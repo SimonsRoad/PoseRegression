@@ -18,11 +18,9 @@ paths.dofile('misc_utils.lua')
 
 -- 0. settings
 task = 'PoseRegression'
---part = 'upperbody'   -- nJoints:8, modelNumber:7
---part = 'lowerbody'   -- nJoints:6, modelNumber:8
-part = 'fullbody'   -- nJoints:14, modelNumber:9
-nJoints = 14
-modelNumber = 9
+part = 'upperbody'; nJoints = 8; modelNumber = 7   -- nJoints:8, modelNumber:7
+--part = 'lowerbody'; nJoints = 6; modelNumber = 8   -- nJoints:6, modelNumber:8
+--part = 'fullbody'; nJoints = 14; modelNumber = 9   -- nJoints:14, modelNumber:9
 
 nPoolSize = 13344
 nTrainData = 10000
@@ -114,13 +112,15 @@ for i=1,3 do
 	testset.data[{ {}, {i}, {}, {} }]:div(stdv[i])
 end
 
-pred_save_te, errPerJoint_te, meanErrPerJoint_te = compute_distance(testset, nJoints)
-pred_save_tr, errPerJoint_tr, meanErrPerJoint_tr = compute_distance(trainset, nJoints)
+pred_save_te, errPerJoint_te, meanErrPerJoint_te = compute_distance_MSE(testset, nJoints)
+pred_save_tr, errPerJoint_tr, meanErrPerJoint_tr = compute_distance_MSE(trainset, nJoints)
+avgMSE_te = compute_distance_MSE(testset)
+avgMSE_tr = compute_distance_MSE(trainset)
 
 print(meanErrPerJoint_te)
 print(meanErrPerJoint_tr)
-
-
+print(string.format('avgMSE (test) : %.4f', avgMSE_te))
+print(string.format('avgMSE (train): %.4f', avgMSE_tr))
 
 
 

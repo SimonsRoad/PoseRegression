@@ -21,3 +21,25 @@ function compute_distance (dataset, nJoints)
 	
 	return pred_save, errPerJoint, meanErrPerJoint
 end
+
+function compute_distance_MSE (dataset) 
+
+	-- compute MSE 
+	local MSE = 0
+	for i = 1, dataset.label(1) do
+		local gt = dataset.label[i]
+		local pred = model:forward(dataset.data[i])
+		local MSE_each = 0
+		for j = 1,dataset.label(2) do
+			local diff = gt[j] - pred[j]
+			MSE_each = MSE_each + math.pow(diff,2)
+		end
+		MSE = MSE + MSE_each
+	end
+	local avgMSE = MSE / dataset.label(1)
+
+	return avgMSE	
+end
+
+
+

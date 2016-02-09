@@ -281,12 +281,65 @@ function create_network_model9() -- same as 6; full-body, but larger output.
 	return net
 end
 
+function create_network_model10()
+	
+	require 'nn'
+	
+	local feat = nn.Sequential()
+	feat:add(nn.SpatialConvolution(3,16,3,3,1,1,1,1))
+	feat:add(nn.ReLU)
+	feat:add(nn.SpatialConvolution(16,16,3,3,1,1,1,1))
+	feat:add(nn.ReLU)
+	feat:add(nn.SpatialMaxPooling(2,2,2,2))
+	feat:add(nn.SpatialConvolution(16,16,3,3,1,1,1,1))
+	feat:add(nn.ReLU)
+	feat:add(nn.SpatialConvolution(16,16,3,3,1,1,1,1))
+	feat:add(nn.ReLU)
+	feat:add(nn.SpatialMaxPooling(2,2,2,2))
+
+	local detection = nn.Sequential() 
+	detection:add(nn.View(16*32*16))
+	detection:add(nn.Linear(16*32*16, 2))
+
+	local regression = nn.Sequential()
+	regression:add(nn.View(16*32*16))
+	regression:add(nn.Linear(16*32*16,28))
+
+end
+
 
 function create_network(modelNumber)
 	local func = 'create_network_model' .. modelNumber
 	local net = _G[func]()
 	return net
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

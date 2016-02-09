@@ -5,24 +5,24 @@ function create_network_model1()
 	local net = nn.Sequential()
 
 	net:add(nn.SpatialConvolution(3,32,9,9))
-	net:add(nn.Sigmoid())
+	net:add(nn.ReLU(true))
 	net:add(nn.SpatialMaxPooling(2,2,2,2))
 	
 	net:add(nn.SpatialConvolution(32,32,5,5))
-	net:add(nn.Sigmoid())
+	net:add(nn.ReLU(true))
 	net:add(nn.SpatialMaxPooling(2,2,2,2))
 	
 	net:add(nn.SpatialConvolution(32,32,5,5))
-	net:add(nn.Sigmoid())
+	net:add(nn.ReLU(true))
 	net:add(nn.SpatialMaxPooling(2,2,2,2))
 	
 	net:add(nn.View(32*12*4))
 
 	net:add(nn.Linear(32*12*4, 512))
-	net:add(nn.Sigmoid())
+	net:add(nn.ReLU(true))
 	
 	net:add(nn.Linear(512, 512))
-	net:add(nn.Sigmoid())
+	net:add(nn.ReLU(true))
 	
 	net:add(nn.Linear(512, 2))
 

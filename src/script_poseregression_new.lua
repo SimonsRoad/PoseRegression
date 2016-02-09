@@ -25,8 +25,8 @@ nJoints = 14
 modelNumber = 9
 
 nPoolSize = 13344
-nTrainData = 1000
-nTestData = 20
+nTrainData = 10000
+nTestData = 2000
 
 
 -- 1. load and normalize data
@@ -37,19 +37,18 @@ idx_pool = torch.randperm(nPoolSize)
 idx_train = idx_pool:narrow(1,1,nTrainData)
 idx_test = idx_pool:narrow(1,nTrainData+1,nTestData)
 
-trainset_sample = mydataloader:get_randomly_indices(idx_train)
+trainset_data = mydataloader:get_randomly_indices(idx_train)
 trainset_label = mydataloader:get_label(part, idx_train)
-trainset = {data = trainset_sample, label = trainset_label} 
-print (trainset)
+trainset = {data = trainset_data, label = trainset_label} 
 
-testset_sample = mydataloader:get_randomly_indices(idx_test)
+testset_data = mydataloader:get_randomly_indices(idx_test)
 testset_label = mydataloader:get_label(part, idx_test)
-testset = {data = testset_sample, label = testset_label}
-print (testset)
+testset = {data = testset_data, label = testset_label}
 
+print (trainset)
+print (testset)
 assert(testset.label:size(1) == nTestData)
 assert(testset.label:size(2) == nJoints*2)
---matio.save('../mat/testdata_noCuda.mat', testset) 	-- save into mat file
 
 setmetatable(trainset,
 {__index = function(t,i)

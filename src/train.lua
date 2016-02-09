@@ -73,7 +73,7 @@ function train()
 		['avg loss (train set)'] = loss_epoch
 	}
 	print(string.format('Ep. [%d/%d][TRAINING SUMMARY]', epoch, opt.nEpochs))
-	print(string.format('    ==> Total Time(s): %.2f  ' .. 'average loss (per batch): %.2f \n', tm:time().real, loss_epoch))
+	print(string.format('==> Total Time(s): %.2f  ' .. 'avg loss (per batch): %.2f ', tm:time().real, loss_epoch))
 
 
 	collectgarbage()

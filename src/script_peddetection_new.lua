@@ -43,13 +43,15 @@ idx_test_neg = idx_pool_neg:narrow(1,nTrainData_neg+1,nTestData_neg)
 trainset_pos = mydataloader_pos:get_randomly_indices(idx_train_pos)
 trainset_neg = mydataloader_neg:get_randomly_indices(idx_train_neg)
 trainset_data = torch.cat(trainset_pos, trainset_neg, 1)
-trainset_label = torch.cat(torch.ones(trainset_pos:size(1)), torch.zeros(trainset_neg:size(1)))
+--trainset_label = torch.cat(torch.ones(trainset_pos:size(1)), torch.zeros(trainset_neg:size(1)))
+trainset_label = torch.cat(torch.ones(trainset_pos:size(1)), torch.ones(trainset_neg:size(1))+1)
 trainset = {data = trainset_data, label = trainset_label} 
 
 testset_pos = mydataloader_pos:get_randomly_indices(idx_test_pos)
 testset_neg = mydataloader_neg:get_randomly_indices(idx_test_neg)
 testset_data = torch.cat(testset_pos, testset_neg, 1)
-testset_label= torch.cat(torch.ones(testset_pos:size(1)), torch.zeros(testset_neg:size(1)))
+--testset_label= torch.cat(torch.ones(testset_pos:size(1)), torch.zeros(testset_neg:size(1)))
+testset_label= torch.cat(torch.ones(testset_pos:size(1)), torch.ones(testset_neg:size(1))+1)
 testset = {data = testset_data, label = testset_label} 
 
 print (trainset)

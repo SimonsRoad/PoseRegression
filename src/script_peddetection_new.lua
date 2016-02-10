@@ -16,7 +16,7 @@ paths.dofile('save_results.lua')
 
 -- 0. settings
 task = 'PedDetection'
-modelNumber = 1
+modelNumber = 2
 
 nPool_pos = 13344
 nPool_neg = 10000

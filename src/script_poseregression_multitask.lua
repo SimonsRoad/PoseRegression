@@ -24,7 +24,7 @@ paths.dofile('misc_utils.lua')
 part = 'fullbody'
 nJoints = 14
 modelNumber = 10
-print(string.format('\n**Performing [%s-%s] modelNumber: %d\n', opt.task, part, modelNumber))
+print(string.format('\n**Performing [%s-%s] modelNumber: %d\n', opt.t, part, modelNumber))
 
 nPoolSize = 13344
 nTrainData = 10000

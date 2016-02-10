@@ -17,10 +17,14 @@ paths.dofile('misc_utils.lua')
 
 
 -- 0. settings
-part = 'upperbody'; nJoints = 8; modelNumber = 7   -- nJoints:8, modelNumber:7
---part = 'lowerbody'; nJoints = 6; modelNumber = 8   -- nJoints:6, modelNumber:8
---part = 'fullbody'; nJoints = 14; modelNumber = 9   -- nJoints:14, modelNumber:9
-print(string.format('\n**Performing [%s] modelNumber: %d\n', opt.task, modelNumber))
+if opt.t == 'PR_full' then
+	part = 'fullbody'; nJoints = 14; modelNumber = 9;   -- nJoints:14, modelNumber:9
+elseif opt.t == 'PR_upper' then
+	part = 'upperbody'; nJoints = 8; modelNumber = 7;   -- nJoints:8, modelNumber:7
+elseif opt.t == 'PR_lower' then
+	part = 'lowerbody'; nJoints = 6; modelNumber = 8;   -- nJoints:6, modelNumber:8
+else assert(false, 'invalid task!!') end
+print(string.format('\n**Performing [%s] modelNumber: %d\n', opt.t, modelNumber))
 
 nPoolSize = 13344
 nTrainData = 10000

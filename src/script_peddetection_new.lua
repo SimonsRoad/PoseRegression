@@ -16,7 +16,7 @@ paths.dofile('save_results.lua')
 
 -- 0. settings
 modelNumber = 1
-print(string.format('\n**Performing [%s] modelNumber: %d\n', opt.task, modelNumber))
+print(string.format('\n**Performing [%s] modelNumber: %d\n', opt.t, modelNumber))
 
 nPool_pos = 13344
 nPool_neg = 10000

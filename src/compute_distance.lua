@@ -42,69 +42,100 @@ function compute_distance_MSE (dataset)
 end
 
 
+local function pcp_tester(jidx_part, iParts, pred, gt, alpha)
+	local pcp = 0
+	local e1 = torch.Tensor({pred[2*jidx_part[iParts][1]-1], pred[2*jidx_part[iParts][1]]})
+	local e2 = torch.Tensor({pred[2*jidx_part[iParts][2]-1], pred[2*jidx_part[iParts][2]]})
+	local g1 = torch.Tensor({gt[2*jidx_part[iParts][1]-1], gt[2*jidx_part[iParts][1]]})
+	local g2 = torch.Tensor({gt[2*jidx_part[iParts][2]-1], gt[2*jidx_part[iParts][2]]})
+	local dist_g1g2 = math.sqrt(math.pow(g1[1]-g2[1],2)+math.pow(g1[2]-g2[2],2)) 
+	local dist_e1g1 = math.sqrt(math.pow(e1[1]-g1[1],2)+math.pow(e1[2]-g1[2],2))
+	local dist_e2g2 = math.sqrt(math.pow(e2[1]-g2[1],2)+math.pow(e2[2]-g2[2],2))
+	local dist_e1g2 = math.sqrt(math.pow(e1[1]-g2[1],2)+math.pow(e1[2]-g2[2],2))
+	local dist_e2g1 = math.sqrt(math.pow(e2[1]-g1[1],2)+math.pow(e2[2]-g1[2],2))
+	local L = dist_g1g2
+
+	-- check if pass the rule
+	if ( (dist_e1g1 <= alpha*L and dist_e2g2 <= alpha*L) 
+		or (dist_e1g2 <= alpha*L and dist_e2g1 <= alpha*L) ) then 
+		pcp = 1
+	end
+	return pcp
+end
+
 function compute_PCP(dataset)
 
 	local alpha = 0.5
 	local nJoints = dataset.label:size(2)/2
 	local nParts
+	local pcp_cnt = 0
 
 	for iSmp = 1, dataset.label:size(1) do 			-- iterate through data samples
 
 		local pred = model:forward(dataset.data[iSmp])
 		local gt = dataset.label[iSmp]
+		local pcp_cnt_smp = 0
 
 		-- Case1: fullbody	
 		if nJoints == 14 then
 			nParts = 11
 
 			jidx_part = torch.Tensor(nParts,2)
-			jidx_part[1] = {1,2}
-			jidx_part[2] = {2,3}
-			jidx_part[3] = {3,4}
-			jidx_part[4] = {4,5}
-			jidx_part[5] = {2,9}
-			jidx_part[6] = {9,10}
-			jidx_part[7] = {10,11}
-			jidx_part[8] = {6,7}
-			jidx_part[9] = {7,8}
-			jidx_part[10] = {12,13}
-			jidx_part[11] = {13,14}
+			jidx_part[1] = torch.Tensor({1,2})
+			jidx_part[2] = torch.Tensor({2,3})
+			jidx_part[3] = torch.Tensor({3,4})
+			jidx_part[4] = torch.Tensor({4,5})
+			jidx_part[5] = torch.Tensor({2,9})
+			jidx_part[6] = torch.Tensor({9,10})
+			jidx_part[7] = torch.Tensor({10,11})
+			jidx_part[8] = torch.Tensor({6,7})
+			jidx_part[9] = torch.Tensor({7,8})
+			jidx_part[10] = torch.Tensor({12,13})
+			jidx_part[11] = torch.Tensor({13,14})
 
-			local pcp_cnt = 0
 			for iParts = 1, nParts do
-				local e1 = {pred[2*jidx_part[iParts][1]-1], pred[2*jidx_part[iParts][1]]}
-				local e2 = {pred[2*jidx_part[iParts][2]-1], pred[2*jidx_part[iParts][2]]}
-				local g1 = {gt[2*jidx_part[iParts][1]-1], gt[2*jidx_part[iParts][1]]}
-				local g2 = {gt[2*jidx_part[iParts][2]-1], gt[2*jidx_part[iParts][2]]}
-				local dist_g1g2 = math.sqrt(math.pow(g1[1]-g2[1],2)+math.pow(g1[2]-g2[2],2)) 
-				local dist_e1g1 = math.sqrt(math.pow(e1[1]-g1[1],2)+math.pow(e1[2]-g1[2],2))
-				local dist_e2g2 = math.sqrt(math.pow(e2[1]-g2[1],2)+math.pow(e2[2]-g2[2],2))
-				local dist_e1g2 = math.sqrt(math.pow(e1[1]-g2[1],2)+math.pow(e1[2]-g2[2],2))
-				local dist_e2g1 = math.sqrt(math.pow(e2[1]-g1[1],2)+math.pow(e2[2]-g1[2],2))
-				local L = dist_gig2
-
-				-- check if pass the rule
-				if ( (dist_e1g1 <= alpha*L and dist_e2g2 <= alpha*L) 
-					or (dist_e1g2 <= alpha*L and dist_e2g1 <= alpha*L) ) then 
-					pcp_cnt = pcp_cnt + 1
-				end
+				pcp_cnt_smp = pcp_cnt_smp + pcp_tester(jidx_part,iParts,pred,gt,alpha)
 			end
-			print(pcp_cnt)
 
 		-- Case2: upperbody
 		elseif nJoints == 8 then
 			nParts = 7
 
+			jidx_part = torch.Tensor(nParts,2)
+			jidx_part[1] = torch.Tensor({1,2})
+			jidx_part[2] = torch.Tensor({2,3})
+			jidx_part[3] = torch.Tensor({3,4})
+			jidx_part[4] = torch.Tensor({4,5})
+			jidx_part[5] = torch.Tensor({2,6})
+			jidx_part[6] = torch.Tensor({6,7})
+			jidx_part[7] = torch.Tensor({7,8})
+
+			for iParts = 1, nParts do
+				pcp_cnt_smp = pcp_cnt_smp + pcp_tester(jidx_part,iParts,pred,gt,alpha)
+			end
 
 		-- Case3: lowerbody
 		elseif nJoints == 6 then
 			nParts = 4
+
+			jidx_part = torch.Tensor(nParts,2)
+			jidx_part[1] = torch.Tensor({1,2})
+			jidx_part[2] = torch.Tensor({2,3})
+			jidx_part[3] = torch.Tensor({4,5})
+			jidx_part[4] = torch.Tensor({5,6})
+
+			for iParts = 1, nParts do
+				pcp_cnt_smp = pcp_cnt_smp + pcp_tester(jidx_part,iParts,pred,gt,alpha)
+			end
 		end
 
-
+		--print(string.format('PCP per sample: %.1f (%d/%d)',pcp_cnt_smp/nParts*100, pcp_cnt_smp, nParts))
+		pcp_cnt = pcp_cnt + pcp_cnt_smp
 
 	end
 	
+	PCP = ( pcp_cnt / (dataset.label:size(1) * nParts) ) * 100
 
+	return PCP
 
 end

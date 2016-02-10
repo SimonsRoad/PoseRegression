@@ -17,12 +17,15 @@ paths.dofile('misc_utils.lua')
 
 
 -- 0. settings
-task = 'PoseRegression'
-part = 'upperbody'; nJoints = 8; modelNumber = 7   -- nJoints:8, modelNumber:7
+task = 'PoseRegression_multitask'
+--part = 'upperbody'; nJoints = 8; modelNumber = 7   -- nJoints:8, modelNumber:7
 --part = 'lowerbody'; nJoints = 6; modelNumber = 8   -- nJoints:6, modelNumber:8
 --part = 'fullbody'; nJoints = 14; modelNumber = 9   -- nJoints:14, modelNumber:9
-print(string.format('\n**Performing [%s-%s] modelNumber: %d\n', task, part, modelNumber))
 
+part = 'fullbody'
+nJoints = 14
+modelNumber = 10
+print(string.format('\n**Performing [%s-%s] modelNumber: %d\n', task, part, modelNumber))
 
 nPoolSize = 13344
 nTrainData = 10000
@@ -55,7 +58,6 @@ setmetatable(trainset,
 	return {t.data[i], t.label[i]}
 end}
 );
-
 function trainset:size()
 	return self.data:size(1)
 end
@@ -77,16 +79,17 @@ end
 model = create_network(modelNumber)
 cudnn.convert(model, cudnn)
 
-adf = adf+1
 
 -- 3. loss function
 -- 
-criterion = nn.MSECriterion()
+criterion1 = nn.MSECriterion()
+criterion2 = nn.MSECriterion()
 
 
 -- *change to cuda 
 model = model:cuda()
-criterion = criterion:cuda()
+criterion1 = criterion1:cuda()
+criterion2 = criterion2:cuda()
 trainset.data = trainset.data:cuda()
 trainset.label = trainset.label:cuda()
 testset.data = testset.data:cuda()
@@ -94,12 +97,13 @@ testset.label = testset.label:cuda()
 
 
 -- *Optional
+--print(model)
 print(opt)
 cutorch.setDevice(opt.GPU)
 
 
 -- 4. (NEW) TRAINING  
-paths.dofile('train.lua')
+paths.dofile('train_multitask.lua')
 
 epoch = opt.epochNumber
 for i=1, opt.nEpochs do

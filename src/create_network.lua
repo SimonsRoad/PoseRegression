@@ -301,10 +301,26 @@ function create_network_model10()
 	detection:add(nn.View(16*32*16))
 	detection:add(nn.Linear(16*32*16, 2))
 
-	local regression = nn.Sequential()
-	regression:add(nn.View(16*32*16))
-	regression:add(nn.Linear(16*32*16,28))
+	local regression_upper = nn.Sequential()
+	regression_upper:add(nn.View(16*32*16))
+	regression_upper:add(nn.Linear(16*32*16,16))
 
+	local regression_lower = nn.Sequential()
+	regression_lower:add(nn.View(16*32*16))
+	regression_lower:add(nn.Linear(16*32*16,12))
+
+	local regression_full = nn.Sequential()
+	regression_full:add(nn.View(16*32*16))
+	regression_full:add(nn.Linear(16*32*16,28))
+
+
+	local tasks = nn.Concat(1)
+	tasks:add(regression_upper)
+	tasks:add(regression_lower)
+
+	local model = nn.Sequential():add(feat):add(tasks)
+
+	return model
 end
 
 

@@ -47,17 +47,15 @@ testset_data = mydataloader:get_randomly_indices(idx_test)
 testset_label = mydataloader:get_label(part, idx_test)
 testset = {data = testset_data, label = testset_label}
 
---print (trainset)
---print (testset)
-assert(testset.label:size(1) == nTestData)
-assert(testset.label:size(2) == nJoints*2)
+--print (trainset); print (testset)
+assert(testset.label:size(1) == nTestData);assert(testset.label:size(2) == nJoints*2)
 
+-- table indexing
 setmetatable(trainset,
 {__index = function(t,i)
 	return {t.data[i], t.label[i]}
 end}
 );
-
 function trainset:size()
 	return self.data:size(1)
 end
@@ -73,11 +71,23 @@ for i=1,3 do
 	trainset.data[{ {}, {i}, {}, {} }]:div(stdv[i])
 end
 
+-- save testset into .mat file for visualization 
+print('Saving everything to: ' .. opt.save)
+os.execute('mkdir -p ' .. opt.save)
+matio.save(paths.concat(opt.save,string.format('testdata_%s.mat', opt.t)), testset)
+
 
 -- 2. network
 --
+--[[
 model = create_network(modelNumber)
 cudnn.convert(model, cudnn)
+--]]
+
+-- *load existing model
+model = torch.load('/home/namhoon/develop/PoseRegression/save/PR_upper/option,nEpochs=100,t=PR_upper/t_WedFeb1003:04:222016/PR_upper_model_100.t7') -- one upperbody model 
+--model = torch.load('/home/namhoon/develop/PoseRegression/save/PR_lower/option,t=PR_lower/t_WedFeb1009:11:262016/PR_lower_model_50.t7')  -- one lowerbody model
+--model = torch.load('/home/namhoon/develop/PoseRegression/save/PR_full/option,nEpochs=100,t=PR_full/t_WedFeb1003:04:332016/PR_full_model_100.t7')  -- one fullbody model
 
 
 -- 3. loss function
@@ -93,11 +103,10 @@ trainset.label = trainset.label:cuda()
 testset.data = testset.data:cuda()
 testset.label = testset.label:cuda()
 
-
+--[[
 -- *Optional
 cutorch.setDevice(opt.GPU)
 print(opt)
-print('Saving everything to: ' .. opt.save)
 
 
 -- 4. (NEW) TRAINING  
@@ -108,7 +117,7 @@ for i=1, opt.nEpochs do
 	train()
 	epoch = epoch + 1
 end
-
+--]]
 
 -- 5. test the network
 --
@@ -127,7 +136,8 @@ print(meanErrPerJoint_tr)
 print(string.format('avgMSE (test) : %.4f', avgMSE_te))
 print(string.format('avgMSE (train): %.4f', avgMSE_tr))
 
-
+-- To check the results on images, save prediction outputs into .mat file
+matio.save(paths.concat(opt.save,string.format('pred_te_%s.mat', opt.t)), pred_save_te)
 
 
 

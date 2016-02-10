@@ -36,10 +36,75 @@ function compute_distance_MSE (dataset)
 		end
 		MSE = MSE + MSE_each
 	end
-	local avgMSE = MSE / dataset.label(1)
+	local avgMSE = MSE / dataset.label:size(1)
 
 	return avgMSE	
 end
 
 
+function compute_PCP(dataset)
 
+	local alpha = 0.5
+	local nJoints = dataset.label:size(2)/2
+	local nParts
+
+	for iSmp = 1, dataset.label:size(1) do 			-- iterate through data samples
+
+		local pred = model:forward(dataset.data[iSmp])
+		local gt = dataset.label[iSmp]
+
+		-- Case1: fullbody	
+		if nJoints == 14 then
+			nParts = 11
+
+			jidx_part = torch.Tensor(nParts,2)
+			jidx_part[1] = {1,2}
+			jidx_part[2] = {2,3}
+			jidx_part[3] = {3,4}
+			jidx_part[4] = {4,5}
+			jidx_part[5] = {2,9}
+			jidx_part[6] = {9,10}
+			jidx_part[7] = {10,11}
+			jidx_part[8] = {6,7}
+			jidx_part[9] = {7,8}
+			jidx_part[10] = {12,13}
+			jidx_part[11] = {13,14}
+
+			local pcp_cnt = 0
+			for iParts = 1, nParts do
+				local e1 = {pred[2*jidx_part[iParts][1]-1], pred[2*jidx_part[iParts][1]]}
+				local e2 = {pred[2*jidx_part[iParts][2]-1], pred[2*jidx_part[iParts][2]]}
+				local g1 = {gt[2*jidx_part[iParts][1]-1], gt[2*jidx_part[iParts][1]]}
+				local g2 = {gt[2*jidx_part[iParts][2]-1], gt[2*jidx_part[iParts][2]]}
+				local dist_g1g2 = math.sqrt(math.pow(g1[1]-g2[1],2)+math.pow(g1[2]-g2[2],2)) 
+				local dist_e1g1 = math.sqrt(math.pow(e1[1]-g1[1],2)+math.pow(e1[2]-g1[2],2))
+				local dist_e2g2 = math.sqrt(math.pow(e2[1]-g2[1],2)+math.pow(e2[2]-g2[2],2))
+				local dist_e1g2 = math.sqrt(math.pow(e1[1]-g2[1],2)+math.pow(e1[2]-g2[2],2))
+				local dist_e2g1 = math.sqrt(math.pow(e2[1]-g1[1],2)+math.pow(e2[2]-g1[2],2))
+				local L = dist_gig2
+
+				-- check if pass the rule
+				if ( (dist_e1g1 <= alpha*L and dist_e2g2 <= alpha*L) 
+					or (dist_e1g2 <= alpha*L and dist_e2g1 <= alpha*L) ) then 
+					pcp_cnt = pcp_cnt + 1
+				end
+			end
+			print(pcp_cnt)
+
+		-- Case2: upperbody
+		elseif nJoints == 8 then
+			nParts = 7
+
+
+		-- Case3: lowerbody
+		elseif nJoints == 6 then
+			nParts = 4
+		end
+
+
+
+	end
+	
+
+
+end

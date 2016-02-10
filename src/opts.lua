@@ -21,9 +21,7 @@ function M.parse(arg)
     cmd:option('-cache',
                defaultDir,
                'subdirectory in which to save/log experiments')
-    --cmd:option('-data',
-    --           defaultDir .. '/imagenet_raw_images/256',
-    --           'Home of ImageNet dataset')
+	cmd:option('-task',		     'PDPR', 'The name of task')
     --cmd:option('-manualSeed',         2, 'Manually set RNG seed')
     cmd:option('-GPU',                1, 'Default preferred GPU')
     cmd:option('-nGPU',               1, 'Number of GPUs to use by default')
@@ -54,7 +52,7 @@ function M.parse(arg)
                             cmd:string('PDPR', opt,
                                        {retrain=true, optimState=true, cache=true, data=true}))
     -- add date/time
-    opt.save = paths.concat(opt.save, ',' .. os.date():gsub(' ',''))
+    opt.save = paths.concat(opt.save, 't_' .. os.date():gsub(' ',''))
     return opt
 end
 

@@ -103,6 +103,8 @@ testset.label = testset.label:cuda()
 -- *optional
 print(opt)
 cutorch.setDevice(opt.GPU)
+print('Saving everything to: ' .. opt.save)
+os.execute('mkdir -p ' .. opt.save)
 
 
 -- 4. trian the network

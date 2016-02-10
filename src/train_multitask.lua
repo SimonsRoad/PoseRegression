@@ -72,7 +72,7 @@ function train()
 	trainLogger:add{
 		['avg loss (train set)'] = loss_epoch
 	}
-	print(string.format('Ep. [%d/%d] ==> Total Time(s): %.2f  ' .. 'avg loss (per batch): %.4f ', epoch, opt.nEpochs, tm:time().real, loss_epoch))
+	print(string.format('Ep. [%d/%d] ==> Total Time(s): %.2f  ' .. 'avg loss (per batch): %.6f ', epoch, opt.nEpochs, tm:time().real, loss_epoch))
 
 
 	collectgarbage()
@@ -89,8 +89,8 @@ function train()
 		end
 	end
 	sanitize(model)
-	saveDataParallel(paths.concat(opt.save, 'model_' .. epoch .. '.t7'), model)
-	torch.save(paths.concat(opt.save, 'optimState_' .. epoch .. '.t7'), optimState)
+	saveDataParallel(paths.concat(opt.save, task .. 'model_' .. epoch .. '.t7'), model)
+	torch.save(paths.concat(opt.save, task .. 'optimState_' .. epoch .. '.t7'), optimState)
 
 end
 

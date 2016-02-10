@@ -17,7 +17,7 @@ paths.dofile('misc_utils.lua')
 
 
 -- 0. settings
-task = 'PoseRegression'
+task = 'PR'
 part = 'upperbody'; nJoints = 8; modelNumber = 7   -- nJoints:8, modelNumber:7
 --part = 'lowerbody'; nJoints = 6; modelNumber = 8   -- nJoints:6, modelNumber:8
 --part = 'fullbody'; nJoints = 14; modelNumber = 9   -- nJoints:14, modelNumber:9
@@ -45,8 +45,8 @@ testset_data = mydataloader:get_randomly_indices(idx_test)
 testset_label = mydataloader:get_label(part, idx_test)
 testset = {data = testset_data, label = testset_label}
 
-print (trainset)
-print (testset)
+--print (trainset)
+--print (testset)
 assert(testset.label:size(1) == nTestData)
 assert(testset.label:size(2) == nJoints*2)
 
@@ -77,7 +77,6 @@ end
 model = create_network(modelNumber)
 cudnn.convert(model, cudnn)
 
-adf = adf+1
 
 -- 3. loss function
 -- 
@@ -94,8 +93,9 @@ testset.label = testset.label:cuda()
 
 
 -- *Optional
-print(opt)
 cutorch.setDevice(opt.GPU)
+print(opt)
+print('Saving everything to: ' .. opt.save)
 
 
 -- 4. (NEW) TRAINING  
@@ -105,6 +105,7 @@ epoch = opt.epochNumber
 for i=1, opt.nEpochs do
 	train()
 	epoch = epoch + 1
+	adf=adf+1
 end
 
 
@@ -115,8 +116,8 @@ for i=1,3 do
 	testset.data[{ {}, {i}, {}, {} }]:div(stdv[i])
 end
 
-pred_save_te, errPerJoint_te, meanErrPerJoint_te = compute_distance_MSE(testset, nJoints)
-pred_save_tr, errPerJoint_tr, meanErrPerJoint_tr = compute_distance_MSE(trainset, nJoints)
+pred_save_te, errPerJoint_te, meanErrPerJoint_te = compute_distance_joint(testset, nJoints)
+pred_save_tr, errPerJoint_tr, meanErrPerJoint_tr = compute_distance_joint(trainset, nJoints)
 avgMSE_te = compute_distance_MSE(testset)
 avgMSE_tr = compute_distance_MSE(trainset)
 

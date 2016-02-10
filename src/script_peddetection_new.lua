@@ -15,8 +15,8 @@ paths.dofile('save_results.lua')
 
 
 -- 0. settings
-task = 'PedDetection'
-modelNumber = 2
+modelNumber = 1
+print(string.format('\n**Performing [%s] modelNumber: %d\n', opt.task, modelNumber))
 
 nPool_pos = 13344
 nPool_neg = 10000
@@ -54,8 +54,8 @@ testset_data = torch.cat(testset_pos, testset_neg, 1)
 testset_label= torch.cat(torch.ones(testset_pos:size(1)), torch.ones(testset_neg:size(1))+1)
 testset = {data = testset_data, label = testset_label} 
 
-print (trainset)
-print (testset)
+--print (trainset)
+--print (testset)
 
 setmetatable(trainset,
 {__index = function(t,i)
@@ -101,10 +101,9 @@ testset.label = testset.label:cuda()
 
 
 -- *optional
-print(opt)
 cutorch.setDevice(opt.GPU)
+print(opt)
 print('Saving everything to: ' .. opt.save)
-os.execute('mkdir -p ' .. opt.save)
 
 
 -- 4. trian the network

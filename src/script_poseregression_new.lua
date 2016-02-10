@@ -17,12 +17,10 @@ paths.dofile('misc_utils.lua')
 
 
 -- 0. settings
-task = 'PR'
 part = 'upperbody'; nJoints = 8; modelNumber = 7   -- nJoints:8, modelNumber:7
 --part = 'lowerbody'; nJoints = 6; modelNumber = 8   -- nJoints:6, modelNumber:8
 --part = 'fullbody'; nJoints = 14; modelNumber = 9   -- nJoints:14, modelNumber:9
-print(string.format('\n**Performing [%s-%s] modelNumber: %d\n', task, part, modelNumber))
-
+print(string.format('\n**Performing [%s] modelNumber: %d\n', opt.task, modelNumber))
 
 nPoolSize = 13344
 nTrainData = 10000
@@ -105,7 +103,6 @@ epoch = opt.epochNumber
 for i=1, opt.nEpochs do
 	train()
 	epoch = epoch + 1
-	adf=adf+1
 end
 
 

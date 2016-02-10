@@ -21,18 +21,18 @@ function M.parse(arg)
     cmd:option('-cache',
                defaultDir,
                'subdirectory in which to save/log experiments')
-	cmd:option('-task',		     'PDPR', 'The name of task')
+	cmd:option('-task',		   'noname', 'The name of task')
     --cmd:option('-manualSeed',         2, 'Manually set RNG seed')
     cmd:option('-GPU',                1, 'Default preferred GPU')
     cmd:option('-nGPU',               1, 'Number of GPUs to use by default')
-    cmd:option('-backend',     'cudnn', 'Options: cudnn | ccn2 | cunn')
+    cmd:option('-backend',      'cudnn', 'Options: cudnn | ccn2 | cunn')
     ------------- Data options ------------------------
     --cmd:option('-nDonkeys',        2, 'number of donkeys to initialize (data loading threads)')
     --cmd:option('-imageSize',         256,    'Smallest side of the resized image')
     --cmd:option('-cropSize',          224,    'Height and Width of image crop to be used as input layer')
     --cmd:option('-nClasses',        1000, 'number of classes in the dataset')
     ------------- Training options --------------------
-    cmd:option('-nEpochs',         50,    'Number of total epochs to run')
+    cmd:option('-nEpochs',         55,    'Number of total epochs to run')
     cmd:option('-epochSize',       10000, 'Number of batches per epoch')
     cmd:option('-epochNumber',     1,     'Manual epoch number (useful on restarts)')
     cmd:option('-batchSize',       1,     'mini-batch size (1 = pure stochastic)')
@@ -48,8 +48,9 @@ function M.parse(arg)
 
     local opt = cmd:parse(arg or {})
     -- add commandline specified options
-    opt.save = paths.concat(opt.cache,
-                            cmd:string('PDPR', opt,
+	opt.save = paths.concat(opt.cache, opt.task)
+    opt.save = paths.concat(opt.save,
+                            cmd:string('option', opt,
                                        {retrain=true, optimState=true, cache=true, data=true}))
     -- add date/time
     opt.save = paths.concat(opt.save, 't_' .. os.date():gsub(' ',''))

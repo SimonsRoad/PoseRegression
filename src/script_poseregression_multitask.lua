@@ -21,7 +21,7 @@ cutorch.setDevice(opt.GPU)
 paths.dofile('load_settings.lua')
 
 nPoolSize = 13344
-nTrainData = 10
+nTrainData = 10000
 nTestData = 2000
 
 
@@ -98,7 +98,7 @@ print(model)
 
 
 -- 4. (NEW) TRAINING  
-TRAINING = false
+TRAINING = true
 if TRAINING then
 	paths.dofile('train_multitask.lua')
 	epoch = opt.epochNumber

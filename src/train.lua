@@ -27,7 +27,7 @@ local loss_epoch
 function train()
 
 	batchNumber = 0
-	cutorch.synchronize()
+	--cutorch.synchronize()
 
 	-- set the dropouts to training mode
 	--model:training()
@@ -65,7 +65,7 @@ function train()
 		trainBatch(inputs, labels)
 	end
 
-	cutorch.synchronize()
+	--cutorch.synchronize()
 
 	loss_epoch = loss_epoch / opt.epochSize
 

@@ -16,7 +16,7 @@ paths.dofile('save_results.lua')
 paths.dofile('misc_utils.lua')
 
 
--- 0. settings
+-- 0. settings + loading
 paths.dofile('load_settings.lua')
 print(string.format('\n**Performing [%s] modelNumber: %d\n', opt.t, modelNumber))
 

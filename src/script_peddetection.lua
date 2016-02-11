@@ -1,5 +1,5 @@
 --[[
---script_peddetection_new.lua
+--script_peddetection.lua
 --Namhoon Lee, The Robotics Institute, Carnegie Mellon University
 --]]
 

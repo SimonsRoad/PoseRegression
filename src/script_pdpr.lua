@@ -1,5 +1,5 @@
 --[[
---script_poseregression_multitask.lua
+--script_pdpr.lua
 --Namhoon Lee, The Robotics Institute, Carnegie Mellon University
 --]]
 
@@ -20,7 +20,7 @@ paths.dofile('misc_utils.lua')
 paths.dofile('load_settings.lua')
 
 nPoolSize = 13344
-nTrainData = 10
+nTrainData = 10000
 nTestData = 2000
 
 
@@ -100,7 +100,7 @@ print(model)
 
 
 -- 4. (NEW) TRAINING  
-TRAINING = false
+TRAINING = true
 if TRAINING then
 	paths.dofile('train_multitask.lua')
 	epoch = opt.epochNumber
@@ -124,16 +124,15 @@ end
 
 PCP_te = compute_PCP(testset)
 PCP_tr = compute_PCP(trainset)
-print(string.format('PCP (test) :   %.2f(%%)', PCP_te))
-print(string.format('PCP (train):   %.2f(%%)', PCP_tr))
-
 pred_save_te, errPerJoint_te, meanErrPerJoint_te = compute_distance_joint(testset, nJoints)
 pred_save_tr, errPerJoint_tr, meanErrPerJoint_tr = compute_distance_joint(trainset, nJoints)
-print(string.format('meanErrPerJoint (test) :   %.4f', meanErrPerJoint_te))
-print(string.format('meanErrPerJoint (train):   %.4f', meanErrPerJoint_tr))
-
 avgMSE_te = compute_distance_MSE(testset)
 avgMSE_tr = compute_distance_MSE(trainset)
+
+print(string.format('PCP (test) :   %.2f(%%)', PCP_te))
+print(string.format('PCP (train):   %.2f(%%)', PCP_tr))
+print(string.format('meanErrPerJoint (test) :   %.4f', meanErrPerJoint_te))
+print(string.format('meanErrPerJoint (train):   %.4f', meanErrPerJoint_tr))
 print(string.format('avgMSE (test) : %.4f', avgMSE_te))
 print(string.format('avgMSE (train): %.4f', avgMSE_tr))
 

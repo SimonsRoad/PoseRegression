@@ -20,6 +20,12 @@ elseif opt.t == 'PR_lower' then
 
 elseif opt.t == 'PR_multi' then
 	part = 'fullbody'; nJoints = 14; modelNumber = 10;
+	modelSaved = '/home/namhoon/develop/PoseRegression/save/PR_multi/option,t=PR_multi/t_ThuFeb1117:30:082016/PR_multimodel_50.t7'
+	--modelSaved = '/home/namhoon/develop/PoseRegression/save/PR_multi/option,t=PR_multi/t_ThuFeb1109:26:482016/PR_multimodel_50.t7'
+
+elseif opt.t == 'PDPR' then
+	part = 'fullbody'; nJoints = 14; modelNumber = 10;
+	modelSaved = '';
 	
 elseif opt.t == 'PD' then
 	modelNumber = 1

@@ -1,9 +1,51 @@
+function convert_multiOut_to_singleOut(pred, gt)
+	-- Assumption: PR_multi (2 table) -->  PR_full (28 size tensor)
+	local pred_tmp = gt:clone():fill(0)
+	pred_tmp[1] = pred[1][1]
+	pred_tmp[2] = pred[1][2]
+	pred_tmp[3] = pred[1][3]
+	pred_tmp[4] = pred[1][4]
+	pred_tmp[5] = pred[1][5]
+	pred_tmp[6] = pred[1][6]
+	pred_tmp[7] = pred[1][7]
+	pred_tmp[8] = pred[1][8]
+	pred_tmp[9] = pred[1][9]
+	pred_tmp[10] = pred[1][10]
+
+	pred_tmp[17] = pred[1][11]
+	pred_tmp[18] = pred[1][12]
+	pred_tmp[19] = pred[1][13]
+	pred_tmp[20] = pred[1][14]
+	pred_tmp[21] = pred[1][15]
+	pred_tmp[22] = pred[1][16]
+
+	pred_tmp[11] = pred[2][1]
+	pred_tmp[12] = pred[2][2]
+	pred_tmp[13] = pred[2][3]
+	pred_tmp[14] = pred[2][4]
+	pred_tmp[15] = pred[2][5]
+	pred_tmp[16] = pred[2][6]
+			
+	pred_tmp[23] = pred[2][7]
+	pred_tmp[24] = pred[2][8]
+	pred_tmp[25] = pred[2][9]
+	pred_tmp[26] = pred[2][10]
+	pred_tmp[27] = pred[2][11]
+	pred_tmp[28] = pred[2][12]
+	return pred_tmp
+end
+
+
 function compute_distance_joint (dataset, nJoints) 
 	local pred_save = torch.Tensor(dataset.label:size(1), dataset.label:size(2))
 	local dist_joints = torch.zeros(nJoints)
 	for i=1, dataset.label:size(1) do
 		local gt = dataset.label[i]
 		local pred = model:forward(dataset.data[i])
+		-- prediction resize in case it's PR_multi
+		if type(pred) == 'table' then
+			pred = convert_multiOut_to_singleOut(pred, gt)
+		end
 		pred_save[{i,{}}] = pred:double()
 		for j=1,nJoints do
 			local xdiff = gt[2*j-1] - pred[2*j-1]
@@ -29,6 +71,10 @@ function compute_distance_MSE (dataset)
 	for i = 1, dataset.label:size(1) do
 		local gt = dataset.label[i]
 		local pred = model:forward(dataset.data[i])
+		-- prediction resize in case it's PR_multi
+		if type(pred) == 'table' then
+			pred = convert_multiOut_to_singleOut(pred, gt)
+		end
 		local MSE_each = 0
 		for j = 1,dataset.label:size(2) do
 			local diff = gt[j] - pred[j]
@@ -66,7 +112,6 @@ end
 function compute_PCP(dataset)
 
 	local alpha = 0.5
-	local nJoints = dataset.label:size(2)/2
 	local nParts
 	local pcp_cnt = 0
 
@@ -76,8 +121,13 @@ function compute_PCP(dataset)
 		local gt = dataset.label[iSmp]
 		local pcp_cnt_smp = 0
 
+		-- prediction resize in case it's PR_multi
+		if type(pred) == 'table' then
+			pred = convert_multiOut_to_singleOut(pred, gt)
+		end
+
 		-- Case1: fullbody	
-		if nJoints == 14 then
+		if opt.t == 'PR_full' or opt.t == 'PR_multi' then
 			nParts = 11
 
 			jidx_part = torch.Tensor(nParts,2)
@@ -98,7 +148,7 @@ function compute_PCP(dataset)
 			end
 
 		-- Case2: upperbody
-		elseif nJoints == 8 then
+		elseif opt.t == 'PR_upper' then
 			nParts = 7
 
 			jidx_part = torch.Tensor(nParts,2)
@@ -115,7 +165,7 @@ function compute_PCP(dataset)
 			end
 
 		-- Case3: lowerbody
-		elseif nJoints == 6 then
+		elseif opt.t == 'PR_lower' then
 			nParts = 4
 
 			jidx_part = torch.Tensor(nParts,2)

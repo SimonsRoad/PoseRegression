@@ -94,9 +94,13 @@ testset.label = testset.label:cuda()
 
 
 -- *Optional
-cutorch.setDevice(opt.GPU)
+print(cutorch.getDevice())
+print(cutorch.getDeviceCount())
+cutorch.setDevice(1)
 print(opt)
 print(model)
+
+adf=adf+1
 
 
 -- 4. (NEW) TRAINING  

@@ -301,9 +301,9 @@ function create_network_model10()
 	feat:add(nn.ReLU())
 	feat:add(nn.SpatialMaxPooling(2,2,2,2))
 	
-	local regression_full = nn.Sequential()
-	regression_full:add(nn.View(16*32*16))
-	regression_full:add(nn.Linear(16*32*16, 28))
+	--local regression_full = nn.Sequential()
+	--regression_full:add(nn.View(16*32*16))
+	--regression_full:add(nn.Linear(16*32*16, 28))
 
 	local regression_upper = nn.Sequential()
 	regression_upper:add(nn.View(16*32*16))

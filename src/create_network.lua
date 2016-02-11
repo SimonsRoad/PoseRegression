@@ -283,44 +283,45 @@ end
 
 function create_network_model10()
 	
-	require 'nn'
-	
-	local feat = nn.Sequential()
-	feat:add(nn.SpatialConvolution(3,16,3,3,1,1,1,1))
-	feat:add(nn.ReLU)
-	feat:add(nn.SpatialConvolution(16,16,3,3,1,1,1,1))
-	feat:add(nn.ReLU)
-	feat:add(nn.SpatialMaxPooling(2,2,2,2))
-	feat:add(nn.SpatialConvolution(16,16,3,3,1,1,1,1))
-	feat:add(nn.ReLU)
-	feat:add(nn.SpatialConvolution(16,16,3,3,1,1,1,1))
-	feat:add(nn.ReLU)
-	feat:add(nn.SpatialMaxPooling(2,2,2,2))
+	require 'nn';
 
-	local detection = nn.Sequential() 
-	detection:add(nn.View(16*32*16))
-	detection:add(nn.Linear(16*32*16, 2))
+	local feat = nn.Sequential()
+
+	feat:add(nn.SpatialConvolution(3,16,3,3,1,1,1,1))
+	feat:add(nn.ReLU())
+
+	feat:add(nn.SpatialConvolution(16,16,3,3,1,1,1,1))
+	feat:add(nn.ReLU())
+	feat:add(nn.SpatialMaxPooling(2,2,2,2))
+	
+	feat:add(nn.SpatialConvolution(16,16,3,3,1,1,1,1))
+	feat:add(nn.ReLU())
+	
+	feat:add(nn.SpatialConvolution(16,16,3,3,1,1,1,1))
+	feat:add(nn.ReLU())
+	feat:add(nn.SpatialMaxPooling(2,2,2,2))
+	
+	local regression_full = nn.Sequential()
+	regression_full:add(nn.View(16*32*16))
+	regression_full:add(nn.Linear(16*32*16, 28))
 
 	local regression_upper = nn.Sequential()
 	regression_upper:add(nn.View(16*32*16))
-	regression_upper:add(nn.Linear(16*32*16,16))
+	regression_upper:add(nn.Linear(16*32*16, 16))
 
 	local regression_lower = nn.Sequential()
 	regression_lower:add(nn.View(16*32*16))
-	regression_lower:add(nn.Linear(16*32*16,12))
+	regression_lower:add(nn.Linear(16*32*16, 12))
 
-	local regression_full = nn.Sequential()
-	regression_full:add(nn.View(16*32*16))
-	regression_full:add(nn.Linear(16*32*16,28))
-
-
-	local tasks = nn.Concat(1)
+	--local tasks = nn.Concat(1)
+	local tasks = nn.ConcatTable()
 	tasks:add(regression_upper)
 	tasks:add(regression_lower)
 
 	local model = nn.Sequential():add(feat):add(tasks)
 
 	return model
+
 end
 
 

@@ -30,7 +30,7 @@ function train()
 	cutorch.synchronize()
 
 	-- set the dropouts to training mode
-	--model:training()
+	model:training()
 
 	local tm = torch.Timer()
 	loss_epoch = 0
@@ -57,11 +57,6 @@ function train()
 		inputs = trainset.data:index(1, idx_batch:long())
 		labels = trainset.label:index(1, idx_batch:long())
 
-		-- check data-label matching (only test purpose)
-		--local tmp = {data = inputs, label = labels}
-		--save_tmp(tmp)
-		--adf = adf + 1
-
 		trainBatch(inputs, labels)
 	end
 
@@ -82,13 +77,16 @@ function train()
 		for _,val in ipairs(list) do
 			for name, field in pairs(val) do
 				if torch.type(field) == 'cdata' then val[name] = nil end
-				if (name == 'output' or name == 'gradInput') then
-					val[name] = field.new()
-				end
+				--if (name == 'output' or name == 'gradInput') then
+				--	val[name] = field.new()
+				--end
 			end
 		end
 	end
-	sanitize(model)
+	--sanitize(model)
+	print(1)
+	model:clearState()
+	print(2)
 	saveDataParallel(paths.concat(opt.save, opt.t .. 'model_' .. epoch .. '.t7'), model)
 	torch.save(paths.concat(opt.save, opt.t .. 'optimState_' .. epoch .. '.t7'), optimState)
 
@@ -96,7 +94,11 @@ end
 
 
 local inputs = torch.CudaTensor()
+local inputs1 = torch.CudaTensor()
+local inputs2 = torch.CudaTensor()
 local labels = torch.CudaTensor()
+local labels1 = torch.CudaTensor()
+local labels2 = torch.CudaTensor()
 
 local timer = torch.Timer()
 local dataTimer = torch.Timer()
@@ -111,6 +113,10 @@ function trainBatch(inputsCPU, labelsCPU)
 	local dataLoadingTime = dataTimer:time().real
 	timer:reset()
 
+	-- idx_upper and idx_lower
+	local idx_upper = torch.Tensor({1,2,3,4,5,6,7,8,9,10,17,18,19,20,21,22})
+	local idx_lower = torch.Tensor({11,12,13,14,15,16,23,24,25,26,27,28})
+
 	-- transfer over to GPU
 	inputs:resize(inputsCPU:size()):copy(inputsCPU)
 	labels:resize(labelsCPU:size()):copy(labelsCPU)
@@ -119,35 +125,47 @@ function trainBatch(inputsCPU, labelsCPU)
 	feval = function(x)
 		model:zeroGradParameters()
 		outputs = model:forward(inputs)
+		--[[
+		err = criterion:forward(outputs, labels)
+		local gradOutputs = criterion:backward(outputs, labels)
+		model:backward(inputs, gradOutputs)
+		return err, gradParameters
+		--]]
 
+		--[[
 		---- multi task. (current: upper + lower concatanation)
 		-- outputs1, labels1, err1, gradOutputs1 for upper body
-		print(1)
-		local idx_upper = torch.Tensor({1,2,3,4,5,6,7,8,9,10,17,18,19,20,21,22})
-		print(2)
 		local outputs1 = outputs:index(1, idx_upper:long())
-		print(3)
-		local labels1 = labels:index(1, idx_upper:long())
-		print(labels1)
 		local err1 = criterion1:forward(outputs1, labels1)
-		print(err1)
+		local labels1 = labels:index(2, idx_upper:long())
 		local gradOutputs1 = criterion1:backward(outputs1, labels1)
-		print(gradOutputs1)
 		
 		-- outputs2, labels2, err2, gradOutputs2 for lower body
-		local idx_lower = torch.Tensor({11,12,13,14,15,16,23,24,25,26,27,28})
 		local outputs2 = outputs:index(1, idx_lower:long())
-		local labels2 = labels:index(1, idx_lower:long())
+		local labels2 = labels:index(2, idx_lower:long())
 		local err2 = criterion2:forward(outputs2, labels2)
 		local gradOutputs2 = criterion2:backward(outputs2, labels2)
 
 		-- gradOutputs = gradOutputs1 + gradOutputs2
 		local gradOutputs = torch.cat(gradOutputs1, gradOutputs2)
 
-		adf = adf + 1
+		-- err (weighted sum; equal weight for now)
+		err = 0.5*err1 + 0.5*err2
+		--print(err1, err2, err)
 
 		model:backward(inputs, gradOutputs)
 		return err, gradParameters
+		--]]
+
+		local outputs1 = outputs[1]
+		local outputs2 = outputs[2]
+		local labels1 = labels:index(2, idx_upper:long())
+		local labels2 = labels:index(2, idx_lower:long())
+		err = criterion:forward({outputs1, outputs2}, {labels1, labels2})
+		local gradOutputs = criterion:backward({outputs1, outputs2}, {labels1, labels2})
+		model:backward(inputs, gradOutputs)
+		return err, gradParameters
+
 	end
 	optim.sgd(feval, parameters, optimState)
 

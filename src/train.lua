@@ -27,10 +27,10 @@ local loss_epoch
 function train()
 
 	batchNumber = 0
-	--cutorch.synchronize()
+	cutorch.synchronize()
 
 	-- set the dropouts to training mode
-	--model:training()
+	model:training()
 
 	local tm = torch.Timer()
 	loss_epoch = 0
@@ -57,15 +57,10 @@ function train()
 		inputs = trainset.data:index(1, idx_batch:long())
 		labels = trainset.label:index(1, idx_batch:long())
 
-		-- check data-label matching (only test purpose)
-		--local tmp = {data = inputs, label = labels}
-		--save_tmp(tmp)
-		--adf = adf + 1
-
 		trainBatch(inputs, labels)
 	end
 
-	--cutorch.synchronize()
+	cutorch.synchronize()
 
 	loss_epoch = loss_epoch / opt.epochSize
 

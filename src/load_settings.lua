@@ -17,6 +17,9 @@ elseif opt.t == 'PR_lower' then
 	part = 'lowerbody'; nJoints = 6; modelNumber = 8;   -- nJoints:6, modelNumber:8
 	modelSaved = '/home/namhoon/develop/PoseRegression/save/PR_lower/option,t=PR_lower/t_ThuFeb1101:07:122016/PR_lower_model_50.t7'
 	--modelSaved = '/home/namhoon/develop/PoseRegression/save/PR_lower/option,t=PR_lower/t_WedFeb1009:11:262016/PR_lower_model_50.t7'
+
+elseif opt.t == 'PR_multi' then
+	part = 'fullbody'; nJoints = 14; modelNumber = 10;
 	
 elseif opt.t == 'PD' then
 	modelNumber = 1

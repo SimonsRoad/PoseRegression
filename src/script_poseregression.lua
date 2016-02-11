@@ -101,6 +101,7 @@ if TRAINING then
 		train()
 		epoch = epoch + 1
 	end
+	model:evaluate()
 else
 	-- *load existing model
 	model = torch.load(modelSaved)
@@ -114,15 +115,15 @@ for i=1,3 do
 	testset.data[{ {}, {i}, {}, {} }]:div(stdv[i])
 end
 
-PCP = compute_PCP(testset)
-PCP = compute_PCP(trainset)
+PCP_te = compute_PCP(testset)
+PCP_tr = compute_PCP(trainset)
 pred_save_te, errPerJoint_te, meanErrPerJoint_te = compute_distance_joint(testset, nJoints)
 pred_save_tr, errPerJoint_tr, meanErrPerJoint_tr = compute_distance_joint(trainset, nJoints)
 avgMSE_te = compute_distance_MSE(testset)
 avgMSE_tr = compute_distance_MSE(trainset)
 
-print(string.format('PCP (test) :   %.2f(%%)', PCP))
-print(string.format('PCP (train):   %.2f(%%)', PCP))
+print(string.format('PCP (test) :   %.2f(%%)', PCP_te))
+print(string.format('PCP (train):   %.2f(%%)', PCP_tr))
 print(string.format('meanErrPerJoint (test) :   %.4f', meanErrPerJoint_te))
 print(string.format('meanErrPerJoint (train):   %.4f', meanErrPerJoint_tr))
 print(string.format('avgMSE (test) :   %.4f', avgMSE_te))

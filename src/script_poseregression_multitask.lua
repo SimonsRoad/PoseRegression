@@ -17,14 +17,7 @@ paths.dofile('misc_utils.lua')
 
 
 -- 0. settings
---part = 'upperbody'; nJoints = 8; modelNumber = 7   -- nJoints:8, modelNumber:7
---part = 'lowerbody'; nJoints = 6; modelNumber = 8   -- nJoints:6, modelNumber:8
---part = 'fullbody'; nJoints = 14; modelNumber = 9   -- nJoints:14, modelNumber:9
-
-part = 'fullbody'
-nJoints = 14
-modelNumber = 10
-print(string.format('\n**Performing [%s-%s] modelNumber: %d\n', opt.t, part, modelNumber))
+paths.dofile('load_settings.lua')
 
 nPoolSize = 13344
 nTrainData = 10000
@@ -47,10 +40,8 @@ testset_data = mydataloader:get_randomly_indices(idx_test)
 testset_label = mydataloader:get_label(part, idx_test)
 testset = {data = testset_data, label = testset_label}
 
---print (trainset)
---print (testset)
-assert(testset.label:size(1) == nTestData)
-assert(testset.label:size(2) == nJoints*2)
+--print (trainset); print (testset)
+assert(testset.label:size(1) == nTestData); assert(testset.label:size(2) == nJoints*2)
 
 setmetatable(trainset,
 {__index = function(t,i)
@@ -72,6 +63,11 @@ for i=1,3 do
 	trainset.data[{ {}, {i}, {}, {} }]:div(stdv[i])
 end
 
+-- save testset into .mat file for visualization
+print('Saving everything to: ' .. opt.save)
+os.execute('mkdir -p ' .. opt.save)
+matio.save(paths.concat(opt.save,string.format('testdata_%s.mat', opt.t)), testset)
+
 
 -- 2. network
 --
@@ -81,14 +77,16 @@ cudnn.convert(model, cudnn)
 
 -- 3. loss function
 -- 
-criterion1 = nn.MSECriterion()
-criterion2 = nn.MSECriterion()
+--criterion1 = nn.MSECriterion()
+--criterion2 = nn.MSECriterion()
+criterion = nn.ParallelCriterion():add(nn.MSECriterion()):add(nn.MSECriterion())
 
 
 -- *change to cuda 
 model = model:cuda()
-criterion1 = criterion1:cuda()
-criterion2 = criterion2:cuda()
+--criterion1 = criterion1:cuda()
+--criterion2 = criterion2:cuda()
+criterion = criterion:cuda()
 trainset.data = trainset.data:cuda()
 trainset.label = trainset.label:cuda()
 testset.data = testset.data:cuda()
@@ -97,18 +95,23 @@ testset.label = testset.label:cuda()
 
 -- *Optional
 cutorch.setDevice(opt.GPU)
---print(model)
 print(opt)
-print('Saving everything to: ' .. opt.save)
+print(model)
 
 
 -- 4. (NEW) TRAINING  
-paths.dofile('train_multitask.lua')
-
-epoch = opt.epochNumber
-for i=1, opt.nEpochs do
-	train()
-	epoch = epoch + 1
+TRAINING = true
+if TRAINING then
+	paths.dofile('train_multitask.lua')
+	epoch = opt.epochNumber
+	for i=1, opt.nEpochs do
+		train()
+		epoch = epoch + 1
+	end
+	model:evaluate()
+else 
+	-- load existing model
+	model = torch.load(modelSaved)
 end
 
 
@@ -119,18 +122,22 @@ for i=1,3 do
 	testset.data[{ {}, {i}, {}, {} }]:div(stdv[i])
 end
 
+PCP_te = compute_PCP(testset)
+PCP_tr = compute_PCP(trainset)
 pred_save_te, errPerJoint_te, meanErrPerJoint_te = compute_distance_joint(testset, nJoints)
 pred_save_tr, errPerJoint_tr, meanErrPerJoint_tr = compute_distance_joint(trainset, nJoints)
 avgMSE_te = compute_distance_MSE(testset)
 avgMSE_tr = compute_distance_MSE(trainset)
 
-print(meanErrPerJoint_te)
-print(meanErrPerJoint_tr)
+print(string.format('PCP (test) :   %.2f(%%)', PCP_te))
+print(string.format('PCP (train):   %.2f(%%)', PCP_tr))
+print(string.format('meanErrPerJoint (test) :   %.4f', meanErrPerJoint_te))
+print(string.format('meanErrPerJoint (train):   %.4f', meanErrPerJoint_tr))
 print(string.format('avgMSE (test) : %.4f', avgMSE_te))
 print(string.format('avgMSE (train): %.4f', avgMSE_tr))
 
-
-
+-- To check the results on images, save prediction outputs into .mat file
+matio.save(paths.concat(opt.save,string.format('pred_te_%s.mat', opt.t)), pred_save_te)
 
 
 

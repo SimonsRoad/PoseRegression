@@ -17,6 +17,7 @@ paths.dofile('misc_utils.lua')
 
 
 -- 0. settings
+cutorch.setDevice(opt.GPU)
 paths.dofile('load_settings.lua')
 
 nPoolSize = 13344
@@ -80,13 +81,11 @@ cudnn.convert(model, cudnn)
 --criterion1 = nn.MSECriterion()
 --criterion2 = nn.MSECriterion()
 criterion = nn.ParallelCriterion():add(nn.MSECriterion()):add(nn.MSECriterion())
-
-
--- *change to cuda 
-model = model:cuda()
---criterion1 = criterion1:cuda()
---criterion2 = criterion2:cuda()
 criterion = criterion:cuda()
+
+
+-- *change data to cuda 
+--model = model:cuda()
 trainset.data = trainset.data:cuda()
 trainset.label = trainset.label:cuda()
 testset.data = testset.data:cuda()
@@ -94,13 +93,8 @@ testset.label = testset.label:cuda()
 
 
 -- *Optional
-print(cutorch.getDevice())
-print(cutorch.getDeviceCount())
-cutorch.setDevice(1)
 print(opt)
 print(model)
-
-adf=adf+1
 
 
 -- 4. (NEW) TRAINING  

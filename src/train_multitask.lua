@@ -130,31 +130,6 @@ function trainBatch(inputsCPU, labelsCPU)
 		return err, gradParameters
 		--]]
 
-		--[[
-		---- multi task. (current: upper + lower concatanation)
-		-- outputs1, labels1, err1, gradOutputs1 for upper body
-		local outputs1 = outputs:index(1, idx_upper:long())
-		local err1 = criterion1:forward(outputs1, labels1)
-		local labels1 = labels:index(2, idx_upper:long())
-		local gradOutputs1 = criterion1:backward(outputs1, labels1)
-		
-		-- outputs2, labels2, err2, gradOutputs2 for lower body
-		local outputs2 = outputs:index(1, idx_lower:long())
-		local labels2 = labels:index(2, idx_lower:long())
-		local err2 = criterion2:forward(outputs2, labels2)
-		local gradOutputs2 = criterion2:backward(outputs2, labels2)
-
-		-- gradOutputs = gradOutputs1 + gradOutputs2
-		local gradOutputs = torch.cat(gradOutputs1, gradOutputs2)
-
-		-- err (weighted sum; equal weight for now)
-		err = 0.5*err1 + 0.5*err2
-		--print(err1, err2, err)
-
-		model:backward(inputs, gradOutputs)
-		return err, gradParameters
-		--]]
-
 		local outputs1 = outputs[1]
 		local outputs2 = outputs[2]
 		local labels1 = labels:index(2, idx_upper:long())

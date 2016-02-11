@@ -18,7 +18,6 @@ paths.dofile('misc_utils.lua')
 
 -- 0. settings + loading
 paths.dofile('load_settings.lua')
-print(string.format('\n**Performing [%s] modelNumber: %d\n', opt.t, modelNumber))
 
 nPoolSize = 13344
 nTrainData = 10000

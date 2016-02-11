@@ -15,8 +15,7 @@ paths.dofile('save_results.lua')
 
 
 -- 0. settings
-modelNumber = 1
-print(string.format('\n**Performing [%s] modelNumber: %d\n', opt.t, modelNumber))
+paths.dofile('load_settings.lua')
 
 nPool_pos = 13344
 nPool_neg = 10000
@@ -43,19 +42,16 @@ idx_test_neg = idx_pool_neg:narrow(1,nTrainData_neg+1,nTestData_neg)
 trainset_pos = mydataloader_pos:get_randomly_indices(idx_train_pos)
 trainset_neg = mydataloader_neg:get_randomly_indices(idx_train_neg)
 trainset_data = torch.cat(trainset_pos, trainset_neg, 1)
---trainset_label = torch.cat(torch.ones(trainset_pos:size(1)), torch.zeros(trainset_neg:size(1)))
 trainset_label = torch.cat(torch.ones(trainset_pos:size(1)), torch.ones(trainset_neg:size(1))+1)
 trainset = {data = trainset_data, label = trainset_label} 
 
 testset_pos = mydataloader_pos:get_randomly_indices(idx_test_pos)
 testset_neg = mydataloader_neg:get_randomly_indices(idx_test_neg)
 testset_data = torch.cat(testset_pos, testset_neg, 1)
---testset_label= torch.cat(torch.ones(testset_pos:size(1)), torch.zeros(testset_neg:size(1)))
 testset_label= torch.cat(torch.ones(testset_pos:size(1)), torch.ones(testset_neg:size(1))+1)
 testset = {data = testset_data, label = testset_label} 
 
---print (trainset)
---print (testset)
+--print (trainset); print (testset)
 
 setmetatable(trainset,
 {__index = function(t,i)
@@ -108,14 +104,18 @@ print('Saving everything to: ' .. opt.save)
 
 -- 4. trian the network
 --
-paths.dofile('train.lua')
-
-epoch = opt.epochNumber
-for i=1, opt.nEpochs do
-	train()
-	epoch = epoch + 1
+TRAINING = false
+if TRAINING then
+	paths.dofile('train.lua')
+	epoch = opt.epochNumber
+	for i=1, opt.nEpochs do
+		train()
+		epoch = epoch + 1
+	end
+else
+	-- load existing model
+	model = torch.load(modelSaved)
 end
-
 
 -- 5. test the network
 --

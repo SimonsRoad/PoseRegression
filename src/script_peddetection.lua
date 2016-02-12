@@ -4,6 +4,7 @@
 --]]
 
 
+local matio = require 'matio'
 require 'optim'
 require 'cudnn'
 require 'cunn'
@@ -67,6 +68,8 @@ mean = {}
 stdv = {}
 for i=1,3 do
 	mean[i] = trainset.data[{ {}, {i}, {}, {} }]:mean()
+	print(mean[i])
+	print(type(mean[i]))
 	trainset.data[{ {}, {i}, {}, {} }]:add(-mean[i])
 
 	stdv[i] = trainset.data[{ {}, {i}, {}, {} }]:std()
@@ -95,6 +98,12 @@ trainset.label = trainset.label:cuda()
 testset.data = testset.data:cuda()
 testset.label = testset.label:cuda()
 
+
+-- save mean and std for future use
+matio.save('meanstd/meanForPD.mat', torch.Tensor(mean))
+matio.save('meanstd/stdvForPD.mat', torch.Tensor(stdv))
+
+adf=adf+1
 
 -- *optional
 cutorch.setDevice(opt.GPU)

@@ -127,6 +127,8 @@ function dataset:get_samplename(idx)
 end
 
 function dataset:get_substring(imgpath, str, length)
+	print(str)
+	print(imgpath)
 	local _, startIdx = imgpath:find(str)
 	startIdx = startIdx + 1
 	local foundstr = imgpath:sub(startIdx, startIdx+length)

@@ -29,7 +29,7 @@ elseif opt.t == 'PDPR' then
 	
 elseif opt.t == 'PD' then
 	modelNumber = 1
-	modelSaved = '/home/namhoon/develop/PoseRegression/save/PD/option,t=PD/t_WedFeb1003:04:132016/PD_model_100.t' 
+	modelSaved = '/home/namhoon/develop/PoseRegression/save/PD/option,t=PD/t_WedFeb1003:04:132016/PD_model_50.t7' 
 	
 else 
 	assert(false, 'invalid task!!') 

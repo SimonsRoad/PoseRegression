@@ -1,0 +1,5 @@
+#!/bin/sh
+
+pathToImages='/home/namhoon/Dropbox/cropped'
+outFile='testimages.txt'
+find $pathToImages -name "*.png" ! -type d > $outFile

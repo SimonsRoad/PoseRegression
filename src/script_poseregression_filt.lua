@@ -21,14 +21,17 @@ paths.dofile('convert_labels.lua')
 cutorch.setDevice(opt.GPU)
 paths.dofile('load_settings.lua')
 
+W = 64
+H = 128
+LLABEL = nJoints*(W+H)  -- 14*(64+128) = 2688
+
+
+-- 1. load and normalize data
+-- 
 nPoolSize = 13344
 nTrainData = 10000
 nTestData = 2000
 
-LLABEL = 14*(64+128)
-
--- 1. load and normalize data
--- 
 mydataloader = dataLoader{filename = '../data/lists/pos.txt'}
 
 idx_pool = torch.randperm(nPoolSize)
@@ -43,7 +46,7 @@ testset_label, testset_label_ori  = mydataloader:get_label_filtered(part, idx_te
 testset = {data = testset_data, label = testset_label}
 
 --print (trainset); print (testset)
-assert(testset.label:size(1) == nTestData);assert(testset.label:size(2) == nJoints*(128+64))
+assert(testset.label:size(1) == nTestData);assert(testset.label:size(2) == nJoints*(W+H))
 
 setmetatable(trainset,
 {__index = function(t,i)

@@ -3,27 +3,27 @@ function find_joint_from_filt(label)
 	-- This should be actually inverse filtering.. (iFFT can do this..)
 
 	-- reshape 
-	local label_res = torch.reshape(label, 14, (64+128))
+	local label_res = torch.reshape(label, nJoints, (W+H))
 
 	-- split x and y
-	local label_x = label_res[{ {}, {1,64}}]
-	local label_y = label_res[{ {}, {65,(64+128)} }]
-	assert(label_y:size(1) == 14 and label_y:size(2) == 128)
+	local label_x = label_res[{ {}, {1,W}}]
+	local label_y = label_res[{ {}, {W+1,(W+H)} }]
+	assert(label_y:size(1) == nJoints and label_y:size(2) == H)
 
 	-- find out joint location. (Iealy, IFFT should be performed)
 	local _, idx_max_x = torch.max(label_x,2)
 	local _, idx_max_y = torch.max(label_y,2)
 	idx_max_x:float()
 	idx_max_y:float()
-	idx_max_x:div(64)
-	idx_max_y:div(128)
-	print(idx_max_x)
-	print(idx_max_y)
-	assert(idx_max_y:size(1) == 14)
+	idx_max_x:div(W)
+	idx_max_y:div(H)
+	--print(idx_max_x)
+	--print(idx_max_y)
+	assert(idx_max_y:size(1) == nJoints)
 
 	-- rearrange to [x1,y1,x2,y2, ... , x14,y14]
 	local label_joint = torch.cat(idx_max_x, idx_max_y, 2)
-	label_joint = torch.reshape(label_joint, 28)
+	label_joint = torch.reshape(label_joint, 2*nJoints)
 
 	return label_joint 
 end
@@ -31,7 +31,7 @@ end
 
 function convert_multiOut_to_singleOut(pred, gt)
 	-- Assumption: PR_multi (2 table) -->  PR_full (28 size tensor)
-	local pred_tmp = torch.Tensor(28)
+	local pred_tmp = torch.Tensor(2*nJoints)
 	pred_tmp[1] = pred[1][1]
 	pred_tmp[2] = pred[1][2]
 	pred_tmp[3] = pred[1][3]
@@ -73,15 +73,18 @@ function compute_distance_joint (dataset, nJoints)
 	for i=1, dataset.label:size(1) do
 		local gt = dataset.label[i]
 		local pred = model:forward(dataset.data[i])
+
 		-- prediction resize in case it's PR_multi
 		if type(pred) == 'table' then
 			pred = convert_multiOut_to_singleOut(pred, gt)
 		end
+
 		-- gt and pred resize in case it's filtered output
 		if pred:size(1) == LLABEL or gt:size(1) == LLABEL then
 			pred = find_joint_from_filt(pred)
 			gt = find_joint_from_filt(gt)
 		end
+
 		pred_save[{i,{}}] = pred:double()
 		for j=1,nJoints do
 			local xdiff = gt[2*j-1] - pred[2*j-1]
@@ -107,15 +110,18 @@ function compute_distance_MSE (dataset)
 	for i = 1, dataset.label:size(1) do
 		local gt = dataset.label[i]
 		local pred = model:forward(dataset.data[i])
+
 		-- prediction resize in case it's PR_multi
 		if type(pred) == 'table' then
 			pred = convert_multiOut_to_singleOut(pred, gt)
 		end
+
 		-- gt and pred resize in case it's filtered output
 		if pred:size(1) == LLABEL or gt:size(1) == LLABEL then
 			pred = find_joint_from_filt(pred)
 			gt = find_joint_from_filt(gt)
 		end
+
 		local MSE_each = 0
 		for j = 1,nJoints*2 do
 			local diff = gt[j] - pred[j]
@@ -172,7 +178,9 @@ function compute_PCP(dataset)
 			pred = find_joint_from_filt(pred)
 			gt = find_joint_from_filt(gt)
 		end
-		assert(pred:size(1) == 28)
+
+		-- At this stage, the size of lable should be 28
+		assert(pred:size(1) == 2*nJoints)
 
 
 		-- Case1: fullbody	

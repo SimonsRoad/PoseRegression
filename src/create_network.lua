@@ -344,14 +344,11 @@ function create_network_model11()
 
 	feat:add(nn.SpatialConvolution(3,16,3,3,1,1,1,1))
 	feat:add(nn.ReLU())
-
 	feat:add(nn.SpatialConvolution(16,16,3,3,1,1,1,1))
 	feat:add(nn.ReLU())
 	feat:add(nn.SpatialMaxPooling(2,2,2,2))
-	
 	feat:add(nn.SpatialConvolution(16,16,3,3,1,1,1,1))
 	feat:add(nn.ReLU())
-	
 	feat:add(nn.SpatialConvolution(16,16,3,3,1,1,1,1))
 	feat:add(nn.ReLU())
 	feat:add(nn.SpatialMaxPooling(2,2,2,2))
@@ -362,8 +359,12 @@ function create_network_model11()
 	--
 	local regression = nn.Sequential()
 	regression:add(nn.View(16*32*16))
+
 	regression:add(nn.Dropout(0.5))
 	regression:add(nn.Linear(16*32*16, 2688))
+	regression:add(nn.ReLU())
+
+	net:add(nn.Linear(2688, 2688))
 
 	regression:cuda()
 

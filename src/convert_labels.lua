@@ -7,9 +7,9 @@
 --
 -- ]]
 
-local function filter_guassian(label, maxPixelSize, stdv)
+local function filter_gaussian(label, maxPixelSize, stdv)
 	local label_new = torch.FloatTensor(label:size(1), label:size(2), maxPixelSize):zero()
-	local pixels = torch.range(0,maxPixelSize+1):float()
+	local pixels = torch.range(1,maxPixelSize):float()
 
 	local k = 0
 
@@ -31,7 +31,8 @@ local function filter_guassian(label, maxPixelSize, stdv)
 			end
 		end
 	end
-return label_new
+
+	return label_new
 
 end
 
@@ -48,8 +49,8 @@ function convert_labels_to_spatialLabels(label_ori)
 	local label_y = label_res:index(2, torch.LongTensor{2,4,6,8,10,12,14,16,18,20,22,24,26,28})
 
 	-- Guassian filter; perform twice for x and y respectively
-	local label_x_filt = filter_guassian(label_x, w, 0.8)
-	local label_y_filt = filter_guassian(label_y, h, 0.8)
+	local label_x_filt = filter_gaussian(label_x, w, 0.8)
+	local label_y_filt = filter_gaussian(label_y, h, 0.8)
 
 	-- concatenate x and y
 	local label_xy = torch.cat(label_x_filt, label_y_filt, 3)

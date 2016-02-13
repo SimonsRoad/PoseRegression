@@ -259,35 +259,7 @@ function dataset:get_label(part, indices)
 	return label
 end
 
-local function filter_guassian(label, maxPixelSize, stdv)
-	local label_new = torch.FloatTensor(label:size(1), label:size(2), maxPixelSize):zero() 
-	local pixels = torch.range(0,maxPixelSize+1):float()
-
-	local k = 0
-	
-	for i = 1, label:size(1) do
-		local keypoints = label[i]
-		local new_keypoints = label_new[i]
-		for j = 1, label:size(2) do
-			local kp = keypoints[j]
-			if kp ~= -1 then
-				local new_kp = new_keypoints[j]
-				new_kp:add(pixels, -kp)
-				new_kp:cmul(new_kp)
-				new_kp:div(2*stdv*stdv)
-				new_kp:mul(-1)
-				new_kp:exp(new_kp)
-				new_kp:div(math.sqrt(2*math.pi)*stdv)
-			else
-				k = k + 1
-			end
-		end
-	end
-	return label_new
-	
-end
-
-function dataset:get_label_filtered(part, indices)
+function dataset:get_label_filt(part, indices)
 	assert(part == 'fullbody')	-- currently only fullbody allowed
 
 	-- load regular labels, which is 28 values for 14 joints

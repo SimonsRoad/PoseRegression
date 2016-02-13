@@ -39,10 +39,10 @@ idx_train = idx_pool:narrow(1,1,nTrainData)
 idx_test = idx_pool:narrow(1,nTrainData+1,nTestData)
 
 trainset_data = mydataloader:get_randomly_indices(idx_train)
-trainset_label, trainset_label_ori = mydataloader:get_label_filtered(part, idx_train)
+trainset_label, _ = mydataloader:get_label_filt(part, idx_train)
 trainset = {data = trainset_data, label = trainset_label} 
 testset_data = mydataloader:get_randomly_indices(idx_test)
-testset_label, testset_label_ori  = mydataloader:get_label_filtered(part, idx_test)
+testset_label, testset_label_ori  = mydataloader:get_label_filt(part, idx_test)
 testset = {data = testset_data, label = testset_label}
 
 --print (trainset); print (testset)
@@ -79,7 +79,6 @@ print(1)
 --print(testset_ori.label)
 --print(convert_spatialLabels_to_labels(convert_labels_to_spatialLabels(testset_ori.label)))
 print(2)
-
 
 
 -- 2. network

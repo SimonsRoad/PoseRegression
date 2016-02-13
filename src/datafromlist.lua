@@ -293,36 +293,9 @@ function dataset:get_label_filtered(part, indices)
 	-- load regular labels, which is 28 values for 14 joints
 	local label_ori = self:get_label(part, indices)
 
-	-- scale back to 64*128
-	local w = 64
-	local h = 128
-	label_ori:cmul(torch.repeatTensor(torch.Tensor({w,h}),label_ori:size(1),14))
-
-	-- split x and y
-	local label_x = label_ori:index(2, torch.LongTensor{1,3,5,7,9,11,13,15,17,19,21,23,25,27})
-	local label_y = label_ori:index(2, torch.LongTensor{2,4,6,8,10,12,14,16,18,20,22,24,26,28})
-
-	-- Guassian filter; perform twice for x and y respectively
-	local label_x_filt = filter_guassian(label_x, w, 0.8)
-	local label_y_filt = filter_guassian(label_y, h, 0.8)
-
-	-- concatenate x and y
-	local label_xy = torch.cat(label_x_filt, label_y_filt, 3)
-
-	-- reshape as a single vector 
-	local label = torch.reshape(label_xy, label_xy:size(1), label_xy:size(2)*label_xy:size(3))
-	
-	-- test1
-	--print(label_xy[1][1][30])
-	--print(label[1][30][1])
-	-- test2
-	--label_tmp = torch.reshape(label, label:size(1), label_xy:size(2), label_xy:size(3))
-	--print(label_xy[1][1][30])
-	--print(label_tmp[1][1][30])
-	--print(label_tmp:size())
-
-	return label
-
+	-- convert to spatial labels
+	local label = convert_labels_to_spatialLabels(label_ori)
+	return label, label_ori
 end
 
 

@@ -14,6 +14,7 @@ paths.dofile('create_network.lua')
 paths.dofile('compute_distance.lua')
 paths.dofile('save_results.lua')
 paths.dofile('misc_utils.lua')
+paths.dofile('convert_labels.lua')
 
 
 -- 0. settings + loading
@@ -22,6 +23,8 @@ paths.dofile('load_settings.lua')
 nPoolSize = 13344
 nTrainData = 10000
 nTestData = 2000
+
+LLABEL = 14*(64+128)
 
 
 -- 1. load and normalize data
@@ -33,10 +36,10 @@ idx_train = idx_pool:narrow(1,1,nTrainData)
 idx_test = idx_pool:narrow(1,nTrainData+1,nTestData)
 
 trainset_data = mydataloader:get_randomly_indices(idx_train)
-trainset_label = mydataloader:get_label_filtered(part, idx_train)
+trainset_label, trainset_label_ori = mydataloader:get_label_filtered(part, idx_train)
 trainset = {data = trainset_data, label = trainset_label} 
 testset_data = mydataloader:get_randomly_indices(idx_test)
-testset_label = mydataloader:get_label_filtered(part, idx_test)
+testset_label, testset_label_ori  = mydataloader:get_label_filtered(part, idx_test)
 testset = {data = testset_data, label = testset_label}
 
 print (trainset)
@@ -68,7 +71,15 @@ end
 -- save testset into .mat file for visualization 
 print('Saving everything to: ' .. opt.save)
 os.execute('mkdir -p ' .. opt.save)
-matio.save(paths.concat(opt.save,string.format('testdata_%s.mat', opt.t)), testset)
+-- save original!!!
+testset_ori = {data = testset.data, label = testset_label_ori}
+matio.save(paths.concat(opt.save,string.format('testdata_%s.mat', opt.t)), testset_ori)
+
+print(1)
+--print(testset_ori.label)
+--print(convert_spatialLabels_to_labels(convert_labels_to_spatialLabels(testset_ori.label)))
+print(2)
+
 
 
 -- 2. network

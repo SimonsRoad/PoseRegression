@@ -1,5 +1,6 @@
 function find_joint_from_filt(label)
 	-- here input argument is a filtered 'long' label
+	-- This should be actually inverse filtering.. (iFFT can do this..)
 
 	-- reshape 
 	local label_res = torch.reshape(label, 14, (64+128))
@@ -24,7 +25,7 @@ end
 
 function convert_multiOut_to_singleOut(pred, gt)
 	-- Assumption: PR_multi (2 table) -->  PR_full (28 size tensor)
-	local pred_tmp = gt:clone():fill(0)
+	local pred_tmp = torch.Tensor(28)
 	pred_tmp[1] = pred[1][1]
 	pred_tmp[2] = pred[1][2]
 	pred_tmp[3] = pred[1][3]
@@ -71,7 +72,7 @@ function compute_distance_joint (dataset, nJoints)
 			pred = convert_multiOut_to_singleOut(pred, gt)
 		end
 		-- gt and pred resize in case it's filtered output
-		if pred:size(1) == 14*(128+64) or gt:size(1) == 14*(128+64) then
+		if pred:size(1) == LLABEL or gt:size(1) == LLABEL then
 			pred = find_joint_from_filt(pred)
 			gt = find_joint_from_filt(gt)
 		end
@@ -105,7 +106,7 @@ function compute_distance_MSE (dataset)
 			pred = convert_multiOut_to_singleOut(pred, gt)
 		end
 		-- gt and pred resize in case it's filtered output
-		if pred:size(1) == 14*(128+64) or gt:size(1) == 14*(128+64) then
+		if pred:size(1) == LLABEL or gt:size(1) == LLABEL then
 			pred = find_joint_from_filt(pred)
 			gt = find_joint_from_filt(gt)
 		end
@@ -161,7 +162,7 @@ function compute_PCP(dataset)
 		end
 
 		-- gt and pred resize in case it's filtered output
-		if pred:size(1) == 14*(128+64) or gt:size(1) == 14*(128+64) then
+		if pred:size(1) == LLABEL or gt:size(1) == LLABEL then
 			pred = find_joint_from_filt(pred)
 			gt = find_joint_from_filt(gt)
 		end

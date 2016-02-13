@@ -22,8 +22,8 @@ cutorch.setDevice(opt.GPU)
 paths.dofile('load_settings.lua')
 
 nPoolSize = 13344
-nTrainData = 100
-nTestData = 2
+nTrainData = 10000
+nTestData = 2000
 
 LLABEL = 14*(64+128)
 

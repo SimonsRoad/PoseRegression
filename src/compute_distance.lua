@@ -10,13 +10,19 @@ function find_joint_from_filt(label)
 	local label_y = label_res[{ {}, {65,(64+128)} }]
 	assert(label_y:size(1) == 14 and label_y:size(2) == 128)
 
-	-- find out joint location. (Here, I find maximum, but there are possible improvement)
-	local label_joint_x = torch.max(label_x,2)
-	local label_joint_y = torch.max(label_y,2)
-	assert(label_joint_x:size(1) == 14)
+	-- find out joint location. (Iealy, IFFT should be performed)
+	local _, idx_max_x = torch.max(label_x,2)
+	local _, idx_max_y = torch.max(label_y,2)
+	idx_max_x:float()
+	idx_max_y:float()
+	idx_max_x:div(64)
+	idx_max_y:div(128)
+	print(idx_max_x)
+	print(idx_max_y)
+	assert(idx_max_y:size(1) == 14)
 
 	-- rearrange to [x1,y1,x2,y2, ... , x14,y14]
-	local label_joint = torch.cat(label_joint_x, label_joint_y, 2)
+	local label_joint = torch.cat(idx_max_x, idx_max_y, 2)
 	label_joint = torch.reshape(label_joint, 28)
 
 	return label_joint 

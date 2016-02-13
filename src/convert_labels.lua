@@ -87,7 +87,7 @@ function convert_spatialLabels_to_labels(label)
 	-- 
 	local label_joint = torch.Tensor(label:size(1), 14*2)
 	for i=1,label:size(1) do
-		-- find out joint location. (Idealy ITTF should be performed)
+		-- find out joint location. (Idealy, IFFT should be performed)
 		local _, idx_max_x = torch.max(label_x[{ {i}, {}, {} }], 3)
 		local _, idx_max_y = torch.max(label_y[{ {i}, {}, {} }], 3)
 		idx_max_x = torch.reshape(idx_max_x, idx_max_x:nElement()):float()

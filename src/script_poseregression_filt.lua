@@ -18,14 +18,14 @@ paths.dofile('convert_labels.lua')
 
 
 -- 0. settings + loading
+cutorch.setDevice(opt.GPU)
 paths.dofile('load_settings.lua')
 
 nPoolSize = 13344
-nTrainData = 10000
-nTestData = 2000
+nTrainData = 100
+nTestData = 2
 
 LLABEL = 14*(64+128)
-
 
 -- 1. load and normalize data
 -- 
@@ -42,9 +42,7 @@ testset_data = mydataloader:get_randomly_indices(idx_test)
 testset_label, testset_label_ori  = mydataloader:get_label_filtered(part, idx_test)
 testset = {data = testset_data, label = testset_label}
 
-print (trainset)
-print (testset)
-
+--print (trainset); print (testset)
 assert(testset.label:size(1) == nTestData);assert(testset.label:size(2) == nJoints*(128+64))
 
 setmetatable(trainset,
@@ -55,7 +53,6 @@ end}
 function trainset:size()
 	return self.data:size(1)
 end
-
 
 -- normalization
 mean = {}
@@ -101,7 +98,6 @@ testset.data = testset.data:cuda()
 testset.label = testset.label:cuda()
 
 -- *Optional
-cutorch.setDevice(opt.GPU)
 print(opt)
 
 

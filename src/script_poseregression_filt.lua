@@ -1,5 +1,5 @@
 --[[
---script_poseregression_filtered.lua
+--script_poseregression_filt.lua
 --Namhoon Lee, The Robotics Institute, Carnegie Mellon University
 --]]
 
@@ -20,8 +20,8 @@ paths.dofile('misc_utils.lua')
 paths.dofile('load_settings.lua')
 
 nPoolSize = 13344
-nTrainData = 100
-nTestData = 2
+nTrainData = 10000
+nTestData = 2000
 
 
 -- 1. load and normalize data

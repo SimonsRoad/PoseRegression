@@ -1,5 +1,8 @@
 #!/bin/sh
 
-pathToImages='/home/namhoon/Dropbox/cropped'
-outFile='testimages.txt'
-find $pathToImages -name "*.png" ! -type d > $outFile
+#pathToImages='/home/namhoon/Dropbox/cropped'
+#outFile='testimages.txt'
+#find $pathToImages -name "*.png" ! -type d > $outFile
+pathToImages='/home/namhoon/Downloads/data_towncenter/frames_out'
+outFile='testcrop.txt'
+find $pathToImages -name "*.jpg" ! -type d > $outFile

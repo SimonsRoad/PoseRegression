@@ -23,9 +23,17 @@ elseif opt.t == 'PR_multi' then
 	modelSaved = '/home/namhoon/develop/PoseRegression/save/PR_multi/option,t=PR_multi/t_ThuFeb1117:30:082016/PR_multimodel_50.t7'
 	--modelSaved = '/home/namhoon/develop/PoseRegression/save/PR_multi/option,t=PR_multi/t_ThuFeb1109:26:482016/PR_multimodel_50.t7'
 
-elseif opt.t == 'PDPR' then
+elseif opt.t == 'PR_multi_test' then
 	part = 'fullbody'; nJoints = 14; modelNumber = 10;
-	modelSaved = '';
+	modelSaved = '/home/namhoon/develop/PoseRegression/save/PR_multi/option,t=PR_multi/t_ThuFeb1117:30:082016/PR_multimodel_50.t7'
+
+elseif opt.t == 'PR_filt' then
+	part = 'fullbody'; nJoints = 14; modelNumber = 11;
+	modelSaved = ' ';
+
+elseif opt.t == 'PDPR' then
+	part = 'fullbody'; nJoints = 14; modelNumber = 0;
+	modelSaved = ' ';
 	
 elseif opt.t == 'PD' then
 	modelNumber = 1

@@ -127,8 +127,6 @@ function dataset:get_samplename(idx)
 end
 
 function dataset:get_substring(imgpath, str, length)
-	print(str)
-	print(imgpath)
 	local _, startIdx = imgpath:find(str)
 	startIdx = startIdx + 1
 	local foundstr = imgpath:sub(startIdx, startIdx+length)
@@ -226,6 +224,28 @@ function dataset:get_label_lowerbody(indices)
 	return label
 end
 
+function dataset:get_label_fortest(indices, pathtojoints)
+	local label = torch.Tensor(indices:size(1),28)
+
+	for i=1, indices:size(1) do
+		local jointpath = paths.concat(pathtojoints, string.format('joints2d_%dth.txt',i))
+		local file = assert(io.open(jointpath, 'r'))
+		local cnt = 0
+		for line in file:lines() do
+			local tmp1 = line:find(' ')
+			local x = tonumber(line:sub(1,tmp1-1))
+			local y = tonumber(line:sub(tmp1,line:len()))
+			cnt = cnt + 1
+			label[i][cnt] = x 
+			cnt = cnt + 1
+			label[i][cnt] = y 
+		end
+		file:close()
+	end
+
+	return label
+end
+
 function dataset:get_label(part, indices) 
 	local label
 	if part == 'fullbody' then
@@ -237,6 +257,72 @@ function dataset:get_label(part, indices)
 	end
 
 	return label
+end
+
+local function filter_guassian(label, maxPixelSize, stdv)
+	local label_new = torch.FloatTensor(label:size(1), label:size(2), maxPixelSize):zero() 
+	local pixels = torch.range(0,maxPixelSize+1):float()
+
+	local k = 0
+	
+	for i = 1, label:size(1) do
+		local keypoints = label[i]
+		local new_keypoints = label_new[i]
+		for j = 1, label:size(2) do
+			local kp = keypoints[j]
+			if kp ~= -1 then
+				local new_kp = new_keypoints[j]
+				new_kp:add(pixels, -kp)
+				new_kp:cmul(new_kp)
+				new_kp:div(2*stdv*stdv)
+				new_kp:mul(-1)
+				new_kp:exp(new_kp)
+				new_kp:div(math.sqrt(2*math.pi)*stdv)
+			else
+				k = k + 1
+			end
+		end
+	end
+	return label_new
+	
+end
+
+function dataset:get_label_filtered(part, indices)
+	assert(part == 'fullbody')	-- currently only fullbody allowed
+
+	-- load regular labels, which is 28 values for 14 joints
+	local label_ori = self:get_label(part, indices)
+
+	-- scale back to 64*128
+	local w = 64
+	local h = 128
+	label_ori:cmul(torch.repeatTensor(torch.Tensor({w,h}),label_ori:size(1),14))
+
+	-- split x and y
+	local label_x = label_ori:index(2, torch.LongTensor{1,3,5,7,9,11,13,15,17,19,21,23,25,27})
+	local label_y = label_ori:index(2, torch.LongTensor{2,4,6,8,10,12,14,16,18,20,22,24,26,28})
+
+	-- Guassian filter; perform twice for x and y respectively
+	local label_x_filt = filter_guassian(label_x, w, 0.8)
+	local label_y_filt = filter_guassian(label_y, h, 0.8)
+
+	-- concatenate x and y
+	local label_xy = torch.cat(label_x_filt, label_y_filt, 3)
+
+	-- reshape as a single vector 
+	local label = torch.reshape(label_xy, label_xy:size(1), label_xy:size(2)*label_xy:size(3))
+	
+	-- test1
+	--print(label_xy[1][1][30])
+	--print(label[1][30][1])
+	-- test2
+	--label_tmp = torch.reshape(label, label:size(1), label_xy:size(2), label_xy:size(3))
+	--print(label_xy[1][1][30])
+	--print(label_tmp[1][1][30])
+	--print(label_tmp:size())
+
+	return label
+
 end
 
 

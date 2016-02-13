@@ -1,3 +1,27 @@
+function find_joint_from_filt(label)
+	-- here input argument is a filtered 'long' label
+
+	-- reshape 
+	local label_res = torch.reshape(label, 14, (64+128))
+
+	-- split x and y
+	local label_x = label_res[{ {}, {1,64}}]
+	local label_y = label_res[{ {}, {65,(64+128)} }]
+	assert(label_y:size(1) == 14 and label_y:size(2) == 128)
+
+	-- find out joint location. (Here, I find maximum, but there are possible improvement)
+	local label_joint_x = torch.max(label_x,2)
+	local label_joint_y = torch.max(label_y,2)
+	assert(label_joint_x:size(1) == 14)
+
+	-- rearrange to [x1,y1,x2,y2, ... , x14,y14]
+	local label_joint = torch.cat(label_joint_x, label_joint_y, 2)
+	label_joint = torch.reshape(label_joint, 28)
+
+	return label_joint 
+end
+
+
 function convert_multiOut_to_singleOut(pred, gt)
 	-- Assumption: PR_multi (2 table) -->  PR_full (28 size tensor)
 	local pred_tmp = gt:clone():fill(0)
@@ -37,7 +61,7 @@ end
 
 
 function compute_distance_joint (dataset, nJoints) 
-	local pred_save = torch.Tensor(dataset.label:size(1), dataset.label:size(2))
+	local pred_save = torch.Tensor(dataset.label:size(1), nJoints*2)
 	local dist_joints = torch.zeros(nJoints)
 	for i=1, dataset.label:size(1) do
 		local gt = dataset.label[i]
@@ -45,6 +69,11 @@ function compute_distance_joint (dataset, nJoints)
 		-- prediction resize in case it's PR_multi
 		if type(pred) == 'table' then
 			pred = convert_multiOut_to_singleOut(pred, gt)
+		end
+		-- gt and pred resize in case it's filtered output
+		if pred:size(1) == 14*(128+64) or gt:size(1) == 14*(128+64) then
+			pred = find_joint_from_filt(pred)
+			gt = find_joint_from_filt(gt)
 		end
 		pred_save[{i,{}}] = pred:double()
 		for j=1,nJoints do
@@ -75,8 +104,13 @@ function compute_distance_MSE (dataset)
 		if type(pred) == 'table' then
 			pred = convert_multiOut_to_singleOut(pred, gt)
 		end
+		-- gt and pred resize in case it's filtered output
+		if pred:size(1) == 14*(128+64) or gt:size(1) == 14*(128+64) then
+			pred = find_joint_from_filt(pred)
+			gt = find_joint_from_filt(gt)
+		end
 		local MSE_each = 0
-		for j = 1,dataset.label:size(2) do
+		for j = 1,nJoints*2 do
 			local diff = gt[j] - pred[j]
 			MSE_each = MSE_each + math.pow(diff,2)
 		end
@@ -126,8 +160,16 @@ function compute_PCP(dataset)
 			pred = convert_multiOut_to_singleOut(pred, gt)
 		end
 
+		-- gt and pred resize in case it's filtered output
+		if pred:size(1) == 14*(128+64) or gt:size(1) == 14*(128+64) then
+			pred = find_joint_from_filt(pred)
+			gt = find_joint_from_filt(gt)
+		end
+		assert(pred:size(1) == 28)
+
+
 		-- Case1: fullbody	
-		if opt.t == 'PR_full' or opt.t == 'PR_multi' then
+		if opt.t == 'PR_full' or opt.t == 'PR_multi' or opt.t == 'PR_multi_test' or opt.t == 'PR_filt' then
 			nParts = 11
 
 			jidx_part = torch.Tensor(nParts,2)

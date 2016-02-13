@@ -18,22 +18,20 @@ paths.dofile('misc_utils.lua')
 cutorch.setDevice(opt.GPU)
 paths.dofile('load_settings.lua')
 
-nPoolSize = 27
-nTestData = 27
+nTestData = 1
+pathtojoints = '/home/namhoon/Downloads/data_towncenter/frames_out'
 
 
 -- 1. load and normalize data
 -- 
-mydataloader = dataLoader{filename = '../data/lists/testimages.txt'}
+mydataloader = dataLoader{filename = '../data/lists/testcrop.txt'}
 
-idx_pool = torch.randperm(nPoolSize)
-idx_test = idx_pool:narrow(1,1,nTestData)
-
-testset_data = mydataloader:get_randomly_indices(idx_test)
-testset_label = mydataloader:get_label(part, idx_test)
+indices = torch.range(1,nTestData)
+testset_data = mydataloader:get_randomly_indices(indices)
+testset_label = mydataloader:get_label_fortest(indices, pathtojoints)
 testset = {data = testset_data, label = testset_label}
 
---print (testset)
+print (testset)
 assert(testset.label:size(1) == nTestData); assert(testset.label:size(2) == nJoints*2)
 
 
@@ -56,12 +54,16 @@ print(model)
 -- load existing model
 model = torch.load(modelSaved)
 
+-- load mean and stdv
+mean = matio.load('meanstd/meanForPD.mat')
+stdv = matio.load('meanstd/stdvForPD.mat')
+
 
 -- test the network
 --
 for i=1,3 do
-	testset.data[{ {}, {i}, {}, {} }]:add(-mean[i])
-	testset.data[{ {}, {i}, {}, {} }]:div(stdv[i])
+	testset.data[{ {}, {i}, {}, {} }]:add(-mean.x[i][1])
+	testset.data[{ {}, {i}, {}, {} }]:div(stdv.x[i][1])
 end
 
 PCP_te = compute_PCP(testset)

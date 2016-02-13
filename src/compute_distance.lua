@@ -184,7 +184,7 @@ function compute_PCP(dataset)
 
 
 		-- Case1: fullbody	
-		if opt.t == 'PR_full' or opt.t == 'PR_multi' or opt.t == 'PR_multi_test' or opt.t == 'PR_filt' then
+		if opt.t == 'PR_full' or opt.t == 'PR_multi' or opt.t == 'PR_multi_test' or opt.t == 'PR_filt' or opt.t == 'PR_filt_struct' then
 			nParts = 11
 
 			jidx_part = torch.Tensor(nParts,2)

@@ -266,9 +266,27 @@ function dataset:get_label_filt(part, indices)
 	local label_ori = self:get_label(part, indices)
 
 	-- convert to spatial labels
-	local label = convert_labels_to_spatialLabels(label_ori)
-	return label, label_ori
+	local label_filt = convert_labels_to_spatialLabels(label_ori)
+	return label_filt, label_ori
 end
+
+--function dataset:get_label_filt_struct(part, indices)
+--	assert(part == 'fullbody')  -- consider all body, but each joints separately
+--
+--	-- load regular labels, which is 28 values for 14 joints
+--	local label_ori = self:get_label(part, indices)
+--
+--	-- convert to spatial labels
+--	local label_filt = convert_labels_to_spatialLabels(label_ori)
+--	
+--	-- reshape 2688 -> 14*(64+128) : 14 joints separately
+--	label_struct = torch.reshape(label_filt, label_filt:size(1), nJoints, W+H)
+--	print(label_filt:size())
+--	print(label_struct:size())
+
+--	return label_struct
+
+--end
 
 
 return dataset

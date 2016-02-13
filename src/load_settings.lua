@@ -31,6 +31,10 @@ elseif opt.t == 'PR_filt' then
 	part = 'fullbody'; nJoints = 14; modelNumber = 11;
 	modelSaved = ' ';
 
+elseif opt.t == 'PR_filt_struct' then
+	part = 'fullbody'; nJoints = 14; modelNumber = 12;
+	modelSaved = ' ';
+
 elseif opt.t == 'PDPR' then
 	part = 'fullbody'; nJoints = 14; modelNumber = 0;
 	modelSaved = ' ';

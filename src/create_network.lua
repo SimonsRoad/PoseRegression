@@ -335,7 +335,7 @@ function create_network_model10()
 
 end
 
-function create_network_model11()
+function create_network_model11()			-- spatial filter; large output
 	
 	require 'nn';
 
@@ -364,7 +364,7 @@ function create_network_model11()
 	regression:add(nn.Linear(16*32*16, 2688))
 	regression:add(nn.ReLU())
 
-	net:add(nn.Linear(2688, 2688))
+	regression:add(nn.Linear(2688, 2688))
 
 	regression:cuda()
 

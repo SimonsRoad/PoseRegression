@@ -1,4 +1,30 @@
-function find_joint_from_filt(label)
+function convert_multi_filt_label(label)
+	-- Assume the input label is a TABLE
+	assert(table.getn(label)==14)
+	
+	local label_new = torch.Tensor(2*nJoints):cuda()
+	for i = 1, nJoints do
+		local label_joint = label[i]
+		local label_x = label_joint[{{1,W}}]
+		local label_y = label_joint[{{W+1,W+H}}]
+		
+		local _, idx_max_x = torch.max(label_x,1)
+		local _, idx_max_y = torch.max(label_y,1)
+
+		idx_max_x:float()
+		idx_max_y:float()
+		idx_max_x:div(W)
+		idx_max_y:div(H)
+
+		label_new[(2*i)-1] = idx_max_x
+		label_new[(2*i)] = idx_max_y
+	end
+	
+	return label_new
+
+end
+
+function convert_filt_label(label)
 	-- here input argument is a filtered 'long' label
 	-- This should be actually inverse filtering.. (iFFT can do this..)
 
@@ -29,8 +55,10 @@ function find_joint_from_filt(label)
 end
 
 
-function convert_multiOut_to_singleOut(pred, gt)
+function convert_multi_label(pred)
 	-- Assumption: PR_multi (2 table) -->  PR_full (28 size tensor)
+	assert(pred[1]:size() == 16 and pred[2]:size() == 12)
+	
 	local pred_tmp = torch.Tensor(2*nJoints)
 	pred_tmp[1] = pred[1][1]
 	pred_tmp[2] = pred[1][2]
@@ -74,18 +102,30 @@ function compute_distance_joint (dataset, nJoints)
 		local gt = dataset.label[i]
 		local pred = model:forward(dataset.data[i])
 
-		-- prediction resize in case it's PR_multi
+		-- resize pred
 		if type(pred) == 'table' then
-			pred = convert_multiOut_to_singleOut(pred, gt)
+			if table.getn(pred) == 2 then			-- structured & no filter
+				pred = convert_multi_label(pred)
+			elseif table.getn(pred) == 14 then		-- structured & filter
+				gt = convert_filt_label(gt)
+				pred = convert_multi_filt_label(pred)
+			end
 		end
 
-		-- gt and pred resize in case it's filtered output
-		if pred:size(1) == LLABEL or gt:size(1) == LLABEL then
-			pred = find_joint_from_filt(pred)
-			gt = find_joint_from_filt(gt)
+		-- case 2: a long filtered label
+		if pred:size(1) == LLABEL and gt:size(1) == LLABEL then
+			assert(LLABEL == 14*(64+128))
+			pred = convert_filt_label(pred)
+			gt = convert_filt_label(gt)
 		end
 
+		-- At this stage, the size of lable should be 28
+		assert(pred:size(1) == 2*nJoints)
+
+		-- save prediction for later use
 		pred_save[{i,{}}] = pred:double()
+
+		-- compute joint distance
 		for j=1,nJoints do
 			local xdiff = gt[2*j-1] - pred[2*j-1]
 			local ydiff = gt[2*j] - pred[2*j]
@@ -111,17 +151,27 @@ function compute_distance_MSE (dataset)
 		local gt = dataset.label[i]
 		local pred = model:forward(dataset.data[i])
 
-		-- prediction resize in case it's PR_multi
+		-- resize pred
 		if type(pred) == 'table' then
-			pred = convert_multiOut_to_singleOut(pred, gt)
+			if table.getn(pred) == 2 then			-- structured & no filter
+				pred = convert_multi_label(pred)
+			elseif table.getn(pred) == 14 then		-- structured & filter
+				gt = convert_filt_label(gt)
+				pred = convert_multi_filt_label(pred)
+			end
 		end
 
-		-- gt and pred resize in case it's filtered output
-		if pred:size(1) == LLABEL or gt:size(1) == LLABEL then
-			pred = find_joint_from_filt(pred)
-			gt = find_joint_from_filt(gt)
+		-- case 2: a long filtered label
+		if pred:size(1) == LLABEL and gt:size(1) == LLABEL then
+			assert(LLABEL == 14*(64+128))
+			pred = convert_filt_label(pred)
+			gt = convert_filt_label(gt)
 		end
 
+		-- At this stage, the size of lable should be 28
+		assert(pred:size(1) == 2*nJoints)
+
+		-- compute MSE
 		local MSE_each = 0
 		for j = 1,nJoints*2 do
 			local diff = gt[j] - pred[j]
@@ -168,20 +218,25 @@ function compute_PCP(dataset)
 		local gt = dataset.label[iSmp]
 		local pcp_cnt_smp = 0
 
-		-- prediction resize in case it's PR_multi
+		-- resize pred
 		if type(pred) == 'table' then
-			pred = convert_multiOut_to_singleOut(pred, gt)
+			if table.getn(pred) == 2 then			-- structured & no filter
+				pred = convert_multi_label(pred)
+			elseif table.getn(pred) == 14 then		-- structured & filter
+				gt = convert_filt_label(gt)
+				pred = convert_multi_filt_label(pred)
+			end
 		end
 
-		-- gt and pred resize in case it's filtered output
-		if pred:size(1) == LLABEL or gt:size(1) == LLABEL then
-			pred = find_joint_from_filt(pred)
-			gt = find_joint_from_filt(gt)
+		-- case 2: a long filtered label
+		if pred:size(1) == LLABEL and gt:size(1) == LLABEL then
+			assert(LLABEL == 14*(64+128))
+			pred = convert_filt_label(pred)
+			gt = convert_filt_label(gt)
 		end
 
 		-- At this stage, the size of lable should be 28
 		assert(pred:size(1) == 2*nJoints)
-
 
 		-- Case1: fullbody	
 		if opt.t == 'PR_full' or opt.t == 'PR_multi' or opt.t == 'PR_multi_test' or opt.t == 'PR_filt' or opt.t == 'PR_filt_struct' then

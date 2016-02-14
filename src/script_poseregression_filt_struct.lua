@@ -87,7 +87,7 @@ cudnn.convert(model, cudnn)
 -- 
 --criterion1 = nn.MSECriterion()
 --criterion2 = nn.MSECriterion()
-criterion = nn.ParallelCriterion():add(nn.MSECriterion()):add(nn.MSECriterion()):add(nn.MSECriterion()):add(nn.MSECriterion()):add(nn.MSECriterion()):add(nn.MSECriterion()):add(nn.MSECriterion()):add(nn.MSECriterion()):add(nn.MSECriterion()):add(nn.MSECriterion()):add(nn.MSECriterion()):add(nn.MSECriterion()):add(nn.MSECriterion()):add(nn.MSECriterion())
+criterion = nn.ParallelCriterion():add(nn.MSECriterion(), 1/14):add(nn.MSECriterion(), 1/14):add(nn.MSECriterion(), 1/14):add(nn.MSECriterion(), 1/14):add(nn.MSECriterion(), 1/14):add(nn.MSECriterion(), 1/14):add(nn.MSECriterion(), 1/14):add(nn.MSECriterion(), 1/14):add(nn.MSECriterion(), 1/14):add(nn.MSECriterion(), 1/14):add(nn.MSECriterion(), 1/14):add(nn.MSECriterion(), 1/14):add(nn.MSECriterion(), 1/14):add(nn.MSECriterion(), 1/14)
 criterion = criterion:cuda()
 
 

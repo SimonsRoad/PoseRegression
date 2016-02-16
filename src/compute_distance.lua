@@ -57,7 +57,7 @@ end
 
 function convert_multi_label(pred)
 	-- Assumption: PR_multi (2 table) -->  PR_full (28 size tensor)
-	assert(pred[1]:size() == 16 and pred[2]:size() == 12)
+	assert(pred[1]:size(1) == 16 and pred[2]:size(1) == 12)
 	
 	local pred_tmp = torch.Tensor(2*nJoints)
 	pred_tmp[1] = pred[1][1]

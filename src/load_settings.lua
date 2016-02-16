@@ -3,6 +3,8 @@
 -- Namhoon Lee, The Robotics Institute, Carnegie Mellon University
 --]]
 
+local SAVEDIR = '/home/namhoon/develop/PoseRegression/save/'
+
 
 if opt.t == 'PR_full' then
 	part = 'fullbody'; nJoints = 14; modelNumber = 9;   -- nJoints:14, modelNumber:9
@@ -33,7 +35,7 @@ elseif opt.t == 'PR_filt' then
 
 elseif opt.t == 'PR_filt_struct' then
 	part = 'fullbody'; nJoints = 14; modelNumber = 12;
-	modelSaved = ' ';
+	modelSaved = SAVEDIR .. opt.t .. '/option,t=PR_filt_struct/t_SatFeb1322:37:392016/PR_filt_struct_model_50.t7'
 
 elseif opt.t == 'PDPR' then
 	part = 'fullbody'; nJoints = 14; modelNumber = 0;

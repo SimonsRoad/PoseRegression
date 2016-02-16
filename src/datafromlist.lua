@@ -18,10 +18,10 @@ opt = opts.parse(arg)
 local sampleSize = {3, 128, 64}
 
 local function loadImage(path)
-   local input = image.load(path, 3, 'float')   
-   -- resize
-   input = image.scale(input, '64x128') 
-   return input
+   	local input = image.load(path, 3, 'float')   
+   	-- resize
+   	input = image.scale(input, '64x128') 
+   	return input
 end
 
 
@@ -65,17 +65,10 @@ function dataset:tableToOutput(dataTable)
 end
 
 function dataset:sampleHook(path)
-   local input = loadImage(path)
-
-   local out
-   out = input:clone()
-      
-   -- mean/std
-   for i=1,3 do -- channels
-      if mean then out[{{i},{},{}}]:add(-mean[i]) end
-      if std then out[{{i},{},{}}]:div(std[i]) end
-   end
-   return out
+   	local input = loadImage(path)
+   	local out
+   	out = input:clone()
+   	return out
 end
 
 function dataset:get(i1, i2)
@@ -112,13 +105,16 @@ end
 
 function dataset:get_randomly_indices(indices)
 	local dataTable = {}
+	local ltTable = {}
 	for i=1, indices:size(1) do
 		local imgpath = ffi.string(torch.data(self.imagePath[indices[i]]), self.pathLength[indices[i]])
-		local out = self:sampleHook(imgpath)
+		local out, lt = self:sampleHook(imgpath)
 		table.insert(dataTable, out)
+		table.insert(ltTable, lt)
 	end
 	local data = self:tableToOutput(dataTable)
-	return data
+
+	return data, ltTable
 end
 
 function dataset:get_samplename(idx)
@@ -138,7 +134,9 @@ function dataset:get_jointpath(imgpath)
 	local id 	= self:get_substring(imgpath, 'id', 4)
 	local pose  = self:get_substring(imgpath, 'pose', 4)
 	local rot   = self:get_substring(imgpath, 'rot', 2)
-	local jointpath = '/home/namhoon/develop/PoseRegression/data/rendout/joints_norm/2D/loc' .. loc .. '/Ped_id' .. id .. '_pose' .. pose .. '_rot' .. rot .. '.txt'
+	--local jointpath = '/home/namhoon/develop/PoseRegression/data/rendout/joints_norm/2D/loc' .. loc .. '/Ped_id' .. id .. '_pose' .. pose .. '_rot' .. rot .. '.txt'
+	--big box. test!
+	local jointpath = '/home/namhoon/develop/PoseRegression/data/rendout/bigboxtest/joints_norm_bb/2D/loc' .. loc .. '/Ped_id' .. id .. '_pose' .. pose .. '_rot' .. rot .. '.txt'
 	return jointpath
 end
 
@@ -246,7 +244,7 @@ function dataset:get_label_fortest(indices, pathtojoints)
 	return label
 end
 
-function dataset:get_label(part, indices) 
+function dataset:get_label(part, indices, ltTable) 
 	local label
 	if part == 'fullbody' then
 		label =  self:get_label_fullbody(indices)
@@ -267,7 +265,106 @@ function dataset:get_label_filt(part, indices)
 
 	-- convert to spatial labels
 	local label_filt = convert_labels_to_spatialLabels(label_ori)
+
+	print(label_filt)
+	adf=adf+1
 	return label_filt, label_ori
+end
+
+local function loadImageCrop(path, labelOri)
+
+	-- bw_outer, bh_outer
+	local bw_outer = 90
+	local bh_outer = bw_outer*2
+	local bw_crop = sampleSize[3]
+	local bh_crop = sampleSize[2]
+	local marginRatio = 0.2
+
+	-- compute bw_tight, bh_tight
+	local label_res = torch.reshape(labelOri, 14, 2)
+	local label_x_min = torch.min(label_res[{{}, {1}}])
+	local label_x_max = torch.max(label_res[{{}, {1}}])
+	local label_y_min = torch.min(label_res[{{}, {2}}])
+	local label_y_max = torch.max(label_res[{{}, {2}}])
+
+	-- lt_tight, rb_tight
+	local lt_tight_x = label_x_min * bw_outer
+	local lt_tight_y = label_y_min * bh_outer
+	local rb_tight_x = label_x_max * bw_outer
+	local rb_tight_y = label_y_max * bh_outer
+	local bw_tight = rb_tight_x - lt_tight_x
+	local bh_tight = rb_tight_y - lt_tight_y
+
+	-- lt_crop, rb_crop (min and max)
+	local lt_crop_x_max, lt_crop_y_max
+	if lt_tight_x > bw_outer-bw_crop then 
+		lt_crop_x_max = bw_outer - bw_crop
+	else 
+		lt_crop_x_max = lt_tight_x 
+	end
+	if lt_tight_y > bh_outer-bh_crop then 
+		lt_crop_y_max = bh_outer - bh_crop 
+	else 
+		lt_crop_y_max = lt_tight_y 
+	end
+	
+	local lt_crop_x_min, lt_crop_y_min
+	if rb_tight_x > bw_crop then
+		lt_crop_x_min = rb_tight_x - bw_crop
+	else
+		lt_crop_x_min = 1e-2
+	end
+	if rb_tight_y > bh_crop then
+		lt_crop_y_min = rb_tight_y - bh_crop 
+	else
+		lt_crop_y_min = 1e-2
+	end
+
+	-- randomly select lt
+	local lt_x_sel = math.ceil(torch.uniform(lt_crop_x_min, lt_crop_x_max-1))
+	local lt_y_sel = math.ceil(torch.uniform(lt_crop_y_min, lt_crop_y_max-1))
+
+	-- load image, resize and crop
+	local input = image.load(path, 3, 'float')
+	input = image.scale(input, bw_outer .. 'x' .. bh_outer)	
+	input = image.crop(input, lt_x_sel, lt_y_sel, lt_x_sel+bw_crop, lt_y_sel+bh_crop)
+	assert(input:size(2) == bh_crop and input:size(3) == bw_crop)
+
+	-- transform label 
+	local scalar = torch.repeatTensor(torch.Tensor({bw_outer,bh_outer}), 14, 1)
+	local label = torch.cmul(label_res, scalar)
+	local translation = torch.repeatTensor(torch.Tensor({lt_x_sel,lt_y_sel}),14)
+	label:add(-translation)
+	scalar = torch.repeatTensor(torch.Tensor({bw_crop,bh_crop}), 14, 1)
+	label:cdiv(scalar)
+	label = torch.reshape(label, 28)
+
+	-- sanity check
+	for i=1, label:size(1) do
+		if label[i] <= 0.0 or label[i] >= 1.0 then
+			assert(false, 'this should not happen!')
+		end
+	end
+
+	return input, label
+end
+
+function dataset:get_crop_label(indices)
+	local imagetensor = torch.Tensor(indices:size(1), 3, 128, 64)
+	local labeltensor = torch.Tensor(indices:size(1), 28)
+
+	local labelOri= self:get_label_fullbody(indices)
+
+	for i=1, indices:size(1) do
+		local imgpath = ffi.string(torch.data(self.imagePath[indices[i]]), self.pathLength[indices[i]])
+		local image, label = loadImageCrop(imgpath, labelOri[i])
+		imagetensor[i] = image
+		labeltensor[i] = label
+	end
+
+	local out = {data = imagetensor, label = labeltensor}
+
+	return out
 end
 
 --function dataset:get_label_filt_struct(part, indices)

@@ -27,7 +27,7 @@ local loss_epoch
 function train()
 
 	batchNumber = 0
-	--cutorch.synchronize()
+	cutorch.synchronize()
 
 	-- set the dropouts to training mode
 	model:training()
@@ -60,7 +60,7 @@ function train()
 		trainBatch(inputs, labels)
 	end
 
-	--cutorch.synchronize()
+	cutorch.synchronize()
 
 	loss_epoch = loss_epoch / opt.epochSize
 
@@ -106,7 +106,7 @@ local parameters, gradParameters = model:getParameters()
 
 -- 4. trainBatch -- used by train() to train a singel batch after the data is loaded.
 function trainBatch(inputsCPU, labelsCPU)
-	--cutorch.synchronize()
+	cutorch.synchronize()
 	collectgarbage()
 	local dataLoadingTime = dataTimer:time().real
 	timer:reset()
@@ -137,9 +137,11 @@ function trainBatch(inputsCPU, labelsCPU)
 	optim.sgd(feval, parameters, optimState)
 
 	-- DataParallelTabel's syncParameters
-	--model:apply(function(m) if m.syncParameters then m:syncParameters() end end)
+	if model.needsSync then
+		model:syncParameters()
+	end
 
-	--cutorch.synchronize()
+	cutorch.synchronize()
 	batchNumber = batchNumber + 1
 	loss_epoch = loss_epoch + err
 

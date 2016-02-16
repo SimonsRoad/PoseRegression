@@ -20,28 +20,24 @@ paths.dofile('misc_utils.lua')
 cutorch.setDevice(opt.GPU)
 paths.dofile('load_settings.lua')
 
-nPoolSize = 13344
-nTrainData = 10000
-nTestData = 2000
+nPoolSize = 672--13344
+nTrainData = 30
+nTestData = 10
 
 
 -- 1. load and normalize data
 -- 
-mydataloader = dataLoader{filename = '../data/lists/pos.txt'}
+--mydataloader = dataLoader{filename = '../data/lists/pos.txt'}
+mydataloader = dataLoader{filename = '../data/lists/pos_bb.txt'}	-- big box test
 
 idx_pool = torch.randperm(nPoolSize)
 idx_train = idx_pool:narrow(1,1,nTrainData)
 idx_test = idx_pool:narrow(1,nTrainData+1,nTestData)
 
-trainset_data = mydataloader:get_randomly_indices(idx_train)
-trainset_label = mydataloader:get_label(part, idx_train)
-trainset = {data = trainset_data, label = trainset_label} 
+trainset = mydataloader:get_crop_label(idx_train)
+testset  = mydataloader:get_crop_label(idx_test)
 
-testset_data = mydataloader:get_randomly_indices(idx_test)
-testset_label = mydataloader:get_label(part, idx_test)
-testset = {data = testset_data, label = testset_label}
-
---print (trainset); print (testset)
+print (trainset); print (testset)
 assert(testset.label:size(1) == nTestData); assert(testset.label:size(2) == nJoints*2)
 
 setmetatable(trainset,
@@ -80,7 +76,7 @@ cudnn.convert(model, cudnn)
 -- 
 --criterion1 = nn.MSECriterion()
 --criterion2 = nn.MSECriterion()
-criterion = nn.ParallelCriterion():add(nn.MSECriterion()):add(nn.MSECriterion())
+criterion = nn.ParallelCriterion():add(nn.MSECriterion(), 8/14):add(nn.MSECriterion(), 6/14)
 criterion = criterion:cuda()
 
 

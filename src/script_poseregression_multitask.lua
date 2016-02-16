@@ -12,7 +12,6 @@ paths.dofile('util.lua')
 paths.dofile('datafromlist.lua')
 paths.dofile('create_network.lua')
 paths.dofile('compute_distance.lua')
-paths.dofile('save_results.lua')
 paths.dofile('misc_utils.lua')
 
 
@@ -20,9 +19,9 @@ paths.dofile('misc_utils.lua')
 cutorch.setDevice(opt.GPU)
 paths.dofile('load_settings.lua')
 
-nPoolSize = 672--13344
-nTrainData = 30
-nTestData = 10
+nPoolSize = 13344
+nTrainData = 10000
+nTestData = 2000
 
 
 -- 1. load and normalize data

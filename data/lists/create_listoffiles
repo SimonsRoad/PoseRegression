@@ -3,6 +3,15 @@
 #pathToImages='/home/namhoon/Dropbox/cropped'
 #outFile='testimages.txt'
 #find $pathToImages -name "*.png" ! -type d > $outFile
-pathToImages='/home/namhoon/Downloads/data_towncenter/frames_out'
-outFile='testcrop.txt'
+
+#pathToImages='/home/namhoon/Downloads/data_towncenter/frames_out'
+#outFile='testcrop.txt'
+#find $pathToImages -name "*.jpg" ! -type d > $outFile
+
+#pathToImages='/home/namhoon/develop/PoseRegression/data/rendout/bigboxtest/pos_bb'
+#outFile='pos_bb.txt'
+#find $pathToImages -name "*.jpg" ! -type d > $outFile
+
+pathToImages='/home/namhoon/develop/PoseRegression/data/rendout/pos/loc045001'
+outFile='pos.txt'
 find $pathToImages -name "*.jpg" ! -type d > $outFile

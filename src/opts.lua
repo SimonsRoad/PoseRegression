@@ -23,7 +23,7 @@ function M.parse(arg)
                'subdirectory in which to save/log experiments')
     --cmd:option('-manualSeed',         2, 'Manually set RNG seed')
     cmd:option('-GPU',                1, 'Default preferred GPU')
-    cmd:option('-nGPU',               4, 'Number of GPUs to use by default')
+    cmd:option('-nGPU',               1, 'Number of GPUs to use by default')
     cmd:option('-backend',      'cudnn', 'Options: cudnn | ccn2 | cunn')
 	------------- Task options ------------------------
 	cmd:option('-t',		   'noname', 'The name of task')

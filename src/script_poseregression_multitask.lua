@@ -62,6 +62,7 @@ end
 print('Saving everything to: ' .. opt.save)
 os.execute('mkdir -p ' .. opt.save)
 matio.save(paths.concat(opt.save,string.format('testdata_%s.mat', opt.t)), testset)
+matio.save(paths.concat(opt.save,string.format('traindata_%s.mat', opt.t)), trainset)
 
 
 -- 2. network

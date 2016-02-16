@@ -274,6 +274,8 @@ function create_network_model9() -- same as 6; full-body, but larger output.
 	net:add(nn.Linear(512, 28))
 	net:add(nn.ReLU())
 
+	net:cuda()
+
 	return net
 end
 

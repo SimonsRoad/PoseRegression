@@ -84,7 +84,6 @@ cudnn.convert(model, cudnn)
 criterion = nn.MSECriterion()
 
 -- *change to cuda 
-model = model:cuda()
 criterion = criterion:cuda()
 trainset.data = trainset.data:cuda()
 trainset.label = trainset.label:cuda()

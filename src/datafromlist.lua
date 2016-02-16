@@ -38,19 +38,19 @@ function dataset:__init(...)
 	for k,v in pairs(args) do self[k] = v end
 	self.numSamples = tonumber(sys.fexecute("cat " .. self.filename .. " |  wc -l"))
 	self.maxFileLength = tonumber(sys.fexecute("cat " .. self.filename .. " |  awk '{print length($0)}' | datamash max 1"))
-   self.imagePath = torch.CharTensor() -- path to each image in dataset
+   	self.imagePath = torch.CharTensor() -- path to each image in dataset
 	self.imagePath:resize(self.numSamples, self.maxFileLength)
-   local i_data = self.imagePath:data()
-   local file = assert(io.open(self.filename, "r"))
-   self.pathLength = torch.LongTensor(self.numSamples):fill(0)   
-   local count = 1
-   for line in file:lines() do
-      self.pathLength[count] = line:len()
-      ffi.copy(i_data, line)
-      i_data = i_data + self.maxFileLength
-      count = count + 1
-   end
-   file:close()
+   	local i_data = self.imagePath:data()
+   	local file = assert(io.open(self.filename, "r"))
+   	self.pathLength = torch.LongTensor(self.numSamples):fill(0)   
+   	local count = 1
+   	for line in file:lines() do
+    	self.pathLength[count] = line:len()
+      	ffi.copy(i_data, line)
+      	i_data = i_data + self.maxFileLength
+      	count = count + 1
+   	end
+   	file:close()
 end
 
 function dataset:tableToOutput(dataTable)

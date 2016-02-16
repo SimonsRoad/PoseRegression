@@ -27,8 +27,7 @@ nTestData = 10
 
 -- 1. load and normalize data
 -- 
---mydataloader = dataLoader{filename = '../data/lists/pos.txt'}
-mydataloader = dataLoader{filename = '../data/lists/pos_bb.txt'}	-- big box test
+mydataloader = dataLoader{filename = '../data/lists/pos.txt'}
 
 idx_pool = torch.randperm(nPoolSize)
 idx_train = idx_pool:narrow(1,1,nTrainData)

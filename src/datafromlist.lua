@@ -105,16 +105,14 @@ end
 
 function dataset:get_randomly_indices(indices)
 	local dataTable = {}
-	local ltTable = {}
 	for i=1, indices:size(1) do
 		local imgpath = ffi.string(torch.data(self.imagePath[indices[i]]), self.pathLength[indices[i]])
-		local out, lt = self:sampleHook(imgpath)
+		local out = self:sampleHook(imgpath)
 		table.insert(dataTable, out)
-		table.insert(ltTable, lt)
 	end
 	local data = self:tableToOutput(dataTable)
 
-	return data, ltTable
+	return data
 end
 
 function dataset:get_samplename(idx)

@@ -12,11 +12,11 @@ paths.dofile('util.lua')
 paths.dofile('datafromlist.lua')
 paths.dofile('create_network.lua')
 paths.dofile('compute_distance.lua')
-paths.dofile('save_results.lua')
 paths.dofile('misc_utils.lua')
 
 
--- 0. settings + loading
+-- 0. settings 
+cutorch.setDevice(opt.GPU)
 paths.dofile('load_settings.lua')
 
 nPoolSize = 13344
@@ -32,14 +32,19 @@ idx_pool = torch.randperm(nPoolSize)
 idx_train = idx_pool:narrow(1,1,nTrainData)
 idx_test = idx_pool:narrow(1,nTrainData+1,nTestData)
 
+trainset = mydataloader:get_crop_label(idx_train)
+testset  = mydataloader:get_crop_label(idx_test)
+
+--[[
 trainset_data = mydataloader:get_randomly_indices(idx_train)
 trainset_label = mydataloader:get_label(part, idx_train)
 trainset = {data = trainset_data, label = trainset_label} 
 testset_data = mydataloader:get_randomly_indices(idx_test)
 testset_label = mydataloader:get_label(part, idx_test)
 testset = {data = testset_data, label = testset_label}
+--]]
 
---print (trainset); print (testset)
+print (trainset); print (testset)
 assert(testset.label:size(1) == nTestData);assert(testset.label:size(2) == nJoints*2)
 
 setmetatable(trainset,
@@ -87,13 +92,12 @@ testset.data = testset.data:cuda()
 testset.label = testset.label:cuda()
 
 -- *Optional
-cutorch.setDevice(opt.GPU)
 print(opt)
 
 
 -- 4. (NEW) TRAINING  
 --
-TRAINING = false
+TRAINING = true
 if TRAINING then
 	paths.dofile('train.lua')
 	epoch = opt.epochNumber
@@ -117,20 +121,22 @@ end
 
 PCP_te = compute_PCP(testset)
 PCP_tr = compute_PCP(trainset)
-pred_save_te, errPerJoint_te, meanErrPerJoint_te = compute_distance_joint(testset, nJoints)
-pred_save_tr, errPerJoint_tr, meanErrPerJoint_tr = compute_distance_joint(trainset, nJoints)
-avgMSE_te = compute_distance_MSE(testset)
-avgMSE_tr = compute_distance_MSE(trainset)
-
 print(string.format('PCP (test) :   %.2f(%%)', PCP_te))
 print(string.format('PCP (train):   %.2f(%%)', PCP_tr))
+
+pred_save_te, errPerJoint_te, meanErrPerJoint_te = compute_distance_joint(testset, nJoints)
+pred_save_tr, errPerJoint_tr, meanErrPerJoint_tr = compute_distance_joint(trainset, nJoints)
 print(string.format('meanErrPerJoint (test) :   %.4f', meanErrPerJoint_te))
 print(string.format('meanErrPerJoint (train):   %.4f', meanErrPerJoint_tr))
+
+avgMSE_te = compute_distance_MSE(testset)
+avgMSE_tr = compute_distance_MSE(trainset)
 print(string.format('avgMSE (test) :   %.4f', avgMSE_te))
 print(string.format('avgMSE (train):   %.4f', avgMSE_tr))
 
 -- To check the results on images, save prediction outputs into .mat file
 matio.save(paths.concat(opt.save,string.format('pred_te_%s.mat', opt.t)), pred_save_te)
+matio.save(paths.concat(opt.save,string.format('pred_tr_%s.mat', opt.t)), pred_save_tr)
 
 
 

@@ -214,10 +214,6 @@ function compute_PCP(dataset)
 
 	for iSmp = 1, dataset.label:size(1) do 			-- iterate through data samples
 		
-		print(dataset.data:size())
-		print(dataset.data[iSmp]:size())
-		adf=adf+1
-
 		local pred = model:forward(dataset.data[iSmp])
 		local gt = dataset.label[iSmp]
 		local pcp_cnt_smp = 0

@@ -20,8 +20,8 @@ cutorch.setDevice(opt.GPU)
 paths.dofile('load_settings.lua')
 
 nPoolSize = 13344
-nTrainData = 100
-nTestData = 20
+nTrainData = 10000
+nTestData = 2000
 
 
 -- 1. load and normalize data
@@ -92,7 +92,7 @@ print(model)
 
 
 -- 4. (NEW) TRAINING  
-TRAINING = true
+TRAINING = false
 if TRAINING then
 	paths.dofile('train_multitask.lua')
 	epoch = opt.epochNumber
@@ -132,6 +132,7 @@ print(string.format('avgMSE (train): %.4f', avgMSE_tr))
 
 -- To check the results on images, save prediction outputs into .mat file
 matio.save(paths.concat(opt.save,string.format('pred_te_%s.mat', opt.t)), pred_save_te)
+matio.save(paths.concat(opt.save,string.format('pred_tr_%s.mat', opt.t)), pred_save_tr)
 
 
 

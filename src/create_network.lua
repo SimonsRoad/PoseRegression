@@ -253,18 +253,14 @@ function create_network_model9() -- same as 6; full-body, but larger output.
 
 	net:add(nn.SpatialConvolution(3,16,3,3,1,1,1,1))
 	net:add(nn.ReLU())
-
 	net:add(nn.SpatialConvolution(16,16,3,3,1,1,1,1))
 	net:add(nn.ReLU())
 	net:add(nn.SpatialMaxPooling(2,2,2,2))
-	
 	net:add(nn.SpatialConvolution(16,16,3,3,1,1,1,1))
 	net:add(nn.ReLU())
-	
 	net:add(nn.SpatialConvolution(16,16,3,3,1,1,1,1))
 	net:add(nn.ReLU())
 	net:add(nn.SpatialMaxPooling(2,2,2,2))
-	
 	net:add(nn.View(16*32*16))
 
 	net:add(nn.Dropout(0.5))
@@ -324,6 +320,7 @@ function create_network_model10()		-- PR_multi
 
 	--
 	local model = nn.Sequential():add(feat):add(tasks)
+	model:cuda()
 
 	return model
 

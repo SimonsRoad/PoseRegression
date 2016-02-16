@@ -20,8 +20,8 @@ cutorch.setDevice(opt.GPU)
 paths.dofile('load_settings.lua')
 
 nPoolSize = 13344
-nTrainData = 10000
-nTestData = 2000
+nTrainData = 100
+nTestData = 20
 
 
 -- 1. load and normalize data
@@ -114,6 +114,7 @@ for i=1,3 do
 	testset.data[{ {}, {i}, {}, {} }]:div(stdv[i])
 end
 
+print(testset)
 PCP_te = compute_PCP(testset)
 PCP_tr = compute_PCP(trainset)
 print(string.format('PCP (test) :   %.2f(%%)', PCP_te))

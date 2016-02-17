@@ -54,6 +54,16 @@ function convert_filt_label(label)
 	return label_joint 
 end
 
+function convert_multi_nofilt_label(label)
+	-- label is 14 joint structured output label (as a table) 
+	assert(type(label)=='table' and label[1]:size(1) == 2)
+	local labelout = torch.Tensor(28):cuda()
+	for i=1,14 do
+		labelout[i*2-1] = label[i][1]
+		labelout[i*2] = label[i][2]
+	end
+	return labelout	
+end
 
 function convert_multi_label(pred)
 	-- Assumption: PR_multi (2 table) -->  PR_full (28 size tensor)
@@ -94,7 +104,6 @@ function convert_multi_label(pred)
 	return pred_tmp
 end
 
-
 function compute_distance_joint (dataset, nJoints) 
 	local pred_save = torch.Tensor(dataset.label:size(1), nJoints*2)
 	local dist_joints = torch.zeros(nJoints)
@@ -106,9 +115,13 @@ function compute_distance_joint (dataset, nJoints)
 		if type(pred) == 'table' then
 			if table.getn(pred) == 2 then			-- structured & no filter
 				pred = convert_multi_label(pred)
-			elseif table.getn(pred) == 14 then		-- structured & filter
-				gt = convert_filt_label(gt)
-				pred = convert_multi_filt_label(pred)
+			elseif table.getn(pred) == 14 then		
+				if pred[1]:size(1) == 2 then		-- structured & no filter & each joint
+					pred = convert_multi_nofilt_label(pred)
+				elseif pred[1]:size(1) == 192 then  -- structured & filter
+					gt = convert_filt_label(gt)
+					pred = convert_multi_filt_label(pred)
+				end
 			end
 		end
 
@@ -155,9 +168,13 @@ function compute_distance_MSE (dataset)
 		if type(pred) == 'table' then
 			if table.getn(pred) == 2 then			-- structured & no filter
 				pred = convert_multi_label(pred)
-			elseif table.getn(pred) == 14 then		-- structured & filter
-				gt = convert_filt_label(gt)
-				pred = convert_multi_filt_label(pred)
+			elseif table.getn(pred) == 14 then		
+				if pred[1]:size(1) == 2 then		-- structured & no filter & each joint
+					pred = convert_multi_nofilt_label(pred)
+				elseif pred[1]:size(1) == 192 then  -- structured & filter
+					gt = convert_filt_label(gt)
+					pred = convert_multi_filt_label(pred)
+				end
 			end
 		end
 
@@ -222,9 +239,13 @@ function compute_PCP(dataset)
 		if type(pred) == 'table' then
 			if table.getn(pred) == 2 then			-- structured & no filter
 				pred = convert_multi_label(pred)
-			elseif table.getn(pred) == 14 then		-- structured & filter
-				gt = convert_filt_label(gt)
-				pred = convert_multi_filt_label(pred)
+			elseif table.getn(pred) == 14 then		
+				if pred[1]:size(1) == 2 then		-- structured & no filter & each joint
+					pred = convert_multi_nofilt_label(pred)
+				elseif pred[1]:size(1) == 192 then  -- structured & filter
+					gt = convert_filt_label(gt)
+					pred = convert_multi_filt_label(pred)
+				end
 			end
 		end
 
@@ -237,9 +258,10 @@ function compute_PCP(dataset)
 
 		-- At this stage, the size of lable should be 28
 		assert(pred:size(1) == 2*nJoints)
+		assert(gt:size(1) == 2*nJoints)
 
 		-- Case1: fullbody	
-		if opt.t == 'PR_full' or opt.t == 'PR_multi' or opt.t == 'PR_multi_test' or opt.t == 'PR_filt' or opt.t == 'PR_filt_struct' then
+		if opt.t == 'PR_full' or opt.t == 'PR_multi' or opt.t == 'PR_multi_test' or opt.t == 'PR_filt' or opt.t == 'PR_filt_struct' or opt.t == 'PR_eachjoint' then
 			nParts = 11
 
 			jidx_part = torch.Tensor(nParts,2)

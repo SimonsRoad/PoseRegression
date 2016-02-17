@@ -12,7 +12,6 @@ paths.dofile('util.lua')
 paths.dofile('datafromlist.lua')
 paths.dofile('create_network.lua')
 paths.dofile('compute_distance.lua')
-paths.dofile('misc_utils.lua')
 
 
 -- 0. settings 
@@ -35,18 +34,16 @@ idx_test = idx_pool:narrow(1,nTrainData+1,nTestData)
 trainset = mydataloader:get_crop_label(idx_train)
 testset  = mydataloader:get_crop_label(idx_test)
 
---[[
-trainset_data = mydataloader:get_randomly_indices(idx_train)
-trainset_label = mydataloader:get_label(part, idx_train)
-trainset = {data = trainset_data, label = trainset_label} 
-testset_data = mydataloader:get_randomly_indices(idx_test)
-testset_label = mydataloader:get_label(part, idx_test)
-testset = {data = testset_data, label = testset_label}
---]]
-
 print (trainset); print (testset)
 assert(testset.label:size(1) == nTestData);assert(testset.label:size(2) == nJoints*2)
 
+-- save testset into .mat file for visualization 
+print('Saving everything to: ' .. opt.save)
+os.execute('mkdir -p ' .. opt.save)
+matio.save(paths.concat(opt.save,string.format('testdata_%s.mat', opt.t)), testset)
+matio.save(paths.concat(opt.save,string.format('traindata_%s.mat', opt.t)), trainset)
+
+-- indexing trainset
 setmetatable(trainset,
 {__index = function(t,i)
 	return {t.data[i], t.label[i]}
@@ -66,12 +63,6 @@ for i=1,3 do
 	stdv[i] = trainset.data[{ {}, {i}, {}, {} }]:std()
 	trainset.data[{ {}, {i}, {}, {} }]:div(stdv[i])
 end
-
--- save testset into .mat file for visualization 
-print('Saving everything to: ' .. opt.save)
-os.execute('mkdir -p ' .. opt.save)
-matio.save(paths.concat(opt.save,string.format('testdata_%s.mat', opt.t)), testset)
-matio.save(paths.concat(opt.save,string.format('traindata_%s.mat', opt.t)), trainset)
 
 
 -- 2. network

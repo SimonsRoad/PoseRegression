@@ -38,6 +38,10 @@ elseif opt.t == 'PR_filt_struct' then
 	part = 'fullbody'; nJoints = 14; modelNumber = 12;
 	modelSaved = SAVEDIR .. opt.t .. '/option,t=PR_filt_struct/t_SatFeb1322:37:392016/PR_filt_struct_model_50.t7'
 
+elseif opt.t == 'PR_eachjoint' then
+	part = 'fullbody'; nJoints = 14; modelNumber = 13;
+	modelSaved = ' '
+
 elseif opt.t == 'PDPR' then
 	part = 'fullbody'; nJoints = 14; modelNumber = 0;
 	modelSaved = ' ';

@@ -12,8 +12,6 @@ paths.dofile('util.lua')
 paths.dofile('datafromlist.lua')
 paths.dofile('create_network.lua')
 paths.dofile('compute_distance.lua')
-paths.dofile('save_results.lua')
-paths.dofile('misc_utils.lua')
 paths.dofile('convert_labels.lua')
 
 

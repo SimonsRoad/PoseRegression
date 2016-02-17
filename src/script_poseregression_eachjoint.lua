@@ -1,5 +1,5 @@
 --[[
---script_poseregression_multitask.lua
+--script_poseregression_eachjoint.lua
 --Namhoon Lee, The Robotics Institute, Carnegie Mellon University
 --]]
 
@@ -73,14 +73,11 @@ cudnn.convert(model, cudnn)
 
 -- 3. loss function
 -- 
---criterion1 = nn.MSECriterion()
---criterion2 = nn.MSECriterion()
-criterion = nn.ParallelCriterion():add(nn.MSECriterion(), 8/14):add(nn.MSECriterion(), 6/14)
+criterion = nn.ParallelCriterion():add(nn.MSECriterion(), 1/22):add(nn.MSECriterion(), 1/22):add(nn.MSECriterion(), 1/22):add(nn.MSECriterion(), 2/22):add(nn.MSECriterion(), 2/22):add(nn.MSECriterion(), 1/22):add(nn.MSECriterion(), 2/22):add(nn.MSECriterion(), 2/22):add(nn.MSECriterion(), 1/22):add(nn.MSECriterion(), 2/22):add(nn.MSECriterion(), 2/22):add(nn.MSECriterion(), 1/22):add(nn.MSECriterion(), 2/22):add(nn.MSECriterion(), 2/22)
 criterion = criterion:cuda()
 
 
 -- *change data to cuda 
---model = model:cuda()
 trainset.data = trainset.data:cuda()
 trainset.label = trainset.label:cuda()
 testset.data = testset.data:cuda()
@@ -93,9 +90,9 @@ print(model)
 
 
 -- 4. (NEW) TRAINING  
-TRAINING = false
+TRAINING = true
 if TRAINING then
-	paths.dofile('train_multitask.lua')
+	paths.dofile('train_eachjoint.lua')
 	epoch = opt.epochNumber
 	for i=1, opt.nEpochs do
 		train()

@@ -363,6 +363,7 @@ function create_network_model11()			-- spatial filter; large output
 
 	--
 	local model = nn.Sequential():add(feat):add(regression)
+	model:cuda()
 
 	return model
 
@@ -496,10 +497,146 @@ function create_network_model12()		-- PR_filt_struct
 
 	--
 	local model = nn.Sequential():add(feat):add(tasks)
+	model:cuda()
 
 	return model
 	
 end
+
+function create_network_model13()		-- PR_eachjoint
+	
+	require 'nn';
+
+	--
+	local feat = nn.Sequential()
+
+	feat:add(nn.SpatialConvolution(3,16,3,3,1,1,1,1))
+	feat:add(nn.ReLU())
+	feat:add(nn.SpatialConvolution(16,16,3,3,1,1,1,1))
+	feat:add(nn.ReLU())
+	feat:add(nn.SpatialMaxPooling(2,2,2,2))
+	feat:add(nn.SpatialConvolution(16,16,3,3,1,1,1,1))
+	feat:add(nn.ReLU())
+	feat:add(nn.SpatialConvolution(16,16,3,3,1,1,1,1))
+	feat:add(nn.ReLU())
+	feat:add(nn.SpatialMaxPooling(2,2,2,2))
+	feat:cuda()
+
+	feat = makeDataParallel(feat, opt.nGPU)
+
+	local nOutFromFeat = 16*32*16
+	
+	-- 
+	local htop = nn.Sequential()
+	htop:add(nn.View(nOutFromFeat))
+	htop:add(nn.Dropout(0.5))
+	htop:add(nn.Linear(nOutFromFeat, 2))
+	htop:cuda()
+	-- 
+	local hbot = nn.Sequential()
+	hbot:add(nn.View(nOutFromFeat))
+	hbot:add(nn.Dropout(0.5))
+	hbot:add(nn.Linear(nOutFromFeat, 2))
+	hbot:cuda()
+	-- 
+	local lsho = nn.Sequential()
+	lsho:add(nn.View(nOutFromFeat))
+	lsho:add(nn.Dropout(0.5))
+	lsho:add(nn.Linear(nOutFromFeat, 2))
+	lsho:cuda()
+	-- 
+	local lelb = nn.Sequential()
+	lelb:add(nn.View(nOutFromFeat))
+	lelb:add(nn.Dropout(0.5))
+	lelb:add(nn.Linear(nOutFromFeat, 2))
+	lelb:cuda()
+	-- 
+	local lwr = nn.Sequential()
+	lwr:add(nn.View(nOutFromFeat))
+	lwr:add(nn.Dropout(0.5))
+	lwr:add(nn.Linear(nOutFromFeat, 2))
+	lwr:cuda()
+	-- 
+	local lhip = nn.Sequential()
+	lhip:add(nn.View(nOutFromFeat))
+	lhip:add(nn.Dropout(0.5))
+	lhip:add(nn.Linear(nOutFromFeat, 2))
+	lhip:cuda()
+	-- 
+	local lkne = nn.Sequential()
+	lkne:add(nn.View(nOutFromFeat))
+	lkne:add(nn.Dropout(0.5))
+	lkne:add(nn.Linear(nOutFromFeat, 2))
+	lkne:cuda()
+	-- 
+	local lank = nn.Sequential()
+	lank:add(nn.View(nOutFromFeat))
+	lank:add(nn.Dropout(0.5))
+	lank:add(nn.Linear(nOutFromFeat, 2))
+	lank:cuda()
+	-- 
+	local rsho = nn.Sequential()
+	rsho:add(nn.View(nOutFromFeat))
+	rsho:add(nn.Dropout(0.5))
+	rsho:add(nn.Linear(nOutFromFeat, 2))
+	rsho:cuda()
+	-- 
+	local relb = nn.Sequential()
+	relb:add(nn.View(nOutFromFeat))
+	relb:add(nn.Dropout(0.5))
+	relb:add(nn.Linear(nOutFromFeat, 2))
+	relb:cuda()
+	-- 
+	local rwr = nn.Sequential()
+	rwr:add(nn.View(nOutFromFeat))
+	rwr:add(nn.Dropout(0.5))
+	rwr:add(nn.Linear(nOutFromFeat, 2))
+	rwr:cuda()
+	-- 
+	local rhip = nn.Sequential()
+	rhip:add(nn.View(nOutFromFeat))
+	rhip:add(nn.Dropout(0.5))
+	rhip:add(nn.Linear(nOutFromFeat, 2))
+	rhip:cuda()
+	-- 
+	local rkne = nn.Sequential()
+	rkne:add(nn.View(nOutFromFeat))
+	rkne:add(nn.Dropout(0.5))
+	rkne:add(nn.Linear(nOutFromFeat, 2))
+	rkne:cuda()
+	-- 
+	local rank = nn.Sequential()
+	rank:add(nn.View(nOutFromFeat))
+	rank:add(nn.Dropout(0.5))
+	rank:add(nn.Linear(nOutFromFeat, 2))
+	rank:cuda()
+
+	--
+	local tasks = nn.ConcatTable()
+	tasks:add(htop)
+	tasks:add(hbot)
+	tasks:add(lsho)
+	tasks:add(lelb)
+	tasks:add(lwr)
+	tasks:add(lhip)
+	tasks:add(lkne)
+	tasks:add(lank)
+	tasks:add(rsho)
+	tasks:add(relb)
+	tasks:add(rwr)
+	tasks:add(rhip)
+	tasks:add(rkne)
+	tasks:add(rank)
+	tasks:cuda()
+
+	--
+	local model = nn.Sequential():add(feat):add(tasks)
+	model:cuda()
+
+	return model
+
+end
+
 
 
 function create_network(modelNumber)

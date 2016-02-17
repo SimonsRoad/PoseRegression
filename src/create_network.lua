@@ -249,40 +249,44 @@ function create_network_model9() -- same as 6; full-body, but larger output.
 	
 	require 'nn';
 
-	local net = nn.Sequential()
+	local feat = nn.Sequential()
 
-	net:add(nn.SpatialConvolution(3,16,3,3,1,1,1,1))
-	net:add(nn.ReLU())
-	net:add(nn.SpatialConvolution(16,16,3,3,1,1,1,1))
-	net:add(nn.ReLU())
-	net:add(nn.SpatialMaxPooling(2,2,2,2))
-	net:add(nn.SpatialConvolution(16,16,3,3,1,1,1,1))
-	net:add(nn.ReLU())
+	feat:add(nn.SpatialConvolution(3,16,3,3,1,1,1,1))
+	feat:add(nn.ReLU())
+	feat:add(nn.SpatialConvolution(16,16,3,3,1,1,1,1))
+	feat:add(nn.ReLU())
+	feat:add(nn.SpatialMaxPooling(2,2,2,2))
+	feat:add(nn.SpatialConvolution(16,16,3,3,1,1,1,1))
+	feat:add(nn.ReLU())
 	-- one more conv is added here
-	net:add(nn.SpatialConvolution(16,16,3,3,1,1,1,1))
-	net:add(nn.ReLU())
+	feat:add(nn.SpatialConvolution(16,16,3,3,1,1,1,1))
+	feat:add(nn.ReLU())
 	--
-	net:add(nn.SpatialConvolution(16,16,3,3,1,1,1,1))
-	net:add(nn.ReLU())
-	net:add(nn.SpatialMaxPooling(2,2,2,2))
-	net:add(nn.View(16*32*16))
+	feat:add(nn.SpatialConvolution(16,16,3,3,1,1,1,1))
+	feat:add(nn.ReLU())
+	feat:add(nn.SpatialMaxPooling(2,2,2,2))
+	feat:cuda()
+	
+	feat:makeDataParallel(feat, opt.nGPU)
 
 	local nOutFromFeat = 16*32*16
 
-	net:add(nn.Dropout(0.5))
-	net:add(nn.Linear(nOutFromFeat, 512))
-	net:add(nn.ReLU())
+	local regression = nn.Sequential()
+	regression:add(nn.View(nOutFromFeat))
+	regression:add(nn.Dropout(0.5))
+	regression:add(nn.Linear(nOutFromFeat, 512))
+	regression:add(nn.ReLU())
+	regression:add(nn.Dropout(0.5))
+	regression:add(nn.Linear(512, 512))
+	regression:add(nn.ReLU())
+	regression:add(nn.Linear(512, 28))
+	regression:add(nn.ReLU())
+	regression:cuda()
 
-	net:add(nn.Dropout(0.5))
-	net:add(nn.Linear(512, 512))
-	net:add(nn.ReLU())
+	local model = nn.Sequential():add(feat):add(regression)
+	model:cuda()
 
-	net:add(nn.Linear(512, 28))
-	net:add(nn.ReLU())
-
-	net:cuda()
-
-	return net
+	return model
 end
 
 function create_network_model10()		-- PR_multi

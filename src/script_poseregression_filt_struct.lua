@@ -23,30 +23,37 @@ W = 64
 H = 128
 LLABEL = W+H
 
+LOADSAVED = true
+
 
 -- 1. load and normalize data
 -- 
-nPoolSize = 13344
-nTrainData = 10000
-nTestData = 2000
+if not LOADSAVED then
+	nPoolSize = 13344
+	nTrainData = 100
+	nTestData = 20
 
-mydataloader = dataLoader{filename = '../data/lists/pos.txt'}
+	mydataloader = dataLoader{filename = '../data/lists/pos.txt'}
 
-idx_pool = torch.randperm(nPoolSize)
-idx_train = idx_pool:narrow(1,1,nTrainData)
-idx_test = idx_pool:narrow(1,nTrainData+1,nTestData)
+	--idx_pool = torch.randperm(nPoolSize)
+	idx_pool  = torch.range(1,nPoolSize)
+	idx_train = idx_pool:narrow(1,1,nTrainData)
+	idx_test  = idx_pool:narrow(1,nTrainData+1,nTestData)
 
-trainset_data = mydataloader:get_randomly_indices(idx_train)
-trainset_label,_ = mydataloader:get_label_filt(part, idx_train)
-trainset = {data = trainset_data, label = trainset_label} 
+	trainset = mydataloader:get_crop_label(idx_train)
+	testset  = mydataloader:get_crop_label(idx_test)
 
-testset_data = mydataloader:get_randomly_indices(idx_test)
-testset_label, testset_label_ori = mydataloader:get_label_filt(part, idx_test)
-testset = {data = testset_data, label = testset_label}
-
+	-- need to convert the labels to spatial label
+	trainset.label = convert_labels_to_spatialLabels(trainset.label)
+	testset.label  = convert_labels_to_spatialLabels(testset.label)
+else
+	trainset = matio.load('../mat/dataset/traindata.mat') 
+	testset  = matio.load('../mat/dataset/testdata.mat') 
+end
 print (trainset); print (testset)
 assert(testset.label:size(1) == nTestData); assert(testset.label:size(2) == nJoints*(W+H))
 
+-- indexing trainset
 setmetatable(trainset,
 {__index = function(t,i)
 	return {t.data[i], t.label[i]}
@@ -67,12 +74,8 @@ for i=1,3 do
 	trainset.data[{ {}, {i}, {}, {} }]:div(stdv[i])
 end
 
--- save testset into .mat file for visualization
 print('Saving everything to: ' .. opt.save)
 os.execute('mkdir -p ' .. opt.save)
---save original!!!
-testset_ori = {data = testset.data, label = testset_label_ori}
-matio.save(paths.concat(opt.save,string.format('testdata_%s.mat', opt.t)), testset_ori)
 
 
 -- 2. network
@@ -83,23 +86,17 @@ cudnn.convert(model, cudnn)
 
 -- 3. loss function
 -- 
---criterion1 = nn.MSECriterion()
---criterion2 = nn.MSECriterion()
 criterion = nn.ParallelCriterion():add(nn.MSECriterion(), 1/14):add(nn.MSECriterion(), 1/14):add(nn.MSECriterion(), 1/14):add(nn.MSECriterion(), 1/14):add(nn.MSECriterion(), 1/14):add(nn.MSECriterion(), 1/14):add(nn.MSECriterion(), 1/14):add(nn.MSECriterion(), 1/14):add(nn.MSECriterion(), 1/14):add(nn.MSECriterion(), 1/14):add(nn.MSECriterion(), 1/14):add(nn.MSECriterion(), 1/14):add(nn.MSECriterion(), 1/14):add(nn.MSECriterion(), 1/14)
 criterion = criterion:cuda()
 
-
 -- *change data to cuda 
---model = model:cuda()
 trainset.data = trainset.data:cuda()
 trainset.label = trainset.label:cuda()
 testset.data = testset.data:cuda()
 testset.label = testset.label:cuda()
 
-
 -- *Optional
 print(opt)
-print(model)
 
 
 -- 4. (NEW) TRAINING  

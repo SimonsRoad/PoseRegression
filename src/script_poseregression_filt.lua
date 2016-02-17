@@ -32,7 +32,8 @@ nTestData = 2000
 
 mydataloader = dataLoader{filename = '../data/lists/pos.txt'}
 
-idx_pool = torch.randperm(nPoolSize)
+--idx_pool = torch.randperm(nPoolSize)
+idx_pool = torch.range(nPoolSize)
 idx_train = idx_pool:narrow(1,1,nTrainData)
 idx_test = idx_pool:narrow(1,nTrainData+1,nTestData)
 

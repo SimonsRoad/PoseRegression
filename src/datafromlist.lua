@@ -253,21 +253,21 @@ function dataset:get_label(part, indices, ltTable)
 	return label
 end
 
-function dataset:get_label_filt(part, indices)
-	assert(part == 'fullbody')	-- currently only fullbody allowed
+--function dataset:get_label_filt(part, indices)
+--	assert(part == 'fullbody')	-- currently only fullbody allowed
+--
+--	-- load regular labels, which is 28 values for 14 joints
+--	local label_ori = self:get_label(part, indices)
+--
+--	-- convert to spatial labels
+--	local label_filt = convert_labels_to_spatialLabels(label_ori)
+--
+--	print(label_filt)
+--	adf=adf+1
+--	return label_filt, label_ori
+--end
 
-	-- load regular labels, which is 28 values for 14 joints
-	local label_ori = self:get_label(part, indices)
-
-	-- convert to spatial labels
-	local label_filt = convert_labels_to_spatialLabels(label_ori)
-
-	print(label_filt)
-	adf=adf+1
-	return label_filt, label_ori
-end
-
-local function loadImageCrop(path, labelOri)
+local function loadImageCrop(path, label_ori)
 
 	-- bw_outer, bh_outer
 	local bw_outer = 90
@@ -277,7 +277,7 @@ local function loadImageCrop(path, labelOri)
 	local marginRatio = 0.2
 
 	-- compute bw_tight, bh_tight
-	local label_res = torch.reshape(labelOri, 14, 2)
+	local label_res = torch.reshape(label_ori, 14, 2)
 	local label_x_min = torch.min(label_res[{{}, {1}}])
 	local label_x_max = torch.max(label_res[{{}, {1}}])
 	local label_y_min = torch.min(label_res[{{}, {2}}])
@@ -349,11 +349,11 @@ function dataset:get_crop_label(indices)
 	local imagetensor = torch.Tensor(indices:size(1), 3, 128, 64)
 	local labeltensor = torch.Tensor(indices:size(1), 28)
 
-	local labelOri= self:get_label_fullbody(indices)
+	local label_ori= self:get_label_fullbody(indices)
 
 	for i=1, indices:size(1) do
 		local imgpath = ffi.string(torch.data(self.imagePath[indices[i]]), self.pathLength[indices[i]])
-		local image, label = loadImageCrop(imgpath, labelOri[i])
+		local image, label = loadImageCrop(imgpath, label_ori[i])
 		imagetensor[i] = image
 		labeltensor[i] = label
 	end

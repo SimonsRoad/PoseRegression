@@ -18,30 +18,31 @@ paths.dofile('compute_distance.lua')
 cutorch.setDevice(opt.GPU)
 paths.dofile('load_settings.lua')
 
-nPoolSize = 13344
-nTrainData = 10000
-nTestData = 2000
+LOADSAVED = true
 
 
 -- 1. load and normalize data
--- 
-mydataloader = dataLoader{filename = '../data/lists/pos.txt'}
+--
+if not LOADSAVED then
+	nPoolSize  = 13344
+	nTrainData = 100
+	nTestData  = 20
 
-idx_pool = torch.randperm(nPoolSize)
-idx_train = idx_pool:narrow(1,1,nTrainData)
-idx_test = idx_pool:narrow(1,nTrainData+1,nTestData)
+	mydataloader = dataLoader{filename = '../data/lists/pos.txt'}
 
-trainset = mydataloader:get_crop_label(idx_train)
-testset  = mydataloader:get_crop_label(idx_test)
+	--idx_pool = torch.randperm(nPoolSize)
+	idx_pool  = torch.range(1,nPoolSize)
+	idx_train = idx_pool:narrow(1,1,nTrainData)
+	idx_test  = idx_pool:narrow(1,nTrainData+1,nTestData)
 
+	trainset = mydataloader:get_crop_label(idx_train)
+	testset  = mydataloader:get_crop_label(idx_test)
+else
+	trainset = matio.load('../mat/dataset/traindata.mat')
+	testset  = matio.load('../mat/dataset/testdata.mat')
+end
 print (trainset); print (testset)
 assert(testset.label:size(1) == nTestData); assert(testset.label:size(2) == nJoints*2)
-
--- save testset into .mat file for visualization
-print('Saving everything to: ' .. opt.save)
-os.execute('mkdir -p ' .. opt.save)
-matio.save(paths.concat(opt.save,string.format('testdata_%s.mat', opt.t)), testset)
-matio.save(paths.concat(opt.save,string.format('traindata_%s.mat', opt.t)), trainset)
 
 -- indexing trainset
 setmetatable(trainset,
@@ -63,6 +64,9 @@ for i=1,3 do
 	stdv[i] = trainset.data[{ {}, {i}, {}, {} }]:std()
 	trainset.data[{ {}, {i}, {}, {} }]:div(stdv[i])
 end
+
+print('Saving everything to: ' .. opt.save)
+os.execute('mkdir -p ' .. opt.save)
 
 
 -- 2. network
@@ -112,7 +116,6 @@ for i=1,3 do
 	testset.data[{ {}, {i}, {}, {} }]:div(stdv[i])
 end
 
-print(testset)
 PCP_te = compute_PCP(testset)
 PCP_tr = compute_PCP(trainset)
 print(string.format('PCP (test) :   %.2f(%%)', PCP_te))

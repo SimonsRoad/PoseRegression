@@ -18,16 +18,16 @@ paths.dofile('compute_distance.lua')
 cutorch.setDevice(opt.GPU)
 paths.dofile('load_settings.lua')
 
+nPoolSize = 13344
+nTrainData = 10000
+nTestData = 2000
+
 LOADSAVED = true
 
 
 -- 1. load and normalize data
 -- 
 if not LOADSAVED then
-	nPoolSize = 13344
-	nTrainData = 100
-	nTestData = 20
-
 	mydataloader = dataLoader{filename = '../data/lists/pos.txt'}
 
 	--idx_pool = torch.randperm(nPoolSize)

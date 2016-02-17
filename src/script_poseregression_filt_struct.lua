@@ -19,20 +19,20 @@ paths.dofile('convert_labels.lua')
 cutorch.setDevice(opt.GPU)
 paths.dofile('load_settings.lua')
 
+nPoolSize  = 13344
+nTrainData = 10000
+nTestData  = 2000
+
+LOADSAVED = true
+
 W = 64
 H = 128
 LLABEL = W+H
-
-LOADSAVED = true
 
 
 -- 1. load and normalize data
 -- 
 if not LOADSAVED then
-	nPoolSize = 13344
-	nTrainData = 100
-	nTestData = 20
-
 	mydataloader = dataLoader{filename = '../data/lists/pos.txt'}
 
 	--idx_pool = torch.randperm(nPoolSize)
@@ -43,13 +43,14 @@ if not LOADSAVED then
 	trainset = mydataloader:get_crop_label(idx_train)
 	testset  = mydataloader:get_crop_label(idx_test)
 
-	-- need to convert the labels to spatial label
-	trainset.label = convert_labels_to_spatialLabels(trainset.label)
-	testset.label  = convert_labels_to_spatialLabels(testset.label)
 else
 	trainset = matio.load('../mat/dataset/traindata.mat') 
 	testset  = matio.load('../mat/dataset/testdata.mat') 
 end
+-- need to convert the labels to spatial label
+trainset.label = convert_labels_to_spatialLabels(trainset.label)
+testset.label  = convert_labels_to_spatialLabels(testset.label)
+
 print (trainset); print (testset)
 assert(testset.label:size(1) == nTestData); assert(testset.label:size(2) == nJoints*(W+H))
 

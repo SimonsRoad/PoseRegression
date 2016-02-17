@@ -258,13 +258,19 @@ function create_network_model9() -- same as 6; full-body, but larger output.
 	net:add(nn.SpatialMaxPooling(2,2,2,2))
 	net:add(nn.SpatialConvolution(16,16,3,3,1,1,1,1))
 	net:add(nn.ReLU())
+	-- one more conv is added here
+	net:add(nn.SpatialConvolution(16,16,3,3,1,1,1,1))
+	net:add(nn.ReLU())
+	--
 	net:add(nn.SpatialConvolution(16,16,3,3,1,1,1,1))
 	net:add(nn.ReLU())
 	net:add(nn.SpatialMaxPooling(2,2,2,2))
 	net:add(nn.View(16*32*16))
 
+	local nOutFromFeat = 16*32*16
+
 	net:add(nn.Dropout(0.5))
-	net:add(nn.Linear(16*32*16, 512))
+	net:add(nn.Linear(nOutFromFeat, 512))
 	net:add(nn.ReLU())
 
 	net:add(nn.Dropout(0.5))

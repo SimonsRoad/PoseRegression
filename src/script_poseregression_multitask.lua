@@ -71,14 +71,18 @@ os.execute('mkdir -p ' .. opt.save)
 
 -- 2. network
 --
-model = create_network(modelNumber)
-cudnn.convert(model, cudnn)
+if opt.retrain ~= 'none' then
+	assert(paths.filep(opt.retrain), 'File not found: ' .. opt.retrain)
+	print('Loading model from file: ' .. opt.retrain)
+	model = loadDataParallel(opt.retrain, opt.nGPU)
+else
+	model = create_network(modelNumber)
+	cudnn.convert(model, cudnn)
+end
 
 
 -- 3. loss function
 -- 
---criterion1 = nn.MSECriterion()
---criterion2 = nn.MSECriterion()
 criterion = nn.ParallelCriterion():add(nn.MSECriterion(), 8/14):add(nn.MSECriterion(), 6/14)
 criterion = criterion:cuda()
 

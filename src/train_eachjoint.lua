@@ -91,7 +91,7 @@ function train()
 	end
 	--sanitize(model)
 	--model:clearState()
-	if epoch % 200 == 0 then
+	if epoch % 500 == 0 then
 		--model:clearState()
 		saveDataParallel(paths.concat(opt.save, opt.t .. '_model_' .. epoch .. '.t7'), model)
 		torch.save(paths.concat(opt.save, opt.t .. '_optimState_' .. epoch .. '.t7'), optimState)

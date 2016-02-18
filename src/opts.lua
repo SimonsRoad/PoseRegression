@@ -34,9 +34,9 @@ function M.parse(arg)
     --cmd:option('-nClasses',        1000, 'number of classes in the dataset')
     ------------- Training options --------------------
     cmd:option('-nEpochs',         100,   'Number of total epochs to run')
-    cmd:option('-epochSize',       157,   'Number of batches per epoch')
+    cmd:option('-epochSize',        40,   'Number of batches per epoch')
     cmd:option('-epochNumber',       1,   'Manual epoch number (useful on restarts)')
-    cmd:option('-batchSize',        64,   'mini-batch size (1 = pure stochastic)')
+    cmd:option('-batchSize',       256,   'mini-batch size (1 = pure stochastic)')
     ---------- Optimization options ----------------------
     cmd:option('-LR',    		   0.001, 'learning rate; if set, overrides default LR/WD recipe')
     cmd:option('-momentum',        0.9,  'momentum')

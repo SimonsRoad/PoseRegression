@@ -109,6 +109,54 @@ function convert_spatialLabels_to_labels(label)
 	return label_joint
 end
 
+-- 
+function convert_labels_to_fcnLabels(labels)
+	-- converts the normal label to FCN voxel
+	-- input label: (#data) x 28
+	-- output label: (#data) x 14 x 32 x 16 
+	-- 14: # of joints
+	-- 32: height
+	-- 16: width
+	
+	-- 00. setting
+	local nlabels = labels:size(1)
+	local w = 16
+	local h = 32
+
+	-- 0. convert normalized labels to pixel labels
+	local scalar = torch.repeatTensor(torch.Tensor({w,h}), nlabels, nJoints)
+	local plabels = torch.cmul(labels, scalar)
+
+	-- 1. reshape labels to voxels
+	local fcnlabels = torch.Tensor(nlabels, nJoints, h, w)
+	for i=1,nlabels do
+
+		local voxel = torch.Tensor(nJoints, h, w)
+		for j=1,nJoints do
+			local channel = torch.zeros(h,w)
+			local x = torch.round(plabels[i][2*j-1])
+			local y = torch.round(plabels[i][2*j])
+			if x == 0 then x = 1 end
+			if y == 0 then y = 1 end
+			channel[y][x] = 1.0
+			voxel[j] = channel
+		end
+		fcnlabels[i] = voxel
+	end
+
+	-- 2. apply gaussian filter
+	local kernel = image.gaussian(5,0.5)
+	print(kernel)
+
+	for i=1,nlabels do
+		for j=1,nJoints do
+			fcnlabels[i][j] = image.convolve(fcnlabels[i][j], kernel, 'same')
+		end
+	end
+	--print(fcnlabels[1][1])
+
+	return fcnlabels
+end
 
 
 

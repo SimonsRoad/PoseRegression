@@ -806,6 +806,38 @@ function create_network_model13()		-- PR_eachjoint
 
 end
 
+function create_network_model14() -- PR_fcn
+	
+	require 'nn';
+
+	--
+	local feat = nn.Sequential()
+
+	feat:add(nn.SpatialConvolution(3,16,3,3,1,1,1,1))
+	feat:add(nn.ReLU())
+	feat:add(nn.SpatialConvolution(16,16,3,3,1,1,1,1))
+	feat:add(nn.ReLU())
+	feat:add(nn.SpatialMaxPooling(2,2,2,2))
+	feat:add(nn.SpatialConvolution(16,16,3,3,1,1,1,1))
+	feat:add(nn.ReLU())
+	-- one more conv is added here
+	feat:add(nn.SpatialConvolution(16,16,3,3,1,1,1,1))
+	feat:add(nn.ReLU())
+	--
+	feat:add(nn.SpatialConvolution(16,16,3,3,1,1,1,1))
+	feat:add(nn.ReLU())
+	feat:add(nn.SpatialMaxPooling(2,2,2,2))
+	--feat:cuda()
+	
+	-- add one more conv. making FCN
+	feat:add(nn.SpatialConvolution(16,14,3,3,1,1,1,1))
+
+	feat:cuda()
+	feat = makeDataParallel(feat, opt.nGPU)
+	feat:cuda()
+
+	return feat
+end
 
 
 function create_network(modelNumber)

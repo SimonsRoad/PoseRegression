@@ -104,6 +104,31 @@ function convert_multi_label(pred)
 	return pred_tmp
 end
 
+function convert_fcnlabel (label)
+	local label_new = torch.Tensor(2*nJoints)
+
+	for i =1, nJoints do
+		-- find max
+		local count =0
+		local idx_max = {}
+		local max = torch.max(label[i])
+		for j=1,label[i]:size(1) do
+			for k=1,label[i]:size(2) do
+				if label[i][j][k] == max then
+					count = count + 1
+					idx_max = {j,k}
+				end
+			end
+		end
+
+		-- new label. 
+		label_new[2*i-1] = idx_max[2] / 16
+		label_new[2*i] = idx_max[1] / 32
+	end
+
+	return label_new
+end
+
 function compute_distance_joint (dataset, nJoints) 
 	local pred_save = torch.Tensor(dataset.label:size(1), nJoints*2)
 	local dist_joints = torch.zeros(nJoints)
@@ -130,6 +155,12 @@ function compute_distance_joint (dataset, nJoints)
 			assert(LLABEL == 14*(64+128))
 			pred = convert_filt_label(pred)
 			gt = convert_filt_label(gt)
+		end
+
+		-- case 3: fcn label
+		if pred:size(1) == nJoints and pred:size(2) == 32 and pred:size(3) == 16 then
+			pred = convert_fcnlabel(pred)
+			gt = convert_fcnlabel(gt)
 		end
 
 		-- At this stage, the size of lable should be 28
@@ -183,6 +214,12 @@ function compute_distance_MSE (dataset)
 			assert(LLABEL == 14*(64+128))
 			pred = convert_filt_label(pred)
 			gt = convert_filt_label(gt)
+		end
+
+		-- case 3: fcn label
+		if pred:size(1) == nJoints and pred:size(2) == 32 and pred:size(3) == 16 then
+			pred = convert_fcnlabel(pred)
+			gt = convert_fcnlabel(gt)
 		end
 
 		-- At this stage, the size of lable should be 28
@@ -256,12 +293,18 @@ function compute_PCP(dataset)
 			gt = convert_filt_label(gt)
 		end
 
+		-- case 3: fcn label
+		if pred:size(1) == nJoints and pred:size(2) == 32 and pred:size(3) == 16 then
+			pred = convert_fcnlabel(pred)
+			gt = convert_fcnlabel(gt)
+		end
+
 		-- At this stage, the size of lable should be 28
 		assert(pred:size(1) == 2*nJoints)
 		assert(gt:size(1) == 2*nJoints)
 
 		-- Case1: fullbody	
-		if opt.t == 'PR_full' or opt.t == 'PR_multi' or opt.t == 'PR_multi_test' or opt.t == 'PR_filt' or opt.t == 'PR_filt_struct' or opt.t == 'PR_eachjoint' then
+		if opt.t == 'PR_full' or opt.t == 'PR_multi' or opt.t == 'PR_multi_test' or opt.t == 'PR_filt' or opt.t == 'PR_filt_struct' or opt.t == 'PR_eachjoint' or opt.t == 'PR_fcn' then
 			nParts = 11
 
 			jidx_part = torch.Tensor(nParts,2)

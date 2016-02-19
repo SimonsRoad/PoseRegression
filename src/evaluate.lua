@@ -57,36 +57,26 @@ local function forwardpass(dataset)
 end
 
 
-function evaluate()
+function evaluate(dataset, kind)
 
 	-- 0. forward pass and convert labels to single vectors
 	-- labels are all #Data x 28
-	label_gt_te, label_pred_te = forwardpass(testset)
-	label_gt_tr, label_pred_tr = forwardpass(trainset)
-
+	label_gt, label_pred = forwardpass(dataset)
 
 	-- EVALUATE
-	PCP_te = compute_PCP(label_gt_te, label_pred_te)
-	PCP_tr = compute_PCP(label_gt_tr, label_pred_tr)
-	print(string.format('PCP (test) :   %.2f(%%)', PCP_te))
-	print(string.format('PCP (train):   %.2f(%%)', PCP_tr))
+	PCP = compute_PCP(label_gt, label_pred)
+	EPJ, EPJ_avg = compute_epj(label_gt, label_pred)
+	MSE_avg = compute_MSE(label_gt, label_pred)
 
-	epj_te, epj_te_mean = compute_epj(label_gt_te, label_pred_te)
-	epj_tr, epj_tr_mean = compute_epj(label_gt_tr, label_pred_tr)
-	print(string.format('meanErrPerJoint (test) :   %.4f', epj_te_mean))
-	print(string.format('meanErrPerJoint (train):   %.4f', epj_tr_mean))
-
-	avgMSE_te = compute_MSE(label_gt_te, label_pred_te)
-	avgMSE_tr = compute_MSE(label_gt_tr, label_pred_tr)
-	print(string.format('avgMSE (test) :   %.4f', avgMSE_te))
-	print(string.format('avgMSE (train):   %.4f', avgMSE_tr))
-
+	-- print out the results
+	print(string.format('-- (%s)', kind))
+	print(string.format('PCP     :   %.2f  (%%)', PCP))
+	print(string.format('EPJ_avg :   %.4f', EPJ_avg))
+	print(string.format('MSE_avg :   %.4f', MSE_avg))
 
 	-- save prediction results for visualization
-	pred_save_te = label_pred_te:double()
-	pred_save_tr = label_pred_tr:double()
-	matio.save(paths.concat(opt.save,string.format('pred_te_%s.mat',opt.t)), pred_save_te)
-	matio.save(paths.concat(opt.save,string.format('pred_tr_%s.mat',opt.t)), pred_save_tr)
+	pred_save = label_pred:double()
+	matio.save(paths.concat(opt.save,string.format('pred_%s_%s.mat', kind, opt.t)), pred_save)
 end
 
 

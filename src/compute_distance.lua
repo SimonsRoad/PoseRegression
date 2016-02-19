@@ -149,10 +149,10 @@ function compute_epj (label_gt, label_pred)
 	for i=1,nJoints do
 		dist_total = dist_total + dist_joints[i]
 	end
-	errPerJoint = dist_total/label_pred:size(1)
-	meanErrPerJoint = dist_total/label_pred:size(1)/nJoints
+	local EPJ = dist_total/label_pred:size(1)
+	local EPJ_avg = dist_total/label_pred:size(1)/nJoints
 	
-	return errPerJoint, meanErrPerJoint
+	return EPJ, EPJ_avg
 end
 
 function compute_MSE (label_gt, label_pred) 
@@ -170,9 +170,9 @@ function compute_MSE (label_gt, label_pred)
 		end
 		MSE = MSE + MSE_each
 	end
-	local avgMSE = MSE / label_pred:size(1)
+	local MSE_avg = MSE / label_pred:size(1)
 
-	return avgMSE	
+	return MSE_avg	
 end
 
 

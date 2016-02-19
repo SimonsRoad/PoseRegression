@@ -11,7 +11,8 @@ require 'cunn';
 paths.dofile('util.lua')
 paths.dofile('datafromlist.lua')
 paths.dofile('compute_distance.lua')
-paths.dofile('misc_utils.lua')
+paths.dofile('convert_labels.lua')
+paths.dofile('evaluate.lua')
 
 
 -- 0. settings

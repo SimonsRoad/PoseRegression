@@ -126,6 +126,7 @@ end
 
 -- 5. test the network
 --
-evaluate()
+evaluate(testset, 'test')
+evaluate(trainset, 'train')
 
 

@@ -21,10 +21,10 @@ cutorch.setDevice(opt.GPU)
 paths.dofile('load_settings.lua')
 
 nPoolSize = 13344
-nTrainData = 10
-nTestData = 2
+nTrainData = 10000
+nTestData = 2000
 
-LOADSAVED = false
+LOADSAVED = true
 
 
 -- 1. load and normalize data

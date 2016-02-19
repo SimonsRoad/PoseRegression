@@ -73,6 +73,9 @@ for i=1,3 do
 
 	stdv[i] = trainset.data[{ {}, {i}, {}, {} }]:std()
 	trainset.data[{ {}, {i}, {}, {} }]:div(stdv[i])
+
+	testset.data[{ {}, {i}, {}, {} }]:add(-mean[i])
+	testset.data[{ {}, {i}, {}, {} }]:div(stdv[i])
 end
 
 print('Saving everything to: ' .. opt.save)
@@ -125,8 +128,6 @@ end
 -- 5. test the network
 --
 for i=1,3 do
-	testset.data[{ {}, {i}, {}, {} }]:add(-mean[i])
-	testset.data[{ {}, {i}, {}, {} }]:div(stdv[i])
 end
 
 PCP_te = compute_PCP(testset)

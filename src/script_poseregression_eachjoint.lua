@@ -63,6 +63,9 @@ for i=1,3 do
 
 	stdv[i] = trainset.data[{ {}, {i}, {}, {} }]:std()
 	trainset.data[{ {}, {i}, {}, {} }]:div(stdv[i])
+
+	testset.data[{ {}, {i}, {}, {} }]:add(-mean[i])
+	testset.data[{ {}, {i}, {}, {} }]:div(stdv[i])
 end
 
 print('Saving everything to: ' .. opt.save)
@@ -117,29 +120,4 @@ end
 
 -- 5. test the network
 --
-for i=1,3 do
-	testset.data[{ {}, {i}, {}, {} }]:add(-mean[i])
-	testset.data[{ {}, {i}, {}, {} }]:div(stdv[i])
-end
-
-PCP_te = compute_PCP(testset)
-PCP_tr = compute_PCP(trainset)
-print(string.format('PCP (test) :   %.2f(%%)', PCP_te))
-print(string.format('PCP (train):   %.2f(%%)', PCP_tr))
-
-pred_save_te, errPerJoint_te, meanErrPerJoint_te = compute_distance_joint(testset, nJoints)
-pred_save_tr, errPerJoint_tr, meanErrPerJoint_tr = compute_distance_joint(trainset, nJoints)
-print(string.format('meanErrPerJoint (test) :   %.4f', meanErrPerJoint_te))
-print(string.format('meanErrPerJoint (train):   %.4f', meanErrPerJoint_tr))
-
-avgMSE_te = compute_distance_MSE(testset)
-avgMSE_tr = compute_distance_MSE(trainset)
-print(string.format('avgMSE (test) : %.4f', avgMSE_te))
-print(string.format('avgMSE (train): %.4f', avgMSE_tr))
-
--- To check the results on images, save prediction outputs into .mat file
-matio.save(paths.concat(opt.save,string.format('pred_te_%s.mat', opt.t)), pred_save_te)
-matio.save(paths.concat(opt.save,string.format('pred_tr_%s.mat', opt.t)), pred_save_tr)
-
-
-
+evaluate()

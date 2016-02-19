@@ -129,45 +129,13 @@ function convert_fcnlabel (label)
 	return label_new
 end
 
-function compute_distance_joint (dataset, nJoints) 
-	local pred_save = torch.Tensor(dataset.label:size(1), nJoints*2)
+function compute_epj (label_gt, label_pred) 
+	assert(label_gt:size(1) == label_pred:size(1))
+
 	local dist_joints = torch.zeros(nJoints)
-	for i=1, dataset.label:size(1) do
-		local gt = dataset.label[i]
-		local pred = model:forward(dataset.data[i])
-
-		-- resize pred
-		if type(pred) == 'table' then
-			if table.getn(pred) == 2 then			-- structured & no filter
-				pred = convert_multi_label(pred)
-			elseif table.getn(pred) == 14 then		
-				if pred[1]:size(1) == 2 then		-- structured & no filter & each joint
-					pred = convert_multi_nofilt_label(pred)
-				elseif pred[1]:size(1) == 192 then  -- structured & filter
-					gt = convert_filt_label(gt)
-					pred = convert_multi_filt_label(pred)
-				end
-			end
-		end
-
-		-- case 2: a long filtered label
-		if pred:size(1) == LLABEL and gt:size(1) == LLABEL then
-			assert(LLABEL == 14*(64+128))
-			pred = convert_filt_label(pred)
-			gt = convert_filt_label(gt)
-		end
-
-		-- case 3: fcn label
-		if pred:size(1) == nJoints and pred:size(2) == 32 and pred:size(3) == 16 then
-			pred = convert_fcnlabel(pred)
-			gt = convert_fcnlabel(gt)
-		end
-
-		-- At this stage, the size of lable should be 28
-		assert(pred:size(1) == 2*nJoints)
-
-		-- save prediction for later use
-		pred_save[{i,{}}] = pred:double()
+	for i=1, label_pred:size(1) do
+		local gt = label_gt[i]
+		local pred = label_pred[i]
 
 		-- compute joint distance
 		for j=1,nJoints do
@@ -181,49 +149,18 @@ function compute_distance_joint (dataset, nJoints)
 	for i=1,nJoints do
 		dist_total = dist_total + dist_joints[i]
 	end
-	errPerJoint = dist_total/dataset.label:size(1)
-	meanErrPerJoint = dist_total/dataset.label:size(1)/nJoints
+	errPerJoint = dist_total/label_pred:size(1)
+	meanErrPerJoint = dist_total/label_pred:size(1)/nJoints
 	
-	return pred_save, errPerJoint, meanErrPerJoint
+	return errPerJoint, meanErrPerJoint
 end
 
-function compute_distance_MSE (dataset) 
+function compute_MSE (label_gt, label_pred) 
 
-	-- compute MSE 
 	local MSE = 0
-	for i = 1, dataset.label:size(1) do
-		local gt = dataset.label[i]
-		local pred = model:forward(dataset.data[i])
-
-		-- resize pred
-		if type(pred) == 'table' then
-			if table.getn(pred) == 2 then			-- structured & no filter
-				pred = convert_multi_label(pred)
-			elseif table.getn(pred) == 14 then		
-				if pred[1]:size(1) == 2 then		-- structured & no filter & each joint
-					pred = convert_multi_nofilt_label(pred)
-				elseif pred[1]:size(1) == 192 then  -- structured & filter
-					gt = convert_filt_label(gt)
-					pred = convert_multi_filt_label(pred)
-				end
-			end
-		end
-
-		-- case 2: a long filtered label
-		if pred:size(1) == LLABEL and gt:size(1) == LLABEL then
-			assert(LLABEL == 14*(64+128))
-			pred = convert_filt_label(pred)
-			gt = convert_filt_label(gt)
-		end
-
-		-- case 3: fcn label
-		if pred:size(1) == nJoints and pred:size(2) == 32 and pred:size(3) == 16 then
-			pred = convert_fcnlabel(pred)
-			gt = convert_fcnlabel(gt)
-		end
-
-		-- At this stage, the size of lable should be 28
-		assert(pred:size(1) == 2*nJoints)
+	for i = 1, label_pred:size(1) do
+		local gt = label_gt[i]
+		local pred = label_pred[i]
 
 		-- compute MSE
 		local MSE_each = 0
@@ -233,7 +170,7 @@ function compute_distance_MSE (dataset)
 		end
 		MSE = MSE + MSE_each
 	end
-	local avgMSE = MSE / dataset.label:size(1)
+	local avgMSE = MSE / label_pred:size(1)
 
 	return avgMSE	
 end
@@ -260,48 +197,19 @@ local function pcp_tester(jidx_part, iParts, pred, gt, alpha)
 	return pcp
 end
 
-function compute_PCP(dataset)
+function compute_PCP(label_gt, label_pred)
+
+	assert(label_gt:size(1) == label_pred:size(1))
 
 	local alpha = 0.5
 	local nParts
 	local pcp_cnt = 0
 
-	for iSmp = 1, dataset.label:size(1) do 			-- iterate through data samples
+	for iSmp = 1, label_pred:size(1) do 			-- iterate through data samples
 		
-		local pred = model:forward(dataset.data[iSmp])
-		local gt = dataset.label[iSmp]
+		local pred = label_pred[iSmp]
+		local gt = label_gt[iSmp]
 		local pcp_cnt_smp = 0
-
-		-- resize pred
-		if type(pred) == 'table' then
-			if table.getn(pred) == 2 then			-- structured & no filter
-				pred = convert_multi_label(pred)
-			elseif table.getn(pred) == 14 then		
-				if pred[1]:size(1) == 2 then		-- structured & no filter & each joint
-					pred = convert_multi_nofilt_label(pred)
-				elseif pred[1]:size(1) == 192 then  -- structured & filter
-					gt = convert_filt_label(gt)
-					pred = convert_multi_filt_label(pred)
-				end
-			end
-		end
-
-		-- case 2: a long filtered label
-		if pred:size(1) == LLABEL and gt:size(1) == LLABEL then
-			assert(LLABEL == 14*(64+128))
-			pred = convert_filt_label(pred)
-			gt = convert_filt_label(gt)
-		end
-
-		-- case 3: fcn label
-		if pred:size(1) == nJoints and pred:size(2) == 32 and pred:size(3) == 16 then
-			pred = convert_fcnlabel(pred)
-			gt = convert_fcnlabel(gt)
-		end
-
-		-- At this stage, the size of lable should be 28
-		assert(pred:size(1) == 2*nJoints)
-		assert(gt:size(1) == 2*nJoints)
 
 		-- Case1: fullbody	
 		if opt.t == 'PR_full' or opt.t == 'PR_multi' or opt.t == 'PR_multi_test' or opt.t == 'PR_filt' or opt.t == 'PR_filt_struct' or opt.t == 'PR_eachjoint' or opt.t == 'PR_fcn' then
@@ -361,7 +269,7 @@ function compute_PCP(dataset)
 
 	end
 	
-	PCP = ( pcp_cnt / (dataset.label:size(1) * nParts) ) * 100
+	PCP = ( pcp_cnt / (label_pred:size(1) * nParts) ) * 100
 
 	return PCP
 

@@ -6,6 +6,7 @@
 -- 2) convert 14*(64+128) to 28
 --
 -- ]]
+local matio = require 'matio'
 
 local function filter_gaussian(label, maxPixelSize, stdv)
 	local label_new = torch.FloatTensor(label:size(1), label:size(2), maxPixelSize):zero()
@@ -145,8 +146,7 @@ function convert_labels_to_fcnLabels(labels)
 	end
 
 	-- 2. apply gaussian filter
-	local kernel = image.gaussian(5,0.5)
-	print(kernel)
+	local kernel = matio.load('matfiles/gaussiankernel.mat')['h']:float()
 
 	for i=1,nlabels do
 		for j=1,nJoints do
@@ -154,7 +154,7 @@ function convert_labels_to_fcnLabels(labels)
 		end
 	end
 	--print(fcnlabels[1][1])
-
+	
 	return fcnlabels
 end
 

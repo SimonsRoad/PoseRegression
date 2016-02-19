@@ -76,7 +76,8 @@ function evaluate(dataset, kind)
 
 	-- save prediction results for visualization
 	pred_save = label_pred:double()
-	matio.save(paths.concat(opt.save,string.format('pred_%s_%s.mat', kind, opt.t)), pred_save)
+	--matio.save(paths.concat(opt.save,string.format('pred_%s_%s.mat', kind, opt.t)), pred_save)
+	matio.save(string.format('pred_%s_%s.mat', kind, opt.t), pred_save)
 end
 
 

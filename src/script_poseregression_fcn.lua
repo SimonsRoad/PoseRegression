@@ -23,7 +23,7 @@ nPoolSize = 13344
 nTrainData = 10000
 nTestData = 2000
 
-LOADSAVED = false
+LOADSAVED = true 
 
 
 -- 1. load and normalize data

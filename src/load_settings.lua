@@ -22,7 +22,8 @@ elseif opt.t == 'PR_lower' then
 
 elseif opt.t == 'PR_multi' then
 	part = 'fullbody'; nJoints = 14; modelNumber = 10;
-	modelSaved = '/home/namhoon/develop/PoseRegression/save/PR_multi/option,nEpochs=400,t=PR_multi/t_TueFeb1604:39:022016/PR_multi_model_400.t7'
+	modelSaved = '/home/namhoon/develop/PoseRegression/save/PR_multi/option,nEpochs=20000,t=PR_multi/t_ThuFeb1819:40:562016/PR_multi_model_14500.t7'
+	--modelSaved = '/home/namhoon/develop/PoseRegression/save/PR_multi/option,nEpochs=400,t=PR_multi/t_TueFeb1604:39:022016/PR_multi_model_400.t7'
 	--modelSaved = '/home/namhoon/develop/PoseRegression/save/PR_multi/option,t=PR_multi/t_ThuFeb1117:30:082016/PR_multimodel_50.t7'
 	--modelSaved = '/home/namhoon/develop/PoseRegression/save/PR_multi/option,t=PR_multi/t_ThuFeb1109:26:482016/PR_multimodel_50.t7'
 
@@ -44,7 +45,7 @@ elseif opt.t == 'PR_eachjoint' then
 
 elseif opt.t == 'PR_fcn' then
 	part = 'fullbody'; nJoints = 14; modelNumber = 14;
-	modelSaved = SAVEDIR .. opt.t .. '/tmp/PR_fcn_model_4000.t7'
+	modelSaved = SAVEDIR .. opt.t .. '/tmp/PR_fcn_model_2500.t7'
 
 elseif opt.t == 'PDPR' then
 	part = 'fullbody'; nJoints = 14; modelNumber = 0;

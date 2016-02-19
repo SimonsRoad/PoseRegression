@@ -1,5 +1,5 @@
 --[[
---script_poseregression_multitask.lua
+--test_pr.lua
 --Namhoon Lee, The Robotics Institute, Carnegie Mellon University
 --]]
 
@@ -22,13 +22,13 @@ paths.dofile('load_settings.lua')
 
 -- 1. load and normalize data
 -- 
-testset = matio.load('../mat/dataset/testdata.mat')
-testset.label = convert_labels_to_fcnLabels(testset.label)
+testset = matio.load('../mat/dataset/traindata.mat')
+--testset.label = convert_labels_to_fcnLabels(testset.label)
 
 print (testset)
-assert(testset.label:size(1) == 2000); 
-assert(testset.label:size(2) == nJoints)
-assert(testset.label:size(3) == 32)
+--assert(testset.label:size(1) == 2000); 
+--assert(testset.label:size(2) == nJoints)
+--assert(testset.label:size(3) == 32)
 
 
 -- normalization
@@ -45,6 +45,7 @@ testset.label = testset.label:cuda()
 
 
 -- load saved model
+print(modelSaved)
 model = torch.load(modelSaved)
 
 

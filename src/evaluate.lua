@@ -8,14 +8,14 @@
 local matio = require 'matio'
 
 
-local function forwardpass(dataset)
+local function forwardpass(inputdataset)
 
-	local label_gt   = torch.Tensor(dataset.label:size(1), 28)
-	local label_pred = torch.Tensor(dataset.label:size(1), 28)
+	local label_gt   = torch.Tensor(inputdataset.label:size(1), 28):float()
+	local label_pred = torch.Tensor(inputdataset.label:size(1), 28)
 
-	for iSmp = 1,dataset.label:size(1) do
-		local pred = model:forward(dataset.data[iSmp])
-		local gt = dataset.label[iSmp]
+	for iSmp = 1,inputdataset.label:size(1) do
+		local pred = model:forward(inputdataset.data[iSmp])
+		local gt = inputdataset.label[iSmp]
 
 		-- resize pred
 		if type(pred) == 'table' then
@@ -48,7 +48,7 @@ local function forwardpass(dataset)
 		assert(pred:size(1) == 2*nJoints)
 		assert(gt:size(1) == 2*nJoints)
 
-		label_gt[iSmp]   = gt
+		label_gt[iSmp]   = gt:float()
 		label_pred[iSmp] = pred 
 	end
 
@@ -57,12 +57,13 @@ local function forwardpass(dataset)
 end
 
 
-function evaluate(dataset, kind)
+function evaluate(inputdataset, kind)
 
 	-- 0. forward pass and convert labels to single vectors
 	-- labels are all #Data x 28
-	label_gt, label_pred = forwardpass(dataset)
+	label_gt, label_pred = forwardpass(inputdataset)
 
+	print(11)
 	-- EVALUATE
 	PCP = compute_PCP(label_gt, label_pred)
 	EPJ, EPJ_avg = compute_epj(label_gt, label_pred)
@@ -76,8 +77,8 @@ function evaluate(dataset, kind)
 
 	-- save prediction results for visualization
 	pred_save = label_pred:double()
-	--matio.save(paths.concat(opt.save,string.format('pred_%s_%s.mat', kind, opt.t)), pred_save)
-	matio.save(string.format('pred_%s_%s.mat', kind, opt.t), pred_save)
+	matio.save(paths.concat(opt.save,string.format('pred_%s_%s.mat', kind, opt.t)), pred_save)
+	--matio.save(string.format('pred_%s_%s.mat', kind, opt.t), pred_save)
 end
 
 

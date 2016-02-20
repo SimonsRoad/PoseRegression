@@ -274,3 +274,35 @@ function compute_PCP(label_gt, label_pred)
 	return PCP
 
 end
+
+function compute_PCK(label_gt, label_pred)
+
+	assert(label_gt:size(1) == label_pred:size(1))
+
+	local alpha = 0.5
+	local pck_cnt = 0
+
+	for iSmp = 1, label_pred:size(1) do 			-- iterate through data samples
+		
+		local pred = label_pred[iSmp]
+		local gt = label_gt[iSmp]
+
+		-- compute size of head
+		local hSize = math.sqrt(math.pow(gt[1]-gt[3],2)+math.pow(gt[2]-gt[4],2))
+
+		-- if distance is less than alpha * head size then passed!!
+		for i=1,14 do
+			local d=math.sqrt(math.pow(gt[2*i-1]-pred[2*i-1],2)+math.pow(gt[2*i]-pred[2*i],2)) 
+			if d <= hSize*alpha then
+				pck_cnt = pck_cnt + 1
+			end
+		end
+
+	end
+	
+	local PCK = ( pck_cnt / (nJoints * label_pred:size(1)) ) * 100
+
+	return PCK
+
+end
+

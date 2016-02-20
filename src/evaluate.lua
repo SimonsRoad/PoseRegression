@@ -73,12 +73,14 @@ function evaluate(inputdataset, kind, savedir)
 
 	-- EVALUATE
 	PCP = compute_PCP(label_gt, label_pred)
+	PCK = compute_PCK(label_gt, label_pred)
 	EPJ, EPJ_avg = compute_epj(label_gt, label_pred)
 	MSE_avg = compute_MSE(label_gt, label_pred)
 
 	-- print out the results
 	print(string.format('-- (%s)', kind))
 	print(string.format('PCP     :   %.2f  (%%)', PCP))
+	print(string.format('PCK     :   %.2f  (%%)', PCK))
 	print(string.format('EPJ_avg :   %.4f', EPJ_avg))
 	print(string.format('MSE_avg :   %.4f', MSE_avg))
 

@@ -19,7 +19,7 @@ paths.dofile('evaluate.lua')
 cutorch.setDevice(opt.GPU)
 paths.dofile('load_settings.lua')
 
-LOADSAVED = true
+LOADSAVED = false
 
 
 -- 1. load and normalize data
@@ -123,4 +123,5 @@ end
 
 -- 5. test the network
 --
-evaluate()
+evaluate(testset, 'test')
+evaluate(trainset, 'train')

@@ -22,8 +22,8 @@ paths.dofile('load_settings.lua')
 
 -- 1. load and normalize data
 -- 
-testset = matio.load('../mat/dataset/traindata.mat')
---testset.label = convert_labels_to_fcnLabels(testset.label)
+testset = matio.load('../mat/dataset/testdata.mat')
+testset.label = convert_labels_to_fcnLabels(testset.label)
 
 print (testset)
 --assert(testset.label:size(1) == 2000); 
@@ -45,10 +45,9 @@ testset.label = testset.label:cuda()
 
 
 -- load saved model
-print(modelSaved)
 model = torch.load(modelSaved)
 
 
 -- 2. Test
-evaluate(testset, 'test')
+evaluate(testset, 'test', 'testdir')
 

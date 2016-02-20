@@ -45,7 +45,7 @@ elseif opt.t == 'PR_eachjoint' then
 
 elseif opt.t == 'PR_fcn' then
 	part = 'fullbody'; nJoints = 14; modelNumber = 14;
-	modelSaved = SAVEDIR .. opt.t .. '/tmp/PR_fcn_model_2500.t7'
+	modelSaved = SAVEDIR .. opt.t .. '/option,batchSize=512,epochSize=20,nEpochs=40000,nGPU=3,t=PR_fcn/t_FriFeb1903:34:422016/PR_fcn_model_2500.t7'
 
 elseif opt.t == 'PDPR' then
 	part = 'fullbody'; nJoints = 14; modelNumber = 0;

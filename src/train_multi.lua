@@ -73,7 +73,7 @@ function train()
 	trainLogger:add{
 		['avg loss (train set)'] = loss_epoch
 	}
-	print(string.format('Ep. [%d/%d] ==> Total Time(s): %.2f  ' .. 'avg loss (per batch): %.8f ', epoch, opt.nEpochs, tm:time().real, loss_epoch))
+	print(string.format('Ep. [%d/%d] (Train) Time(s): %.2f  ' .. 'avg loss (per batch): %.8f ', epoch, opt.nEpochs, tm:time().real, loss_epoch))
 
 
 	collectgarbage()
@@ -89,7 +89,7 @@ function train()
 			end
 		end
 	end
-	--sanitize(model)
+	sanitize(model)
 	--model:clearState()
 	if epoch % 500 == 0 then
 		--model:clearState()

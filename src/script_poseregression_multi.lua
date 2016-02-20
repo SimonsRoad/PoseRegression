@@ -1,5 +1,5 @@
 --[[
---script_poseregression_multitask.lua
+--script_poseregression_multi.lua
 --Namhoon Lee, The Robotics Institute, Carnegie Mellon University
 --]]
 
@@ -12,15 +12,12 @@ paths.dofile('util.lua')
 paths.dofile('datafromlist.lua')
 paths.dofile('create_network.lua')
 paths.dofile('compute_distance.lua')
+paths.dofile('evaluate.lua')
 
 
 -- 0. settings
 cutorch.setDevice(opt.GPU)
 paths.dofile('load_settings.lua')
-
-nPoolSize  = 13344
-nTrainData = 10000
-nTestData  = 2000
 
 LOADSAVED = true
 
@@ -28,6 +25,10 @@ LOADSAVED = true
 -- 1. load and normalize data
 -- 
 if not LOADSAVED then
+	nPoolSize  = 13344
+	nTrainData = 10
+	nTestData  = 10
+
 	mydataloader = dataLoader{filename = '../data/lists/pos.txt'}
 
 	--idx_pool = torch.randperm(nPoolSize)
@@ -105,10 +106,12 @@ print(model)
 -- 4. (NEW) TRAINING  
 TRAINING = true
 if TRAINING then
-	paths.dofile('train_multitask.lua')
+	paths.dofile('train_multi.lua')
+	paths.dofile('test_multi.lua')
 	epoch = opt.epochNumber
 	for i=1, opt.nEpochs do
 		train()
+		test()
 		epoch = epoch + 1
 	end
 	model:evaluate()

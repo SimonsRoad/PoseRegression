@@ -355,8 +355,8 @@ function create_network_model10()		-- PR_multi
 
 end
 
-function create_network_model11()			-- spatial filter; large output
-	
+function create_network_model11()			-- PR_torsolimbs 
+
 	require 'nn';
 
 	--
@@ -369,30 +369,56 @@ function create_network_model11()			-- spatial filter; large output
 	feat:add(nn.SpatialMaxPooling(2,2,2,2))
 	feat:add(nn.SpatialConvolution(16,16,3,3,1,1,1,1))
 	feat:add(nn.ReLU())
+	feat:add(nn.SpatialMaxPooling(2,2,2,2))
+	feat:add(nn.SpatialConvolution(16,16,3,3,1,1,1,1))
+	feat:add(nn.ReLU())
 	feat:add(nn.SpatialConvolution(16,16,3,3,1,1,1,1))
 	feat:add(nn.ReLU())
 	feat:add(nn.SpatialMaxPooling(2,2,2,2))
-
 	feat:cuda()
+
 	feat = makeDataParallel(feat, opt.nGPU)
 	
-	--
-	local regression = nn.Sequential()
-	regression:add(nn.View(16*32*16))
-
-	regression:add(nn.Dropout(0.5))
-	regression:add(nn.Linear(16*32*16, 2688))
-	regression:add(nn.ReLU())
-
-	regression:add(nn.Linear(2688, 2688))
-
-	regression:cuda()
+	local nOutFromFeat = 16*16*8
+	local dFC = 1024
 
 	--
-	local model = nn.Sequential():add(feat):add(regression)
+	local torso = nn.Sequential()
+	torso:add(nn.View(nOutFromFeat))
+	torso:add(nn.Dropout(0.5))
+	torso:add(nn.Linear(nOutFromFeat, nOutFromFeat))
+	torso:add(nn.ReLU())
+	torso:add(nn.Dropout(0.5))
+	torso:add(nn.Linear(nOutFromFeat, dFC))
+	torso:add(nn.ReLU())
+	torso:add(nn.Linear(dFC, 12))
+	torso:cuda()
+
+	--
+	local limbs = nn.Sequential()
+	limbs:add(nn.View(nOutFromFeat))
+	limbs:add(nn.Dropout(0.5))
+	limbs:add(nn.Linear(nOutFromFeat, nOutFromFeat))
+	limbs:add(nn.ReLU())
+	limbs:add(nn.Dropout(0.5))
+	limbs:add(nn.Linear(nOutFromFeat, dFC))
+	limbs:add(nn.ReLU())
+	limbs:add(nn.Linear(dFC, 16))
+	limbs:cuda()
+
+	--
+	local tasks = nn.ConcatTable()
+	tasks:add(torso)
+	tasks:add(limbs)
+	tasks:cuda()
+
+	--
+	local model = nn.Sequential():add(feat):add(tasks)
 	model:cuda()
 
 	return model
+
+
 
 end
 

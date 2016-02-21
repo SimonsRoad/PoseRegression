@@ -31,7 +31,7 @@ elseif opt.t == 'PR_multi_test' then
 	part = 'fullbody'; nJoints = 14; modelNumber = 10;
 	modelSaved = '/home/namhoon/develop/PoseRegression/save/PR_multi/option,t=PR_multi/t_ThuFeb1117:30:082016/PR_multimodel_50.t7'
 
-elseif opt.t == 'PR_filt' then
+elseif opt.t == 'PR_torsolimbs' then
 	part = 'fullbody'; nJoints = 14; modelNumber = 11;
 	modelSaved = ' ';
 

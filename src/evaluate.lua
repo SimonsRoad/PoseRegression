@@ -22,8 +22,10 @@ local function forwardpass(inputdataset)
 
 		-- resize pred
 		if type(pred) == 'table' then
-			if table.getn(pred) == 2 then           -- structured & no filter
+			if table.getn(pred)==2 and opt.t=='PR_multi' then           -- structured & no filter
 				pred = convert_multi_label(pred)
+			elseif table.getn(pred)==2 and opt.t=='PR_torsolimbs' then
+				pred = convert_torsolimbs_label(pred)
 			elseif table.getn(pred) == 14 then
 				if pred[1]:size(1) == 2 then        -- structured & no filter & each joint
 					pred = convert_multi_nofilt_label(pred)

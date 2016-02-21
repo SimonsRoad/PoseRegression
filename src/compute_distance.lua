@@ -65,6 +65,44 @@ function convert_multi_nofilt_label(label)
 	return labelout	
 end
 
+function convert_torsolimbs_label(pred)
+	-- Assumption: PR_multi (2 table) -->  PR_full (28 size tensor)
+	-- torso and limbs 2 outputs
+	assert(pred[1]:size(1) == 12 and pred[2]:size(1) == 16)
+	
+	local pred_tmp = torch.Tensor(2*nJoints)
+	pred_tmp[1] = pred[1][1]
+	pred_tmp[2] = pred[1][2]
+	pred_tmp[3] = pred[1][3]
+	pred_tmp[4] = pred[1][4]
+	pred_tmp[5] = pred[1][5]
+	pred_tmp[6] = pred[1][6]
+	pred_tmp[11] = pred[1][7]
+	pred_tmp[12] = pred[1][8]
+	pred_tmp[17] = pred[1][9]
+	pred_tmp[18] = pred[1][10]
+	pred_tmp[23] = pred[1][11]
+	pred_tmp[24] = pred[1][12]
+
+	pred_tmp[7] = pred[2][1]
+	pred_tmp[8] = pred[2][2]
+	pred_tmp[9] = pred[2][3]
+	pred_tmp[10] = pred[2][4]
+	pred_tmp[13] = pred[2][5]
+	pred_tmp[14] = pred[2][6]
+	pred_tmp[15] = pred[2][7]
+	pred_tmp[16] = pred[2][8]
+	pred_tmp[19] = pred[2][9]
+	pred_tmp[20] = pred[2][10]
+	pred_tmp[21] = pred[2][11]
+	pred_tmp[22] = pred[2][12]
+	pred_tmp[25] = pred[2][13]
+	pred_tmp[26] = pred[2][14]
+	pred_tmp[27] = pred[2][15]
+	pred_tmp[28] = pred[2][16]
+	return pred_tmp
+end
+
 function convert_multi_label(pred)
 	-- Assumption: PR_multi (2 table) -->  PR_full (28 size tensor)
 	assert(pred[1]:size(1) == 16 and pred[2]:size(1) == 12)
@@ -212,7 +250,7 @@ function compute_PCP(label_gt, label_pred)
 		local pcp_cnt_smp = 0
 
 		-- Case1: fullbody	
-		if opt.t == 'PR_full' or opt.t == 'PR_multi' or opt.t == 'PR_multi_test' or opt.t == 'PR_filt' or opt.t == 'PR_filt_struct' or opt.t == 'PR_eachjoint' or opt.t == 'PR_fcn' then
+		if opt.t == 'PR_full' or opt.t == 'PR_multi' or opt.t == 'PR_multi_test' or opt.t == 'PR_filt_struct' or opt.t == 'PR_eachjoint' or opt.t == 'PR_fcn' or opt.t == 'PR_torsolimbs' then
 			nParts = 11
 
 			jidx_part = torch.Tensor(nParts,2)

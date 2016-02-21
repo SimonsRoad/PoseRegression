@@ -23,7 +23,9 @@ paths.dofile('load_settings.lua')
 -- 1. load and normalize data
 -- 
 testset = matio.load('../mat/dataset/testdata.mat')
-testset.label = convert_labels_to_fcnLabels(testset.label)
+
+-- convert label if it's fcn
+--testset.label = convert_labels_to_fcnLabels(testset.label)
 
 print (testset)
 --assert(testset.label:size(1) == 2000); 

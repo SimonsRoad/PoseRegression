@@ -12,10 +12,9 @@ paths.dofile('util.lua')
 paths.dofile('datafromlist.lua')
 paths.dofile('create_network.lua')
 
-paths.dofile('save_results.lua')
-
 
 -- 0. settings
+cutorch.setDevice(opt.GPU)
 paths.dofile('load_settings.lua')
 
 nPool_pos = 13344
@@ -68,13 +67,17 @@ mean = {}
 stdv = {}
 for i=1,3 do
 	mean[i] = trainset.data[{ {}, {i}, {}, {} }]:mean()
-	print(mean[i])
-	print(type(mean[i]))
 	trainset.data[{ {}, {i}, {}, {} }]:add(-mean[i])
 
 	stdv[i] = trainset.data[{ {}, {i}, {}, {} }]:std()
 	trainset.data[{ {}, {i}, {}, {} }]:div(stdv[i])
+
+	testset.data[{ {}, {i}, {}, {} }]:add(-mean[i])
+	testset.data[{ {}, {i}, {}, {} }]:div(stdv[i])
 end
+
+print('Saving everything to: ' .. opt.save)
+os.execute('mkdir -p ' .. opt.save)
 
 
 -- 2. network
@@ -85,35 +88,25 @@ end
 model = create_network(modelNumber)
 cudnn.convert(model, cudnn)
 
+
 -- 3. loss function
 -- 
 criterion = nn.ClassNLLCriterion()
-
+criterion = criterion:cuda()
 
 -- *change to cuda
-model = model:cuda()
-criterion = criterion:cuda()
 trainset.data = trainset.data:cuda()
 trainset.label = trainset.label:cuda()
 testset.data = testset.data:cuda()
 testset.label = testset.label:cuda()
 
-
--- save mean and std for future use
-matio.save('meanstd/meanForPD.mat', torch.Tensor(mean))
-matio.save('meanstd/stdvForPD.mat', torch.Tensor(stdv))
-
-adf=adf+1
-
 -- *optional
-cutorch.setDevice(opt.GPU)
 print(opt)
-print('Saving everything to: ' .. opt.save)
 
 
 -- 4. trian the network
 --
-TRAINING = false
+TRAINING = true
 if TRAINING then
 	paths.dofile('train.lua')
 	epoch = opt.epochNumber
@@ -128,11 +121,6 @@ end
 
 -- 5. test the network
 --
-for i=1,3 do
-	testset.data[{ {}, {i}, {}, {} }]:add(-mean[i])
-	testset.data[{ {}, {i}, {}, {} }]:div(stdv[i])
-end
-
 -- test error
 correct = 0
 for i=1, testset.label:size(1) do

@@ -11,13 +11,11 @@
 --
 testLogger = optim.Logger(paths.concat(opt.save, 'test.log'))
 
-local batchNumber
 local loss_epoch
 local timer = torch.Timer()
 
 function test()
 
-   	batchNumber = 0
    	cutorch.synchronize()
    	timer:reset()
 
@@ -28,7 +26,7 @@ function test()
 
    	loss_epoch = 0
    	for i=1,nTest/opt.batchSize do 
-	  	 local idx_start = batchNumber * opt.batchSize + 1
+	  	 local idx_start = i * opt.batchSize + 1
 		 local idx_end   = idx_start + opt.batchSize - 1
 		 local idx_batch
 		 if idx_end <= nTest then
@@ -66,7 +64,6 @@ local labels2 = torch.CudaTensor()
 
 
 function testBatch(inputsCPU, labelsCPU)
-   	batchNumber = batchNumber + opt.batchSize
 
    	inputs:resize(inputsCPU:size()):copy(inputsCPU)
    	labels:resize(labelsCPU:size()):copy(labelsCPU)

@@ -24,7 +24,6 @@ end
 
 -- 2. Create loggers.
 trainLogger = optim.Logger(paths.concat(opt.save, 'train.log'))
-local batchNumber
 local loss_epoch
 
 
@@ -32,7 +31,6 @@ local loss_epoch
 --		     i.e. load data, train model, save model and state to disk
 function train()
 
-	batchNumber = 0
 	cutorch.synchronize()
 
 	-- set the dropouts to training mode
@@ -47,7 +45,7 @@ function train()
 	for i=1, opt.epochSize do
 
 		-- create indices for a batch
-		local idx_start = batchNumber*opt.batchSize + 1
+		local idx_start = i * opt.batchSize + 1
 		local idx_end = idx_start + opt.batchSize - 1
 		local idx_batch
 		if idx_end <= trainset.label:size(1) then
@@ -136,7 +134,6 @@ function trainBatch(inputsCPU, labelsCPU)
 	end
 
 	cutorch.synchronize()
-	batchNumber = batchNumber + 1
 	loss_epoch = loss_epoch + err
 
 	--print(('Ep. [%d/%d][%d/%d]\tTime %.3f Err %.5f LR %.0e DLTime %.3f'):format(epoch, opt.nEpochs, batchNumber, opt.epochSize, timer:time().real, err, optimState.learningRate, dataLoadingTime))

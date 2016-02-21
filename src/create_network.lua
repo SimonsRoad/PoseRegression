@@ -28,6 +28,8 @@ function create_network_model1()
 
 	net:add(nn.LogSoftMax())
 
+	net:cuda()
+
 	return net
 end
 

@@ -39,6 +39,9 @@ if not LOADSAVED then
 	trainset = mydataloader:get_crop_label(idx_train)
 	testset  = mydataloader:get_crop_label(idx_test)
 else 
+	nPoolSize  = 13344
+	nTrainData = 10000
+	nTestData  = 2000
 	trainset = matio.load('../mat/dataset/traindata.mat')
 	testset  = matio.load('../mat/dataset/testdata.mat')
 end

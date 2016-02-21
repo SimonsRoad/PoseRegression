@@ -12,6 +12,11 @@
 #outFile='pos_bb.txt'
 #find $pathToImages -name "*.jpg" ! -type d > $outFile
 
-pathToImages='/home/namhoon/develop/PoseRegression/data/rendout/pos/loc045001'
-outFile='pos.txt'
-find $pathToImages -name "*.jpg" ! -type d > $outFile
+#pathToImages='/home/namhoon/develop/PoseRegression/data/rendout/pos/loc045001'
+#outFile='pos.txt'
+#find $pathToImages -name "*.jpg" ! -type d > $outFile
+
+# real data
+pathToImages='/home/namhoon/develop/PoseRegression/data/cropped'
+outFile='real.txt'
+find $pathToImages -name "*.png" ! -type d > $outFile

@@ -136,6 +136,12 @@ function dataset:get_jointpath(imgpath)
 	return jointpath
 end
 
+function dataset:get_jointpath_real(imgpath)
+	local id = self:get_substring(imgpath, 'cropped/', 2)
+	local jointpath = '/home/namhoon/develop/PoseRegression/data/cropped/joints/joints2d_' .. id .. 'th.txt'
+	return jointpath
+end
+
 function dataset:get_label_fullbody(indices)
 
 	-- for 14 joints model, full body
@@ -143,6 +149,30 @@ function dataset:get_label_fullbody(indices)
 
 	for i=1, indices:size(1) do
 		local jointpath = self:get_jointpath(self:get_samplename(indices[i]))
+		local file = assert(io.open(jointpath, 'r'))
+		local cnt = 0
+		for line in file:lines() do
+			local tmp1 = line:find(' ')
+			local x = tonumber(line:sub(1,tmp1-1))
+			local y = tonumber(line:sub(tmp1,line:len()))
+			cnt = cnt + 1
+			label[i][cnt] = x 
+			cnt = cnt + 1
+			label[i][cnt] = y 
+		end
+		file:close()
+	end
+
+	return label
+end
+
+function dataset:get_label_fullbody_real(indices) 	-- load real label
+
+	-- for 14 joints model, full body
+	local label = torch.Tensor(indices:size(1), 28)  
+
+	for i=1, indices:size(1) do
+		local jointpath = self:get_jointpath_real(self:get_samplename(indices[i]))
 		local file = assert(io.open(jointpath, 'r'))
 		local cnt = 0
 		for line in file:lines() do
@@ -350,6 +380,24 @@ function dataset:get_crop_label(indices)
 	local labeltensor = torch.Tensor(indices:size(1), 28)
 
 	local label_ori= self:get_label_fullbody(indices)
+
+	for i=1, indices:size(1) do
+		local imgpath = ffi.string(torch.data(self.imagePath[indices[i]]), self.pathLength[indices[i]])
+		local image, label = loadImageCrop(imgpath, label_ori[i])
+		imagetensor[i] = image
+		labeltensor[i] = label
+	end
+
+	local out = {data = imagetensor, label = labeltensor}
+
+	return out
+end
+
+function dataset:get_crop_label_real(indices)
+	local imagetensor = torch.Tensor(indices:size(1), 3, 128, 64)
+	local labeltensor = torch.Tensor(indices:size(1), 28)
+
+	local label_ori= self:get_label_fullbody_real(indices)
 
 	for i=1, indices:size(1) do
 		local imgpath = ffi.string(torch.data(self.imagePath[indices[i]]), self.pathLength[indices[i]])

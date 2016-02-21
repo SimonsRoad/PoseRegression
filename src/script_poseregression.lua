@@ -72,6 +72,11 @@ print('Saving everything to: ' .. opt.save)
 os.execute('mkdir -p ' .. opt.save)
 
 
+-- save mean and std for future use
+--matio.save('meanstd/meanForPD.mat', torch.Tensor(mean))
+--matio.save('meanstd/stdvForPD.mat', torch.Tensor(stdv))
+
+
 -- 2. network
 --
 if opt.retrain ~= 'none' then

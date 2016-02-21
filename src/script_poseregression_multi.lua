@@ -38,11 +38,18 @@ if not LOADSAVED then
 
 	trainset = mydataloader:get_crop_label(idx_train)
 	testset  = mydataloader:get_crop_label(idx_test)
+
+	-- Also real data for test
+	--realloader = dataLoader{filename = '../data/lists/real.txt'}
+	--testset_real = realloader:get_crop_label_real(torch.range(1,27))
 else 
+	nPoolSize  = 13344
+	nTrainData = 10000
+	nTestData  = 2000
 	trainset = matio.load('../mat/dataset/traindata.mat')
 	testset  = matio.load('../mat/dataset/testdata.mat')
 end
-print (trainset); print (testset)
+print(trainset); print(testset)
 assert(testset.label:size(1) == nTestData); assert(testset.label:size(2) == nJoints*2)
 
 -- indexing trainset

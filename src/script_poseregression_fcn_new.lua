@@ -20,15 +20,18 @@ paths.dofile('randomcrop.lua')
 -- 0. settings 
 cutorch.setDevice(opt.GPU)
 paths.dofile('load_settings.lua')
+print('Saving everything to: ' .. opt.save) 
+os.execute('mkdir -p ' .. opt.save)
 
 
 -- 1. load and normalize data
 -- 
 mydataloader = dataLoader{filename = '../data/lists/pos.txt'}
 
-nTrainData = 10
-nTestData = 10
+nTrainData = 10000
+nTestData = 2000
 
+-- original data (before crop or normalize)
 trainset_ori = mydataloader:load_original(torch.range(1,nTrainData))
 testset_ori  = mydataloader:load_original(torch.range(nTrainData+1,nTrainData+nTestData))
 print(trainset_ori)
@@ -42,20 +45,17 @@ for i=1,3 do
 	stdv[i] = trainset_ori.data[{ {}, {i}, {}, {} }]:std()
 end
 
--- prepare testset (randomcrop + normalize)
+-- testset
 testset = randomcrop(testset_ori)
+testset.label = convert_labels_to_fcnLabels(testset.label)
+matio.save(paths.concat(opt.save, 'testdata.mat'), testset)
 for i=1,3 do
 	testset.data[{ {}, {i}, {}, {} }]:add(-mean[i])
 	testset.data[{ {}, {i}, {}, {} }]:div(stdv[i])
 end
-
--- convert testset label to fcnlabel 
-testset.label = convert_labels_to_fcnLabels(testset.label)
 assert(testset.label:size(1) == nTestData); 
 assert(testset.label:size(2) == nJoints)
 assert(testset.label:size(3) == 32)
-
--- cuda
 testset.data  = testset.data:cuda()
 testset.label = testset.label:cuda()
 
@@ -81,8 +81,6 @@ criterion = criterion:cuda()
 -- 4. Training
 --
 print(opt)
-print('Saving everything to: ' .. opt.save) 
-os.execute('mkdir -p ' .. opt.save)
 
 paths.dofile('train_fcn.lua')
 paths.dofile('test_fcn.lua')

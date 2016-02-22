@@ -105,40 +105,42 @@ end
 
 function convert_multi_label(pred)
 	-- Assumption: PR_multi (2 table) -->  PR_full (28 size tensor)
-	assert(pred[1]:size(1) == 16 and pred[2]:size(1) == 12)
-	
-	local pred_tmp = torch.Tensor(2*nJoints)
-	pred_tmp[1] = pred[1][1]
-	pred_tmp[2] = pred[1][2]
-	pred_tmp[3] = pred[1][3]
-	pred_tmp[4] = pred[1][4]
-	pred_tmp[5] = pred[1][5]
-	pred_tmp[6] = pred[1][6]
-	pred_tmp[7] = pred[1][7]
-	pred_tmp[8] = pred[1][8]
-	pred_tmp[9] = pred[1][9]
-	pred_tmp[10] = pred[1][10]
+	assert(pred[1]:size(1) == opt.batchSize and pred[2]:size(1) == opt.batchSize)
 
-	pred_tmp[17] = pred[1][11]
-	pred_tmp[18] = pred[1][12]
-	pred_tmp[19] = pred[1][13]
-	pred_tmp[20] = pred[1][14]
-	pred_tmp[21] = pred[1][15]
-	pred_tmp[22] = pred[1][16]
+	local pred_tmp = torch.Tensor(opt.batchSize, 2*nJoints)
+	for i=1,opt.batchSize do
+		pred_tmp[i][1] = pred[1][i][1]
+		pred_tmp[i][2] = pred[1][i][2]
+		pred_tmp[i][3] = pred[1][i][3]
+		pred_tmp[i][4] = pred[1][i][4]
+		pred_tmp[i][5] = pred[1][i][5]
+		pred_tmp[i][6] = pred[1][i][6]
+		pred_tmp[i][7] = pred[1][i][7]
+		pred_tmp[i][8] = pred[1][i][8]
+		pred_tmp[i][9] = pred[1][i][9]
+		pred_tmp[i][10] = pred[1][i][10]
 
-	pred_tmp[11] = pred[2][1]
-	pred_tmp[12] = pred[2][2]
-	pred_tmp[13] = pred[2][3]
-	pred_tmp[14] = pred[2][4]
-	pred_tmp[15] = pred[2][5]
-	pred_tmp[16] = pred[2][6]
+		pred_tmp[i][17] = pred[1][i][11]
+		pred_tmp[i][18] = pred[1][i][12]
+		pred_tmp[i][19] = pred[1][i][13]
+		pred_tmp[i][20] = pred[1][i][14]
+		pred_tmp[i][21] = pred[1][i][15]
+		pred_tmp[i][22] = pred[1][i][16]
+
+		pred_tmp[i][11] = pred[2][i][1]
+		pred_tmp[i][12] = pred[2][i][2]
+		pred_tmp[i][13] = pred[2][i][3]
+		pred_tmp[i][14] = pred[2][i][4]
+		pred_tmp[i][15] = pred[2][i][5]
+		pred_tmp[i][16] = pred[2][i][6]
 			
-	pred_tmp[23] = pred[2][7]
-	pred_tmp[24] = pred[2][8]
-	pred_tmp[25] = pred[2][9]
-	pred_tmp[26] = pred[2][10]
-	pred_tmp[27] = pred[2][11]
-	pred_tmp[28] = pred[2][12]
+		pred_tmp[i][23] = pred[2][i][7]
+		pred_tmp[i][24] = pred[2][i][8]
+		pred_tmp[i][25] = pred[2][i][9]
+		pred_tmp[i][26] = pred[2][i][10]
+		pred_tmp[i][27] = pred[2][i][11]
+		pred_tmp[i][28] = pred[2][i][12]
+	end
 	return pred_tmp
 end
 

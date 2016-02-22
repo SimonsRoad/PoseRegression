@@ -124,36 +124,32 @@ function convert_labels_to_fcnLabels(labels)
 	local w = 16
 	local h = 32
 
+	local grid_x = torch.repeatTensor(torch.range(1,16),32,1)
+	local grid_y = torch.repeatTensor(torch.range(1,32),16,1):transpose(1,2)
+	local sigma = 1.0
+
+
 	-- 0. convert normalized labels to pixel labels
 	local scalar = torch.repeatTensor(torch.Tensor({w,h}), nlabels, nJoints)
 	local plabels = torch.cmul(labels, scalar)
 
-	-- 1. reshape labels to voxels
+
+	-- 1. reshape labels and apply Gaussian filter: output as voxels
 	local fcnlabels = torch.Tensor(nlabels, nJoints, h, w)
 	for i=1,nlabels do
 
 		local voxel = torch.Tensor(nJoints, h, w)
 		for j=1,nJoints do
-			local channel = torch.zeros(h,w)
-			local x = torch.round(plabels[i][2*j-1])
-			local y = torch.round(plabels[i][2*j])
-			if x == 0 then x = 1 end
-			if y == 0 then y = 1 end
-			channel[y][x] = 1.0
+			local x = plabels[i][2*j-1]
+			local y = plabels[i][2*j]
+			local tmp1 = (1/(sigma*math.sqrt(2*math.pi)))
+			local tmp2 = torch.exp(-( torch.pow(grid_x-x,2) + torch.pow(grid_y-y,2) )/(2*math.pow(sigma,2)))
+			local channel = torch.mul(tmp2, tmp1)
 			voxel[j] = channel
 		end
 		fcnlabels[i] = voxel
 	end
 
-	-- 2. apply gaussian filter
-	local kernel = matio.load('matfiles/gaussiankernel.mat')['h']:float()
-
-	for i=1,nlabels do
-		for j=1,nJoints do
-			fcnlabels[i][j] = image.convolve(fcnlabels[i][j], kernel, 'same')
-		end
-	end
-	--print(fcnlabels[1][1])
 	
 	return fcnlabels
 end

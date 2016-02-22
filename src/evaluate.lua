@@ -18,59 +18,51 @@ local function processBatch(inputsCPU, labelsCPU)
 	local pred = model:forward(inputs)
 	local gt = labelsCPU
 
-	local pred_new = torch.Tensor(pred:size(1), 28)
-	local gt_new   = torch.Tensor(pred:size(1), 28)
+	local pred_new = torch.Tensor(opt.batchSize, 28)
+	local gt_new   = torch.Tensor(opt.batchSize, 28)
+	local gt_fcn, pred_fcn
 
 	-- resize pred
 	if type(pred) == 'table' then
 		if table.getn(pred)==2 and opt.t=='PR_multi' then           -- structured & no filter
-			for i=1,pred:size(1) do
-				pred_new[i] = convert_multi_label(pred[i])
-			end
+			pred_new = convert_multi_label(pred)
 		elseif table.getn(pred)==2 and opt.t=='PR_torsolimbs' then
-			for i=1,pred:size(1) do
+			for i=1,opt.batchSize do
 				pred_new[i] = convert_torsolimbs_label(pred[i])
 			end
 		elseif table.getn(pred) == 14 then
 			if pred:size(3) == 2 then        -- structured & no filter & each joint
-				for i=1,pred:size(1) do
+				for i=1,opt.batchSize do
 					pred_new[i] = convert_multi_nofilt_label(pred[i])
 				end
 			elseif pred:size(3) == 192 then  -- structured & filter
-				for i=1,pred:size(1) do
+				for i=1,opt.batchSize do
 					gt_new[i] = convert_filt_label(gt_new[i])
 					pred_new[i] = convert_multi_filt_label(pred[i])
 				end
 			end
 		end
-	end
+	else
+		-- case 3: fcn label
+		if pred:size(2) == nJoints and pred:size(3) == 32 and pred:size(4) == 16 then
+			-- before converting, save the heatmap
+			gt_fcn   = gt:float()
+			pred_fcn = pred:float()
 
-	-- case 2: a long filtered label
-	if pred:size(1) == LLABEL and gt:size(1) == LLABEL then
-		print('case2')
-		assert(false, 'this is not used any more')
-		assert(LLABEL == 14*(64+128))
-		pred = convert_filt_label(pred)
-		gt = convert_filt_label(gt)
-	end
-
-	-- case 3: fcn label
-	local gt_fcn, pred_fcn
-	if pred:size(2) == nJoints and pred:size(3) == 32 and pred:size(4) == 16 then
-		-- before converting, save the heatmap
-		gt_fcn   = gt:float()
-		pred_fcn = pred:float()
-
-		-- convert
-		for i=1,pred:size(1) do
-			pred_new[i] = convert_fcnlabel(pred[i])
-			gt_new[i]   = convert_fcnlabel(gt[i])
+			-- convert
+			for i=1,pred:size(1) do
+				pred_new[i] = convert_fcnlabel(pred[i])
+				gt_new[i]   = convert_fcnlabel(gt[i])
+			end
 		end
+
 	end
 
-	-- At this stage, the size of lable should be 28
-	assert(pred_new:size(2) == 2*nJoints)
+		-- At this stage, the size of lable should be 28
+	assert(gt_new:size(1) == opt.batchSize)
 	assert(gt_new:size(2) == 2*nJoints)
+	assert(pred_new:size(1) == opt.batchSize)
+	assert(pred_new:size(2) == 2*nJoints)
 
 	return gt_new, pred_new, gt_fcn, pred_fcn
 
@@ -102,18 +94,31 @@ local function forwardpass(inputdataset)
 		-- process batch
 		local gt_batch, pred_batch, gt_fcn_batch, pred_fcn_batch = processBatch(inputs, labels)
 
-		if idx_end <= nData then
-			gt[{ {idx_start,idx_end}, {} }]				= gt_batch
-			pred[{ {idx_start,idx_end}, {}}]	 		= pred_batch
-			gt_fcn[{ {idx_start,idx_end},{},{},{}}] 	= gt_fcn_batch
-			pred_fcn[{ {idx_start,idx_end},{},{},{}}] 	= pred_fcn_batch
-		else 
-			local len = nData-idx_start+1
-			gt[{ {idx_start,nData}, {} }]			= gt_batch[{{1,len},{}}]
-			pred[{ {idx_start,nData}, {}}]	 		= pred_batch[{{1,len},{}}]
-			gt_fcn[{ {idx_start,nData},{},{},{}}] 	= gt_fcn_batch[{{1,len},{},{},{}}]
-			pred_fcn[{ {idx_start,nData},{},{},{}}] = pred_fcn_batch[{{1,len},{},{},{}}]
+		
+		if opt.t == 'PR_multi' then
+			if idx_end <= nData then
+				gt[{ {idx_start,idx_end}, {} }]				= gt_batch
+				pred[{ {idx_start,idx_end}, {}}]	 		= pred_batch
+			else 
+				local len = nData-idx_start+1
+				gt[{ {idx_start,nData}, {} }]			= gt_batch[{{1,len},{}}]
+				pred[{ {idx_start,nData}, {}}]	 		= pred_batch[{{1,len},{}}]
+			end
+		elseif opt.t == 'PR_fcn' then
+			if idx_end <= nData then
+				gt[{ {idx_start,idx_end}, {} }]				= gt_batch
+				pred[{ {idx_start,idx_end}, {}}]	 		= pred_batch
+				gt_fcn[{ {idx_start,idx_end},{},{},{}}] 	= gt_fcn_batch
+				pred_fcn[{ {idx_start,idx_end},{},{},{}}] 	= pred_fcn_batch
+			else 
+				local len = nData-idx_start+1
+				gt[{ {idx_start,nData}, {} }]			= gt_batch[{{1,len},{}}]
+				pred[{ {idx_start,nData}, {}}]	 		= pred_batch[{{1,len},{}}]
+				gt_fcn[{ {idx_start,nData},{},{},{}}] 	= gt_fcn_batch[{{1,len},{},{},{}}]
+				pred_fcn[{ {idx_start,nData},{},{},{}}] = pred_fcn_batch[{{1,len},{},{},{}}]
+			end
 		end
+	
 	end
 
 	return gt, pred, gt_fcn, pred_fcn
@@ -131,15 +136,15 @@ function evaluate(inputdataset, kind, savedir)
 	-- EVALUATE
 	PCP = compute_PCP(label_gt, label_pred)
 	PCK = compute_PCK(label_gt, label_pred)
-	EPJ, EPJ_avg = compute_epj(label_gt, label_pred)
-	MSE_avg = compute_MSE(label_gt, label_pred)
+	--EPJ, EPJ_avg = compute_epj(label_gt, label_pred)
+	--MSE_avg = compute_MSE(label_gt, label_pred)
 
 	-- print out the results
 	print(string.format('-- (%s)', kind))
 	print(string.format('PCP     :   %.2f  (%%)', PCP))
 	print(string.format('PCK     :   %.2f  (%%)', PCK))
-	print(string.format('EPJ_avg :   %.4f', EPJ_avg))
-	print(string.format('MSE_avg :   %.4f', MSE_avg))
+	--print(string.format('EPJ_avg :   %.4f', EPJ_avg))
+	--print(string.format('MSE_avg :   %.4f', MSE_avg))
 
 	-- save prediction results for visualization
 	pred_save = label_pred:double()

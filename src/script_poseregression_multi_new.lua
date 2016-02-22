@@ -25,8 +25,8 @@ paths.dofile('load_settings.lua')
 -- 
 mydataloader = dataLoader{filename = '../data/lists/pos.txt'}
 
-nTrainData = 10000
-nTestData  = 2000
+nTrainData = 100
+nTestData  = 20
 
 trainset_ori = mydataloader:load_original(torch.range(1,nTrainData))
 testset_ori  = mydataloader:load_original(torch.range(nTrainData+1, nTrainData+nTestData))

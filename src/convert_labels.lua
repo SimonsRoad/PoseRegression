@@ -145,6 +145,7 @@ function convert_labels_to_fcnLabels(labels)
 			local tmp1 = (1/(sigma*math.sqrt(2*math.pi)))
 			local tmp2 = torch.exp(-( torch.pow(grid_x-x,2) + torch.pow(grid_y-y,2) )/(2*math.pow(sigma,2)))
 			local channel = torch.mul(tmp2, tmp1)
+			channel:div(torch.max(channel))
 			voxel[j] = channel
 		end
 		fcnlabels[i] = voxel

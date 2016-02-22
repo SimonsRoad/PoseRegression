@@ -8,61 +8,116 @@
 local matio = require 'matio'
 
 
-local function forwardpass(inputdataset)
 
-	local label_gt   = torch.Tensor(inputdataset.label:size(1), 28):float()
-	local label_pred = torch.Tensor(inputdataset.label:size(1), 28)
+local function processBatch(inputsCPU, labelsCPU)
+	local inputs = torch.CudaTensor()
+	local labels = torch.CudaTensor()
+	inputs:resize(inputsCPU:size()):copy(inputsCPU)
+	labels:resize(labelsCPU:size()):copy(labelsCPU)
 
-	local label_gt_fcn  = torch.Tensor(inputdataset.label:size())	-- save fcn labels to see heatmap
-	local label_pred_fcn= torch.Tensor(inputdataset.label:size())	-- save fcn labels to see heatmap
+	local pred = model:forward(inputs)
+	local gt = labelsCPU
 
-	for iSmp = 1,inputdataset.label:size(1) do
-		local pred = model:forward(inputdataset.data[iSmp])
-		local gt = inputdataset.label[iSmp]
+	local pred_new = torch.Tensor(pred:size(1), 28)
+	local gt_new   = torch.Tensor(pred:size(1), 28)
 
-		-- resize pred
-		if type(pred) == 'table' then
-			if table.getn(pred)==2 and opt.t=='PR_multi' then           -- structured & no filter
-				pred = convert_multi_label(pred)
-			elseif table.getn(pred)==2 and opt.t=='PR_torsolimbs' then
-				pred = convert_torsolimbs_label(pred)
-			elseif table.getn(pred) == 14 then
-				if pred[1]:size(1) == 2 then        -- structured & no filter & each joint
-					pred = convert_multi_nofilt_label(pred)
-				elseif pred[1]:size(1) == 192 then  -- structured & filter
-					gt = convert_filt_label(gt)
-					pred = convert_multi_filt_label(pred)
+	-- resize pred
+	if type(pred) == 'table' then
+		if table.getn(pred)==2 and opt.t=='PR_multi' then           -- structured & no filter
+			for i=1,pred:size(1) do
+				pred_new[i] = convert_multi_label(pred[i])
+			end
+		elseif table.getn(pred)==2 and opt.t=='PR_torsolimbs' then
+			for i=1,pred:size(1) do
+				pred_new[i] = convert_torsolimbs_label(pred[i])
+			end
+		elseif table.getn(pred) == 14 then
+			if pred:size(3) == 2 then        -- structured & no filter & each joint
+				for i=1,pred:size(1) do
+					pred_new[i] = convert_multi_nofilt_label(pred[i])
+				end
+			elseif pred:size(3) == 192 then  -- structured & filter
+				for i=1,pred:size(1) do
+					gt_new[i] = convert_filt_label(gt_new[i])
+					pred_new[i] = convert_multi_filt_label(pred[i])
 				end
 			end
 		end
-
-		-- case 2: a long filtered label
-		if pred:size(1) == LLABEL and gt:size(1) == LLABEL then
-			assert(LLABEL == 14*(64+128))
-			pred = convert_filt_label(pred)
-			gt = convert_filt_label(gt)
-		end
-
-		-- case 3: fcn label
-		if pred:size(1) == nJoints and pred:size(2) == 32 and pred:size(3) == 16 then
-			-- before converting, save the heatmap
-			label_gt_fcn[iSmp]   = gt:float()
-			label_pred_fcn[iSmp] = pred:float()
-
-			-- convert
-			pred = convert_fcnlabel(pred)
-			gt = convert_fcnlabel(gt)
-		end
-
-		-- At this stage, the size of lable should be 28
-		assert(pred:size(1) == 2*nJoints)
-		assert(gt:size(1) == 2*nJoints)
-
-		label_gt[iSmp]   = gt:float()
-		label_pred[iSmp] = pred 
 	end
 
-	return label_gt, label_pred, label_gt_fcn, label_pred_fcn
+	-- case 2: a long filtered label
+	if pred:size(1) == LLABEL and gt:size(1) == LLABEL then
+		print('case2')
+		assert(false, 'this is not used any more')
+		assert(LLABEL == 14*(64+128))
+		pred = convert_filt_label(pred)
+		gt = convert_filt_label(gt)
+	end
+
+	-- case 3: fcn label
+	local gt_fcn, pred_fcn
+	if pred:size(2) == nJoints and pred:size(3) == 32 and pred:size(4) == 16 then
+		-- before converting, save the heatmap
+		gt_fcn   = gt:float()
+		pred_fcn = pred:float()
+
+		-- convert
+		for i=1,pred:size(1) do
+			pred_new[i] = convert_fcnlabel(pred[i])
+			gt_new[i]   = convert_fcnlabel(gt[i])
+		end
+	end
+
+	-- At this stage, the size of lable should be 28
+	assert(pred_new:size(2) == 2*nJoints)
+	assert(gt_new:size(2) == 2*nJoints)
+
+	return gt_new, pred_new, gt_fcn, pred_fcn
+
+end
+
+local function forwardpass(inputdataset)
+	local nData = inputdataset.label:size(1)
+	local gt		= torch.Tensor(nData, 28):float()
+	local pred 		= torch.Tensor(nData, 28)
+	local gt_fcn  	= torch.Tensor(nData, 14, 32, 16)	--fcn labels to see heatmap
+	local pred_fcn	= torch.Tensor(nData, 14, 32, 16)	--fcn labels to see heatmap
+
+	for i=1, math.ceil(nData/opt.batchSize) do
+		local idx_start = (i-1) * opt.batchSize + 1
+		local idx_end   = idx_start + opt.batchSize - 1
+		local idx_batch
+		if idx_end <= nData then
+			idx_batch = torch.range(idx_start, idx_end)
+		else
+			local idx1 = torch.range(idx_start, nData)
+			local idx2 = torch.range(1, idx_end-nData)
+			idx_batch = torch.cat(idx1, idx2, 1)
+		end
+		
+		local inputs, labels
+		inputs = inputdataset.data:index(1, idx_batch:long())
+		labels = inputdataset.label:index(1, idx_batch:long())
+
+		-- process batch
+		local gt_batch, pred_batch, gt_fcn_batch, pred_fcn_batch = processBatch(inputs, labels)
+
+		if idx_end <= nData then
+			gt[{ {idx_start,idx_end}, {} }]				= gt_batch
+			pred[{ {idx_start,idx_end}, {}}]	 		= pred_batch
+			gt_fcn[{ {idx_start,idx_end},{},{},{}}] 	= gt_fcn_batch
+			pred_fcn[{ {idx_start,idx_end},{},{},{}}] 	= pred_fcn_batch
+		else 
+			local len = nData-idx_start+1
+			gt[{ {idx_start,nData}, {} }]			= gt_batch[{{1,len},{}}]
+			pred[{ {idx_start,nData}, {}}]	 		= pred_batch[{{1,len},{}}]
+			gt_fcn[{ {idx_start,nData},{},{},{}}] 	= gt_fcn_batch[{{1,len},{},{},{}}]
+			pred_fcn[{ {idx_start,nData},{},{},{}}] = pred_fcn_batch[{{1,len},{},{},{}}]
+		end
+	end
+
+	return gt, pred, gt_fcn, pred_fcn
+
 end
 
 

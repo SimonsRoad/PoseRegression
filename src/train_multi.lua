@@ -30,7 +30,7 @@ local loss_epoch
 
 --3. Train - this function handles the high-level training loop,
 --		     i.e. load data, train model, save model and state to disk
-function train()
+function train(trainset)
 
 	batchNumber = 0
 	cutorch.synchronize()

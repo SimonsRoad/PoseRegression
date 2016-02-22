@@ -37,6 +37,7 @@ if not LOADSAVED then
 	idx_test  = idx_pool:narrow(1,nTrainData+1,nTestData)
 
 	trainset = mydataloader:get_crop_label(idx_train)
+	adf=adf+1
 	testset  = mydataloader:get_crop_label(idx_test)
 
 	-- Also real data for test

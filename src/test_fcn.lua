@@ -26,22 +26,22 @@ function test()
 
    	loss_epoch = 0
    	for i=1,nTest/opt.batchSize do 
-	  	 local idx_start = (i-1)* opt.batchSize + 1
-		 local idx_end   = idx_start + opt.batchSize - 1
-		 local idx_batch
-		 if idx_end <= nTest then
-			 idx_batch = torch.range(idx_start, idx_end)
-		 else
-			 local idx1 = torch.range(idx_start, nTest)
-			 local idx2 = torch.range(1, idx_end-nTest)
-			 idx_batch = torch.cat(idx1, idx2, 1)
-		 end
+	  	local idx_start = (i-1) * opt.batchSize + 1
+		local idx_end   = idx_start + opt.batchSize - 1
+		local idx_batch
+		if idx_end <= nTest then
+			idx_batch = torch.range(idx_start, idx_end)
+		else
+			local idx1 = torch.range(idx_start, nTest)
+			local idx2 = torch.range(1, idx_end-nTest)
+			idx_batch = torch.cat(idx1, idx2, 1)
+		end
 
-		 local inputs, labels
-		 inputs = testset.data:index(1, idx_batch:long())
-		 labels = testset.label:index(1, idx_batch:long())
+		local inputs, labels
+		inputs = testset.data:index(1, idx_batch:long())
+		labels = testset.label:index(1, idx_batch:long())
 
-         testBatch(inputs, labels)
+        testBatch(inputs, labels)
    	end
 
    	cutorch.synchronize()
@@ -56,27 +56,16 @@ function test()
 end -- of test()
 -----------------------------------------------------------------------------
 local inputs = torch.CudaTensor()
-local inputs1 = torch.CudaTensor()
-local inputs2 = torch.CudaTensor()
 local labels = torch.CudaTensor()
-local labels1 = torch.CudaTensor()
-local labels2 = torch.CudaTensor()
 
 
 function testBatch(inputsCPU, labelsCPU)
+
    	inputs:resize(inputsCPU:size()):copy(inputsCPU)
    	labels:resize(labelsCPU:size()):copy(labelsCPU)
 
    	local outputs = model:forward(inputs)
-	local outputs1 = outputs[1]
-	local outputs2 = outputs[2]
-
-	local idx_torso = torch.Tensor({1,2,3,4,5,6,11,12,17,18,23,24})
-	local idx_limbs = torch.Tensor({7,8,9,10,13,14,15,16,19,20,21,22,25,26,27,28})
-	local labels1 = labels:index(2, idx_torso:long())
-	local labels2 = labels:index(2, idx_limbs:long())
-
-   	local err = criterion:forward({outputs1, outputs2}, {labels1, labels2})
+   	local err = criterion:forward(outputs, labels)
    	cutorch.synchronize()
 
    	loss_epoch = loss_epoch + err

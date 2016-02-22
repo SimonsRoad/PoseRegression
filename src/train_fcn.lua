@@ -30,7 +30,7 @@ local loss_epoch
 
 --3. Train - this function handles the high-level training loop,
 --		     i.e. load data, train model, save model and state to disk
-function train()
+function train(trainset)
 
 	batchNumber = 0
 	cutorch.synchronize()
@@ -73,7 +73,7 @@ function train()
 	trainLogger:add{
 		['avg loss (train set)'] = loss_epoch
 	}
-	print(string.format('Ep. [%d/%d] ==> Total Time(s): %.2f  ' .. 'avg loss (per batch): %.8f ', epoch, opt.nEpochs, tm:time().real, loss_epoch))
+	print(string.format('Ep. [%d/%d] (Train) Time(s): %.2f  ' .. 'avg loss (per batch): %.8f ', epoch, opt.nEpochs, tm:time().real, loss_epoch))
 
 
 	collectgarbage()
@@ -83,13 +83,13 @@ function train()
 		for _,val in ipairs(list) do
 			for name, field in pairs(val) do
 				if torch.type(field) == 'cdata' then val[name] = nil end
-				if (name == 'output' or name == 'gradInput') then
-					val[name] = field.new()
-				end
+				--if (name == 'output' or name == 'gradInput') then
+				--	val[name] = field.new()
+				--end
 			end
 		end
 	end
-	--sanitize(model)
+	sanitize(model)
 	if epoch % 500 == 0 then
 		--model:clearState()
 		saveDataParallel(paths.concat(opt.save, opt.t.. '_model_' .. epoch .. '.t7'), model)

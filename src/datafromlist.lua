@@ -90,19 +90,6 @@ end
 
 
 -- N.LEE
-function dataset:get_randomly(nTotal, nSel)
-	-- generate randome sequence (like randperm)
-	local randSeq = torch.randperm(nTotal):narrow(1,1,nSel) 
-	local dataTable = {}
-	for i=1, randSeq:size(1) do
-		local imgpath = ffi.string(torch.data(self.imagePath[randSeq[i]]), self.pathLength[randSeq[i]])
-		local out = self:sampleHook(imgpath)
-		table.insert(dataTable, out)
-	end
-	local data = self:tableToOutput(dataTable)
-	return data
-end
-
 function dataset:get_randomly_indices(indices)
 	local dataTable = {}
 	for i=1, indices:size(1) do
@@ -136,12 +123,6 @@ function dataset:get_jointpath(imgpath)
 	return jointpath
 end
 
-function dataset:get_jointpath_real(imgpath)
-	local id = self:get_substring(imgpath, 'cropped/', 2)
-	local jointpath = '/home/namhoon/develop/PoseRegression/data/cropped/joints/joints2d_' .. id .. 'th.txt'
-	return jointpath
-end
-
 function dataset:get_label_fullbody(indices)
 
 	-- for 14 joints model, full body
@@ -149,30 +130,6 @@ function dataset:get_label_fullbody(indices)
 
 	for i=1, indices:size(1) do
 		local jointpath = self:get_jointpath(self:get_samplename(indices[i]))
-		local file = assert(io.open(jointpath, 'r'))
-		local cnt = 0
-		for line in file:lines() do
-			local tmp1 = line:find(' ')
-			local x = tonumber(line:sub(1,tmp1-1))
-			local y = tonumber(line:sub(tmp1,line:len()))
-			cnt = cnt + 1
-			label[i][cnt] = x 
-			cnt = cnt + 1
-			label[i][cnt] = y 
-		end
-		file:close()
-	end
-
-	return label
-end
-
-function dataset:get_label_fullbody_real(indices) 	-- load real label
-
-	-- for 14 joints model, full body
-	local label = torch.Tensor(indices:size(1), 28)  
-
-	for i=1, indices:size(1) do
-		local jointpath = self:get_jointpath_real(self:get_samplename(indices[i]))
 		local file = assert(io.open(jointpath, 'r'))
 		local cnt = 0
 		for line in file:lines() do
@@ -283,20 +240,6 @@ function dataset:get_label(part, indices, ltTable)
 	return label
 end
 
---function dataset:get_label_filt(part, indices)
---	assert(part == 'fullbody')	-- currently only fullbody allowed
---
---	-- load regular labels, which is 28 values for 14 joints
---	local label_ori = self:get_label(part, indices)
---
---	-- convert to spatial labels
---	local label_filt = convert_labels_to_spatialLabels(label_ori)
---
---	print(label_filt)
---	adf=adf+1
---	return label_filt, label_ori
---end
-
 local function loadImageCrop(path, label_ori)
 
 	-- bw_outer, bh_outer
@@ -393,21 +336,28 @@ function dataset:get_crop_label(indices)
 	return out
 end
 
-function dataset:get_crop_label_real(indices)
-	local imagetensor = torch.Tensor(indices:size(1), 3, 128, 64)
-	local labeltensor = torch.Tensor(indices:size(1), 28)
+function dataset:load_original(indices)
 
-	local label_ori= self:get_label_fullbody_real(indices)
+	-- for the first time, load the first image to measure the size of input image
+	local tmp = image.load(ffi.string(torch.data(self.imagePath[indices[1]]), self.pathLength[indices[1]]), 3, 'float')
+	local w = tmp:size(3)
+	local h = tmp:size(2)
+
+	-- images 
+	local labeltensor = self:get_label_fullbody(indices)
+	local imagetensor = torch.Tensor(indices:size(1), 3, h, w)
 
 	for i=1, indices:size(1) do
 		local imgpath = ffi.string(torch.data(self.imagePath[indices[i]]), self.pathLength[indices[i]])
-		local image, label = loadImageCrop(imgpath, label_ori[i])
-		imagetensor[i] = image
-		labeltensor[i] = label
+		local img = image.load(imgpath, 3, 'float')
+		imagetensor[i] = img
 	end
 
-	local out = {data = imagetensor, label = labeltensor}
+	-- labels
+	local labeltensor = self:get_label_fullbody(indices)
 
+	-- out
+	local out = {data = imagetensor, label = labeltensor}
 	return out
 end
 

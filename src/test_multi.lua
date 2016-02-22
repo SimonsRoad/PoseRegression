@@ -26,22 +26,22 @@ function test()
 
    	loss_epoch = 0
    	for i=1,nTest/opt.batchSize do 
-	  	 local idx_start = i * opt.batchSize + 1
-		 local idx_end   = idx_start + opt.batchSize - 1
-		 local idx_batch
-		 if idx_end <= nTest then
-			 idx_batch = torch.range(idx_start, idx_end)
-		 else
-			 local idx1 = torch.range(idx_start, nTest)
-			 local idx2 = torch.range(1, idx_end-nTest)
-			 idx_batch = torch.cat(idx1, idx2, 1)
-		 end
+	  	local idx_start = (i-1) * opt.batchSize + 1
+		local idx_end   = idx_start + opt.batchSize - 1
+		local idx_batch
+		if idx_end <= nTest then
+			idx_batch = torch.range(idx_start, idx_end)
+		else
+			local idx1 = torch.range(idx_start, nTest)
+			local idx2 = torch.range(1, idx_end-nTest)
+			idx_batch = torch.cat(idx1, idx2, 1)
+		end
 
-		 local inputs, labels
-		 inputs = testset.data:index(1, idx_batch:long())
-		 labels = testset.label:index(1, idx_batch:long())
+		local inputs, labels
+		inputs = testset.data:index(1, idx_batch:long())
+		labels = testset.label:index(1, idx_batch:long())
 
-         testBatch(inputs, labels)
+        testBatch(inputs, labels)
    	end
 
    	cutorch.synchronize()

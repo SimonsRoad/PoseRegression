@@ -20,7 +20,7 @@ local function processBatch(inputsCPU, labelsCPU)
 
 	local pred_new = torch.Tensor(opt.batchSize, 28)
 	local gt_new   = torch.Tensor(opt.batchSize, 28)
-	local gt_fcn, pred_fcn
+	--local gt_fcn, pred_fcn
 
 	-- resize pred
 	if type(pred) == 'table' then
@@ -46,8 +46,8 @@ local function processBatch(inputsCPU, labelsCPU)
 		-- case 3: fcn label
 		if pred:size(2) == nJoints and pred:size(3) == 32 and pred:size(4) == 16 then
 			-- before converting, save the heatmap
-			gt_fcn   = gt:float()
-			pred_fcn = pred:float()
+			--gt_fcn   = gt:float()
+			--pred_fcn = pred:float()
 
 			-- convert
 			for i=1,pred:size(1) do
@@ -64,7 +64,8 @@ local function processBatch(inputsCPU, labelsCPU)
 	assert(pred_new:size(1) == opt.batchSize)
 	assert(pred_new:size(2) == 2*nJoints)
 
-	return gt_new, pred_new, gt_fcn, pred_fcn
+	--return gt_new, pred_new, gt_fcn, pred_fcn
+	return gt_new, pred_new
 
 end
 
@@ -92,7 +93,8 @@ local function forwardpass(inputdataset)
 		labels = inputdataset.label:index(1, idx_batch:long())
 
 		-- process batch
-		local gt_batch, pred_batch, gt_fcn_batch, pred_fcn_batch = processBatch(inputs, labels)
+		--local gt_batch, pred_batch, gt_fcn_batch, pred_fcn_batch = processBatch(inputs, labels)
+		local gt_batch, pred_batch = processBatch(inputs, labels)
 
 		
 		if opt.t == 'PR_multi' then
@@ -108,20 +110,21 @@ local function forwardpass(inputdataset)
 			if idx_end <= nData then
 				gt[{ {idx_start,idx_end}, {} }]				= gt_batch
 				pred[{ {idx_start,idx_end}, {}}]	 		= pred_batch
-				gt_fcn[{ {idx_start,idx_end},{},{},{}}] 	= gt_fcn_batch
-				pred_fcn[{ {idx_start,idx_end},{},{},{}}] 	= pred_fcn_batch
+				--gt_fcn[{ {idx_start,idx_end},{},{},{}}] 	= gt_fcn_batch
+				--pred_fcn[{ {idx_start,idx_end},{},{},{}}] 	= pred_fcn_batch
 			else 
 				local len = nData-idx_start+1
 				gt[{ {idx_start,nData}, {} }]			= gt_batch[{{1,len},{}}]
 				pred[{ {idx_start,nData}, {}}]	 		= pred_batch[{{1,len},{}}]
-				gt_fcn[{ {idx_start,nData},{},{},{}}] 	= gt_fcn_batch[{{1,len},{},{},{}}]
-				pred_fcn[{ {idx_start,nData},{},{},{}}] = pred_fcn_batch[{{1,len},{},{},{}}]
+				--gt_fcn[{ {idx_start,nData},{},{},{}}] 	= gt_fcn_batch[{{1,len},{},{},{}}]
+				--pred_fcn[{ {idx_start,nData},{},{},{}}] = pred_fcn_batch[{{1,len},{},{},{}}]
 			end
 		end
 	
 	end
 
-	return gt, pred, gt_fcn, pred_fcn
+	--return gt, pred, gt_fcn, pred_fcn
+	return gt, pred
 
 end
 
@@ -130,7 +133,8 @@ function evaluate(inputdataset, kind, savedir)
 
 	-- 0. forward pass and convert labels to single vectors
 	-- labels are all #Data x 28
-	label_gt, label_pred, label_gt_fcn, label_pred_fcn = forwardpass(inputdataset)
+	--label_gt, label_pred, label_gt_fcn, label_pred_fcn = forwardpass(inputdataset)
+	label_gt, label_pred = forwardpass(inputdataset)
 	
 
 	-- EVALUATE
@@ -151,14 +155,15 @@ function evaluate(inputdataset, kind, savedir)
 	if savedir then
 		-- This is when temporary save directory is specified
 		matio.save(string.format('../save/%s/pred_%s_%s.mat', savedir, kind, opt.t), pred_save)
-		matio.save(string.format('../save/%s/pred_%s_%s_heatmap.mat', savedir, kind, opt.t), label_pred_fcn)
-		matio.save(string.format('../save/%s/gt_%s_%s_heatmap.mat', savedir, kind, opt.t), label_gt_fcn)
+		--matio.save(string.format('../save/%s/pred_%s_%s_heatmap.mat', savedir, kind, opt.t), label_pred_fcn)
+		--matio.save(string.format('../save/%s/gt_%s_%s_heatmap.mat', savedir, kind, opt.t), label_gt_fcn)
 	else
 		matio.save(paths.concat(opt.save,string.format('pred_%s_%s.mat', kind, opt.t)), pred_save)
-		matio.save(paths.concat(opt.save,string.format('pred_%s_%s_heatmap.mat', kind, opt.t)), label_pred_fcn)
-		matio.save(paths.concat(opt.save,string.format('gt_%s_%s_heatmap.mat', kind, opt.t)), label_gt_fcn)
+		--matio.save(paths.concat(opt.save,string.format('pred_%s_%s_heatmap.mat', kind, opt.t)), label_pred_fcn)
+		--matio.save(paths.concat(opt.save,string.format('gt_%s_%s_heatmap.mat', kind, opt.t)), label_gt_fcn)
 	end
 	--matio.save(string.format('pred_%s_%s.mat', kind, opt.t), pred_save)
+	
 end
 
 

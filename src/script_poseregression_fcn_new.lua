@@ -93,9 +93,11 @@ for i=1, opt.nEpochs do
 
 	-- random crop
 	local trainset = randomcrop(trainset_ori)
+	local t_crop = timer:time().real
 
 	-- convert label to fcnlabel 
 	trainset.label = convert_labels_to_fcnLabels(trainset.label)
+	local t_fcnlabel = timer:time().real
 
 	-- normalize
 	for j = 1,3 do
@@ -109,14 +111,16 @@ for i=1, opt.nEpochs do
 	-- train and test
 	train(trainset)
 	test()
+	local t_main = timer:time().real
 
 	-- evaluation
-	if epoch % 50 == 0 then
+	if epoch == 50 then
 		evaluate(testset,  'test')
-		evaluate(trainset, 'train')
+		--evaluate(trainset, 'train')
+		local t_eval = timer:time().real
+		print(string.format('EP. [%d/%d] Time Analysys(s) [crop / fcn / main / eval]: %.2f / %.2f / %.2f / %.2f ',epoch,opt.nEpochs,t_crop, t_fcnlabel, t_main, t_eval))
 	end
 
-	print(string.format('EP. [%d/%d] (Total) Time(s): %.2f',epoch,opt.nEpochs,timer:time().real))
 	epoch = epoch + 1
 end
 

@@ -148,22 +148,14 @@ function convert_fcnlabel (label)
 	local label_new = torch.Tensor(2*nJoints)
 
 	for i =1, nJoints do
-		-- find max
-		local count =0
-		local idx_max = {}
-		local max = torch.max(label[i])
-		for j=1,label[i]:size(1) do
-			for k=1,label[i]:size(2) do
-				if label[i][j][k] == max then
-					count = count + 1
-					idx_max = {j,k}
-				end
-			end
-		end
+
+		local max, idx = torch.max(torch.reshape(label[i], 32*16), 1)
+		local j = math.floor(idx[1]/16)+1
+		local k = idx[1] % 16
 
 		-- new label. 
-		label_new[2*i-1] = idx_max[2] / 16
-		label_new[2*i] = idx_max[1] / 32
+		label_new[2*i-1] = k / 16
+		label_new[2*i] = j / 32
 	end
 
 	return label_new

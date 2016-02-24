@@ -16,7 +16,15 @@
 #outFile='pos.txt'
 #find $pathToImages -name "*.jpg" ! -type d > $outFile
 
+pathToImages='/home/namhoon/develop/PoseRegression/data/rendout/pos_double/loc045001'
+outFile='pos_double.txt'
+find $pathToImages -name "*.jpg" ! -type d > $outFile
+
+#pathToImages='/home/namhoon/develop/PoseRegression/data/rendout/joints_norm/2D/loc045001'
+#outFile='joints_2d.txt'
+#find $pathToImages -name "*.txt" ! -type d > $outFile
+
 # real data
-pathToImages='/home/namhoon/develop/PoseRegression/data/cropped'
-outFile='real.txt'
-find $pathToImages -name "*.png" ! -type d > $outFile
+#pathToImages='/home/namhoon/develop/PoseRegression/data/cropped'
+#outFile='real.txt'
+#find $pathToImages -name "*.png" ! -type d > $outFile

@@ -19,14 +19,16 @@ paths.dofile('randomcrop.lua')
 -- 0. settings
 cutorch.setDevice(opt.GPU)
 paths.dofile('load_settings.lua')
+print('Saving everything to: ' .. opt.save)
+os.execute('mkdir -p ' .. opt.save)
 
 
 -- 1. load original data
 -- 
 mydataloader = dataLoader{filename = '../data/lists/pos.txt'}
 
-nTrainData = 100
-nTestData  = 20
+nTrainData = 10000
+nTestData  = 2000
 
 trainset_ori = mydataloader:load_original(torch.range(1,nTrainData))
 testset_ori  = mydataloader:load_original(torch.range(nTrainData+1, nTrainData+nTestData))
@@ -43,11 +45,12 @@ end
 
 -- prepare testset (randomcrop + normalize)
 testset = randomcrop(testset_ori)
-assert(testset.label:size(1) == nTestData); assert(testset.label:size(2) == nJoints*2)
+matio.save(paths.concat(opt.save, 'testdata.mat'), testset)
 for i=1,3 do
 	testset.data[{ {}, {i}, {}, {} }]:add(-mean[i])
 	testset.data[{ {}, {i}, {}, {} }]:div(stdv[i])
 end
+assert(testset.label:size(1) == nTestData); assert(testset.label:size(2) == nJoints*2)
 testset.data  = testset.data:cuda()
 testset.label = testset.label:cuda()
 
@@ -73,8 +76,6 @@ criterion = criterion:cuda()
 -- 4. Training 
 --
 print(opt)
-print('Saving everything to: ' .. opt.save)
-os.execute('mkdir -p ' .. opt.save)
 
 paths.dofile('train_multi.lua')
 paths.dofile('test_multi.lua')
@@ -87,6 +88,7 @@ for i=1, opt.nEpochs do
 
 	-- random crop
 	local trainset = randomcrop(trainset_ori)
+	local t_crop = timer:time().real
 
 	-- normalize
 	for j = 1,3 do
@@ -100,14 +102,16 @@ for i=1, opt.nEpochs do
 	-- train and test
 	train(trainset)
 	test()
+	local t_main = timer:time().real
 
 	-- evaluation
-	if epoch % 50 == 0 then
+	if epoch % 100 == 0 then
 		evaluate(testset,  'test')
 		evaluate(trainset, 'train')
+		local t_eval = timer:time().real
+		print(string.format('EP. [%d/%d] Time Analysis(s) [crop/main/eval]: %.2f/%.2f/%.2f', epoch,opt.nEpochs,t_crop,t_main,t_eval))
 	end
 
-	print(string.format('EP. [%d/%d] (Total) Time(s): %.2f',epoch,opt.nEpochs,timer:time().real))
 	epoch = epoch + 1
 end
 

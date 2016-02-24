@@ -114,7 +114,7 @@ for i=1, opt.nEpochs do
 	local t_main = timer:time().real
 
 	-- evaluation
-	if epoch == 1 then
+	if epoch % 100 == 0 then
 		evaluate(testset,  'test')
 		evaluate(trainset, 'train')
 		local t_eval = timer:time().real

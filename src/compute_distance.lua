@@ -107,7 +107,7 @@ function convert_multi_label(pred)
 	-- Assumption: PR_multi (2 table) -->  PR_full (28 size tensor)
 	assert(pred[1]:size(1) == opt.batchSize and pred[2]:size(1) == opt.batchSize)
 
-	local pred_tmp = torch.Tensor(opt.batchSize, 2*nJoints)
+	local pred_tmp = torch.Tensor(opt.batchSize, 2*nJoints):cuda()
 	for i=1,opt.batchSize do
 		pred_tmp[i][1] = pred[1][i][1]
 		pred_tmp[i][2] = pred[1][i][2]
@@ -145,7 +145,7 @@ function convert_multi_label(pred)
 end
 
 function convert_fcnlabel (label)
-	local label_new = torch.Tensor(2*nJoints)
+	local label_new = torch.Tensor(2*nJoints):cuda()
 
 	for i =1, nJoints do
 
@@ -214,6 +214,11 @@ local function pcp_tester(jidx_part, iParts, pred, gt, alpha)
 	local e2 = torch.Tensor({pred[2*jidx_part[iParts][2]-1], pred[2*jidx_part[iParts][2]]})
 	local g1 = torch.Tensor({gt[2*jidx_part[iParts][1]-1], gt[2*jidx_part[iParts][1]]})
 	local g2 = torch.Tensor({gt[2*jidx_part[iParts][2]-1], gt[2*jidx_part[iParts][2]]})
+	local scalar = torch.Tensor({64,128}) 
+	e1 = torch.cmul(scalar, e1)
+	e2 = torch.cmul(scalar, e2)
+	g1 = torch.cmul(scalar, g1)
+	g2 = torch.cmul(scalar, g2)
 	local dist_g1g2 = math.sqrt(math.pow(g1[1]-g2[1],2)+math.pow(g1[2]-g2[2],2)) 
 	local dist_e1g1 = math.sqrt(math.pow(e1[1]-g1[1],2)+math.pow(e1[2]-g1[2],2))
 	local dist_e2g2 = math.sqrt(math.pow(e2[1]-g2[1],2)+math.pow(e2[2]-g2[2],2))
@@ -245,7 +250,7 @@ function compute_PCP(label_gt, label_pred)
 
 		-- Case1: fullbody	
 		if opt.t == 'PR_full' or opt.t == 'PR_multi' or opt.t == 'PR_multi_test' or opt.t == 'PR_filt_struct' or opt.t == 'PR_eachjoint' or opt.t == 'PR_fcn' or opt.t == 'PR_torsolimbs' then
-			nParts = 11
+			nParts = 13
 
 			jidx_part = torch.Tensor(nParts,2)
 			jidx_part[1] = torch.Tensor({1,2})
@@ -259,6 +264,8 @@ function compute_PCP(label_gt, label_pred)
 			jidx_part[9] = torch.Tensor({7,8})
 			jidx_part[10] = torch.Tensor({12,13})
 			jidx_part[11] = torch.Tensor({13,14})
+			jidx_part[12] = torch.Tensor({3,6})
+			jidx_part[13] = torch.Tensor({9,12})
 
 			for iParts = 1, nParts do
 				pcp_cnt_smp = pcp_cnt_smp + pcp_tester(jidx_part,iParts,pred,gt,alpha)
@@ -318,6 +325,9 @@ function compute_PCK(label_gt, label_pred)
 		
 		local pred = label_pred[iSmp]
 		local gt = label_gt[iSmp]
+		local scalar = torch.repeatTensor(torch.Tensor({64,128}),14, 1):cuda()
+		gt = torch.cmul(gt, scalar)
+		pred = torch.cmul(pred, scalar)
 
 		-- compute size of head
 		local hSize = math.sqrt(math.pow(gt[1]-gt[3],2)+math.pow(gt[2]-gt[4],2))

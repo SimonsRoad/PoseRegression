@@ -18,19 +18,22 @@ local function processBatch(inputsCPU, labelsCPU)
 	local pred = model:forward(inputs)
 	local gt = labelsCPU
 
-	local pred_new = torch.Tensor(opt.batchSize, 28)
-	local gt_new   = torch.Tensor(opt.batchSize, 28)
+	local pred_new = torch.Tensor(opt.batchSize, 28):cuda()
+	local gt_new   = torch.Tensor(opt.batchSize, 28):cuda()
 	--local gt_fcn, pred_fcn
 
 	-- resize pred
 	if type(pred) == 'table' then
 		if table.getn(pred)==2 and opt.t=='PR_multi' then           -- structured & no filter
 			pred_new = convert_multi_label(pred)
+			gt_new = gt
 		elseif table.getn(pred)==2 and opt.t=='PR_torsolimbs' then
+			assert(false, 'no implemented correctly yet')
 			for i=1,opt.batchSize do
 				pred_new[i] = convert_torsolimbs_label(pred[i])
 			end
 		elseif table.getn(pred) == 14 then
+			assert(false, 'no implemented correctly yet')
 			if pred:size(3) == 2 then        -- structured & no filter & each joint
 				for i=1,opt.batchSize do
 					pred_new[i] = convert_multi_nofilt_label(pred[i])
@@ -58,7 +61,7 @@ local function processBatch(inputsCPU, labelsCPU)
 
 	end
 
-		-- At this stage, the size of lable should be 28
+	-- At this stage, the size of lable should be 28
 	assert(gt_new:size(1) == opt.batchSize)
 	assert(gt_new:size(2) == 2*nJoints)
 	assert(pred_new:size(1) == opt.batchSize)
@@ -71,10 +74,10 @@ end
 
 local function forwardpass(inputdataset)
 	local nData = inputdataset.label:size(1)
-	local gt		= torch.Tensor(nData, 28):float()
-	local pred 		= torch.Tensor(nData, 28)
-	local gt_fcn  	= torch.Tensor(nData, 14, 32, 16)	--fcn labels to see heatmap
-	local pred_fcn	= torch.Tensor(nData, 14, 32, 16)	--fcn labels to see heatmap
+	local gt		= torch.Tensor(nData, 28):cuda()
+	local pred 		= torch.Tensor(nData, 28):cuda()
+	--local gt_fcn  	= torch.Tensor(nData, 14, 32, 16)	--fcn labels to see heatmap
+	--local pred_fcn	= torch.Tensor(nData, 14, 32, 16)	--fcn labels to see heatmap
 
 	for i=1, math.ceil(nData/opt.batchSize) do
 		local idx_start = (i-1) * opt.batchSize + 1
@@ -151,8 +154,11 @@ function evaluate(inputdataset, kind, savedir)
 	--print(string.format('MSE_avg :   %.4f', MSE_avg))
 
 	-- save prediction results for visualization
-	pred_save = label_pred:double()
+	pred_save = label_pred:float()
 	if savedir then
+		-- be careful when saving
+		adf=adf+1
+
 		-- This is when temporary save directory is specified
 		matio.save(string.format('../save/%s/pred_%s_%s.mat', savedir, kind, opt.t), pred_save)
 		--matio.save(string.format('../save/%s/pred_%s_%s_heatmap.mat', savedir, kind, opt.t), label_pred_fcn)

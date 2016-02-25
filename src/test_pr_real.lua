@@ -43,7 +43,7 @@ testset_data = testdataloader:get_randomly_indices(indices)
 testset_label = testdataloader:get_label_fortest(indices, '../data/cropped')
 testset = {data = testset_data, label = testset_label}
 print(testset)
-matio.save('../save/testdir/testdata.mat', testset)
+--matio.save('../save/testdir/testdata.mat', testset)
 
 for i=1,3 do
 	testset.data[{ {}, {i}, {}, {} }]:add(-mean[i])

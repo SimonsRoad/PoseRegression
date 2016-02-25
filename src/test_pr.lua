@@ -29,9 +29,9 @@ nTrainData = 10000
 nTestData  = 2000
 
 trainset_ori = mydataloader:load_original(torch.range(1,nTrainData))
---testset_ori  = mydataloader:load_original(torch.range(nTrainData+1, nTrainData+nTestData))
+testset_ori  = mydataloader:load_original(torch.range(nTrainData+1, nTrainData+nTestData))
 print(trainset_ori)
---print(testset_ori)
+print(testset_ori)
 
 -- compute mean and stdv from original
 mean = {}
@@ -47,7 +47,7 @@ end
 
 -- load testset.. 
 testset = matio.load(string.format('../save/testdir/testdata.mat'))
-
+print(testset)
 
 
 for i=1,3 do

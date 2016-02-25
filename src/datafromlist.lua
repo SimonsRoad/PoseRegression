@@ -209,7 +209,7 @@ function dataset:get_label_fortest(indices, pathtojoints)
 	local label = torch.Tensor(indices:size(1),28)
 
 	for i=1, indices:size(1) do
-		local jointpath = paths.concat(pathtojoints, string.format('joints2d_%dth.txt',i))
+		local jointpath = paths.concat(pathtojoints, string.format('joints2d_%02dth.txt',i))
 		local file = assert(io.open(jointpath, 'r'))
 		local cnt = 0
 		for line in file:lines() do
@@ -227,7 +227,7 @@ function dataset:get_label_fortest(indices, pathtojoints)
 	return label
 end
 
-function dataset:get_label(part, indices, ltTable) 
+function dataset:get_label(part, indices) 
 	local label
 	if part == 'fullbody' then
 		label =  self:get_label_fullbody(indices)

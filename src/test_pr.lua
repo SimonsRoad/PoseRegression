@@ -43,7 +43,7 @@ end
 
 -- prepare testset (randomcrop + normalize)
 --testset = randomcrop(testset_ori)
---matio.save(string.format('../save/testdir/testdata.mat'), testset)		-- save before normalize
+--matio.save(string.format('../save/testdir/testdata_s.mat', opt.t), testset)		-- save before normalize
 
 -- load testset.. 
 testset = matio.load(string.format('../save/testdir/testdata.mat'))

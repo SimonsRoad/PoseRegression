@@ -130,7 +130,7 @@ function convert_labels_to_fcnLabels(labels)
 
 
 	-- 0. convert normalized labels to pixel labels
-	local scalar = torch.repeatTensor(torch.Tensor({w,h}), nlabels, nJoints)
+	local scalar = torch.repeatTensor(torch.Tensor({w,h}), nlabels, nJoints):cuda()
 	local plabels = torch.cmul(labels, scalar)
 
 

@@ -107,11 +107,6 @@ function randomcrop(dataset)
 	local labeltensor = torch.Tensor(nData, 28)
 
 	for i=1,nData do
-		crop_label(dataset.data[i], dataset.label[i])
-	end
-	adf=adf+1
-
-	for i=1,nData do
 		local crop, label = crop_label(dataset.data[i], dataset.label[i])
 		imagetensor[i] = crop
 		labeltensor[i] = label

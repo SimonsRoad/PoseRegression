@@ -32,21 +32,24 @@ function crop_label(img_ori, label_ori)
 	local lt_crop_x_center = lt_tight_x - d_from_tight_to_centeredbox_x
 	local lt_crop_y_center = lt_tight_y - d_from_tight_to_centeredbox_y
 
-	-- lt_crop - min 
+	-- lt_crop - min and max 
 	local lt_crop_x_min = lt_crop_x_center - 4
 	local lt_crop_y_min = lt_crop_y_center - 8
-	
-	-- lt_crop - max
 	local lt_crop_x_max = lt_crop_x_center + 4
 	local lt_crop_y_max = lt_crop_y_center + 8
-	--print(lt_crop_x_min, lt_crop_y_min)
-	--print(lt_crop_x_max, lt_crop_y_max)
 	
+	-- post processing
 	if math.floor(lt_crop_x_min) <= 0 then
 		lt_crop_x_min = 1
 	end
 	if math.ceil(lt_crop_x_max)+ 64 >= bw_outer then
 		lt_crop_x_max = bw_outer-64-1
+	end
+	if math.floor(lt_crop_y_min) <= 0 then
+		lt_crop_y_min = 1
+	end
+	if math.ceil(lt_crop_y_max)+128 >= bh_outer then
+		lt_crop_y_max = bh_outer-128-1
 	end
 
 	-- randomly select it

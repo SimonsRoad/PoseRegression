@@ -6,7 +6,7 @@
 function crop_label(img_ori, label_ori)
 
 	-- bw_outer, bh_outer
-	local bw_outer = 100
+	local bw_outer = 90
 	local bh_outer = bw_outer*2
 	local bw_crop = 64
 	local bh_crop = 128
@@ -26,7 +26,6 @@ function crop_label(img_ori, label_ori)
 	local rb_tight_y = label_y_max * bh_outer
 	local bw_tight = rb_tight_x - lt_tight_x
 	local bh_tight = rb_tight_y - lt_tight_y
-	--print(bw_tight, bh_tight)
 
 	-- lt_crop - center
 	local d_from_tight_to_centeredbox_x = (64-bw_tight)/2 
@@ -41,9 +40,19 @@ function crop_label(img_ori, label_ori)
 	-- lt_crop - max
 	local lt_crop_x_max = lt_crop_x_center + 4
 	local lt_crop_y_max = lt_crop_y_center + 8
-
 	--print(lt_crop_x_min, lt_crop_y_min)
 	--print(lt_crop_x_max, lt_crop_y_max)
+	
+	if lt_crop_x_min + 64 > bw_outer then
+		lt_crop_x_min = bw_outer-64
+	end
+	
+	if lt_crop_x_max > lt_tight_x then
+		lt_crop_x_max = lt_tight_x
+	end
+	if lt_crop_y_max > lt_tight_y then
+		lt_crop_y_max = lt_tight_y
+	end
 	
 	-- post processing
 	if lt_crop_x_max + 64 > bw_outer then
@@ -54,8 +63,8 @@ function crop_label(img_ori, label_ori)
 	end
 
 	-- randomly select it
-	local lt_x_sel = math.ceil(torch.uniform(lt_crop_x_min, lt_crop_x_max))
-	local lt_y_sel = math.ceil(torch.uniform(lt_crop_y_min, lt_crop_y_max))
+	local lt_x_sel = math.ceil(torch.uniform(lt_crop_x_min+1, lt_crop_x_max-1))
+	local lt_y_sel = math.ceil(torch.uniform(lt_crop_y_min+1, lt_crop_y_max-1))
 
 	-- local image, resize and crop
 	local img_out = image.scale(img_ori, bw_outer .. 'x' .. bh_outer)
@@ -83,6 +92,7 @@ function crop_label(img_ori, label_ori)
 	end
 
 	return img_out, label_out
+	--]]
 	
 end
 
@@ -95,6 +105,11 @@ function randomcrop(dataset)
 
 	local imagetensor = torch.Tensor(nData, 3, 128, 64)
 	local labeltensor = torch.Tensor(nData, 28)
+
+	for i=1,nData do
+		crop_label(dataset.data[i], dataset.label[i])
+	end
+	adf=adf+1
 
 	for i=1,nData do
 		local crop, label = crop_label(dataset.data[i], dataset.label[i])

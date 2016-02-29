@@ -30,6 +30,37 @@
 #find $pathToImages -name "*.png" ! -type d > $outFile
 
 # new render with szx szy szz
-pathToImages='/home/namhoon/develop/PoseRegression/data/rendout/tmp_y144_x256/pos'
-outFile='pos_y144_x256.txt'
-find $pathToImages -name "*.jpg" ! -type d > $outFile
+#pathToImages='/home/namhoon/develop/PoseRegression/data/rendout/tmp_y144_x256/pos'
+#outFile='pos_y144_x256.txt'
+#find $pathToImages -name "*.jpg" ! -type d > $outFile
+
+# (double) new render with szx szy szz
+#pathToImages='/home/namhoon/develop/PoseRegression/data/rendout/tmp_y144_x256_double/pos'
+#outFile='pos_y144_x256_double.txt'
+#find $pathToImages -name "*.jpg" ! -type d > $outFile
+
+## real data. tmp_y144_x256
+#pathToImages='/home/namhoon/develop/towncenter/data/frames_y144_x256_sel'
+#outFile='frames_y144_x256_sel.txt'
+#find $pathToImages -name "*.png" ! -type d > $outFile
+
+# real data. frame_y144_x256_sel_triple
+pathToImages='/home/namhoon/develop/towncenter/data/frames_y144_x256_sel_triple'
+outFile='frames_y144_x256_sel_triple.txt'
+find $pathToImages -name "*.png" ! -type d > $outFile
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

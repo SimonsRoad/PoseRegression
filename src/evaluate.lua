@@ -153,6 +153,13 @@ function evaluate(inputdataset, kind, savedir)
 	--print(string.format('EPJ_avg :   %.4f', EPJ_avg))
 	--print(string.format('MSE_avg :   %.4f', MSE_avg))
 
+	-- save into log
+	if kind == 'test' then
+		pckLogger_test:add{ ['PCK'] = PCK }
+	elseif kind == 'train' then
+		pckLogger_train:add{ ['PCK'] = PCK }
+	end
+
 	-- save prediction results for visualization
 	pred_save = label_pred:float()
 	if savedir then

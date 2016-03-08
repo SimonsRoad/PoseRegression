@@ -29,8 +29,8 @@ os.execute('mkdir -p ' .. opt.save)
 --mydataloader = dataLoader{filename = '../data/lists/pos_y144_x256.txt'}
 mydataloader = dataLoader{filename = '../data/lists/pos_y144_x256_new.txt'}
 
-nTrainData = 100000
-nTestData  = 2000
+nTrainData = 100
+nTestData  = 20
 
 trainset_ori = mydataloader:load_original(torch.range(1,nTrainData))
 testset_ori  = mydataloader:load_original(torch.range(nTrainData+1, nTrainData+nTestData))
@@ -81,6 +81,9 @@ print(opt)
 
 paths.dofile('train_multi.lua')
 paths.dofile('test_multi.lua')
+
+pckLogger_test  = optim.Logger(paths.concat(opt.save, 'pck_test.log'))
+pckLogger_train = optim.Logger(paths.concat(opt.save, 'pck_train.log'))
 
 local timer = torch.Timer()
 

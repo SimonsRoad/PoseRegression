@@ -353,7 +353,6 @@ function dataset:load_original(indices)
 	local h = tmp:size(2)
 
 	-- images 
-	local labeltensor = self:get_label_fullbody(indices)
 	local imagetensor = torch.Tensor(indices:size(1), 3, h, w)
 
 	for i=1, indices:size(1) do
@@ -369,24 +368,6 @@ function dataset:load_original(indices)
 	local out = {data = imagetensor, label = labeltensor}
 	return out
 end
-
---function dataset:get_label_filt_struct(part, indices)
---	assert(part == 'fullbody')  -- consider all body, but each joints separately
---
---	-- load regular labels, which is 28 values for 14 joints
---	local label_ori = self:get_label(part, indices)
---
---	-- convert to spatial labels
---	local label_filt = convert_labels_to_spatialLabels(label_ori)
---	
---	-- reshape 2688 -> 14*(64+128) : 14 joints separately
---	label_struct = torch.reshape(label_filt, label_filt:size(1), nJoints, W+H)
---	print(label_filt:size())
---	print(label_struct:size())
-
---	return label_struct
-
---end
 
 
 return dataset

@@ -859,7 +859,7 @@ function create_network_model14() -- PR_fcn
 	feat:add(nn.ReLU())
 	
 	feat:add(nn.SpatialConvolution(512,14,1,1))
-	feat:add(nn.ReLU())
+	--feat:add(nn.ReLU()) -- No ReLU from Shih-Wen's Pose Machine (2016/03/06)
 
 	feat = makeDataParallel(feat, opt.nGPU)
 	feat:cuda()

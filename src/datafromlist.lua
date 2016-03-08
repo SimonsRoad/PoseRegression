@@ -124,10 +124,12 @@ function dataset:get_jointpath(imgpath)
 	--]]
 	
 	-- changed to new data (fatter, thicker now)
-	local id 	= self:get_substring(imgpath, 'id', 4)
-	local pose  = self:get_substring(imgpath, 'pose', 4)
-	local rot   = self:get_substring(imgpath, 'rot', 2)
-	local jointpath = '/home/namhoon/develop/PoseRegression/data/rendout/tmp_y144_x256/joint/2D_Ped_id' .. id .. '_pose' .. pose .. '_rot' .. rot .. '.txt'
+	-- another change: all height covered
+	local id 	 = self:get_substring(imgpath, 'id'    , 4)
+	local pose   = self:get_substring(imgpath, 'pose'  , 4)
+	local rot    = self:get_substring(imgpath, 'rot'   , 2)
+	local hscale = self:get_substring(imgpath, 'hscale', 0)
+	local jointpath = '/home/namhoon/develop/PoseRegression/data/rendout/tmp_y144_x256_new/joint/2D_Ped_id' .. id .. '_pose' .. pose .. '_rot' .. rot .. '_hscale' .. hscale .. '.txt'
 
 	return jointpath
 end

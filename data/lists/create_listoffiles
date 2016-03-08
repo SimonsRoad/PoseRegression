@@ -44,18 +44,18 @@
 #outFile='frames_y144_x256_sel.txt'
 #find $pathToImages -name "*.png" ! -type d > $outFile
 
-# real data. frame_y144_x256_sel_triple
-pathToImages='/home/namhoon/develop/towncenter/data/frames_y144_x256_sel_triple'
-outFile='frames_y144_x256_sel_triple.txt'
-find $pathToImages -name "*.png" ! -type d > $outFile
+## real data. frame_y144_x256_sel_triple
+#pathToImages='/home/namhoon/develop/towncenter/data/frames_y144_x256_sel_triple'
+#outFile='frames_y144_x256_sel_triple.txt'
+#find $pathToImages -name "*.png" ! -type d > $outFile
 
-
-
-
-
-
-
-
+# frame_y144_x256_new (covers all heights and it has segmentations)
+pathToImages1='/home/namhoon/develop/PoseRegression/data/rendout/tmp_y144_x256_new/pos'
+pathToImages2='/home/namhoon/develop/PoseRegression/data/rendout/tmp_y144_x256_new/mask'
+outFile1='pos_y144_x256_new.txt'
+outFile2='mask_y144_x256_new.txt'
+find $pathToImages1 -maxdepth 1 -name "*.jpg" ! -type d > $outFile1
+find $pathToImages2 -maxdepth 1 -name "*.jpg" ! -type d > $outFile2
 
 
 

@@ -26,9 +26,10 @@ os.execute('mkdir -p ' .. opt.save)
 -- 1. load original data
 -- 
 --mydataloader = dataLoader{filename = '../data/lists/pos.txt'}
-mydataloader = dataLoader{filename = '../data/lists/pos_y144_x256.txt'}
+--mydataloader = dataLoader{filename = '../data/lists/pos_y144_x256.txt'}
+mydataloader = dataLoader{filename = '../data/lists/pos_y144_x256_new.txt'}
 
-nTrainData = 10000
+nTrainData = 100000
 nTestData  = 2000
 
 trainset_ori = mydataloader:load_original(torch.range(1,nTrainData))
@@ -106,7 +107,7 @@ for i=1, opt.nEpochs do
 	local t_main = timer:time().real
 
 	-- evaluation
-	if epoch % 50 == 0 then
+	if epoch % 10 == 0 then
 		evaluate(testset,  'test')
 		evaluate(trainset, 'train')
 		local t_eval = timer:time().real

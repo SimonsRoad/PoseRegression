@@ -15,6 +15,7 @@ paths.dofile('compute_distance.lua')
 paths.dofile('compute_meanstdv.lua')
 paths.dofile('evaluate.lua')
 paths.dofile('load_batch.lua')
+paths.dofile('eval_jsdc.lua')
 
 
 -- 0. settings 
@@ -65,26 +66,19 @@ print(opt)
 paths.dofile('train_fcn.lua')
 paths.dofile('test_fcn.lua')
 
-local timer = torch.Timer()
-
 epoch = opt.epochNumber
-for i=1, opt.nEpochs do
-	timer:reset()
+for i=1,opt.nEpochs do
 
 	-- train and test
 	train()
 	test()
 
 	-- evaluation
-    --[[
-	if epoch % 1 == 0 then
-		evaluate(testset,  'test')
-		evaluate(trainset, 'train')
-		local t_eval = timer:time().real
-		print(string.format('EP. [%d/%d] Time Analysys(s) [crop / fcn / main / eval]: %.2f / %.2f / %.2f / %.2f ',epoch,opt.nEpochs,t_crop, t_fcnlabel, t_main, t_eval))
-        adf=adf+1
+	if epoch % 10 == 0 then
+        eval_jsdc(testset)
+		--evaluate(testset,  'test')
+		--evaluate(trainset, 'train')
 	end
-    --]]
 	epoch = epoch + 1
 end
 

@@ -36,7 +36,7 @@ nTestData  = 2000
 mean, stdv = compute_meanstdv(torch.range(1,nTrainData, 20))
 
 testset = load_batch(torch.range(nTrainData+1, nTrainData+nTestData))
---matio.save(paths.concat(opt.save, 'testdata.mat'), testset)
+matio.save(paths.concat(opt.save, 'testdata.mat'), testset)
 print(testset)
 assert(testset.label:size(1) == nTestData); assert(testset.label:size(2) == 30)
 
@@ -65,6 +65,8 @@ print(opt)
 
 paths.dofile('train_fcn.lua')
 paths.dofile('test_fcn.lua')
+
+pckLogger = optim.Logger(paths.concat(opt.save, 'pck_test.log'))
 
 epoch = opt.epochNumber
 for i=1,opt.nEpochs do

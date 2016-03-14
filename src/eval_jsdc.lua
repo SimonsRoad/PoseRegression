@@ -4,6 +4,8 @@
 -- evaluate jsdc (j27, seg, dep, cen)
 --]]
 
+local matio = require 'matio'
+
 function find_peak(hmap)
     -- 1. hmap expects {ndata x 27 x 128 x 64}
     -- 2. returns {ndata x 27 x 2} 
@@ -113,7 +115,6 @@ function eval_jsdc (dataset)
     gt_j27   = find_peak(gt_j27_hmap) 
     pred_j27 = find_peak(pred_j27_hmap) 
 
-
     -- EVALUATION
     local pck_j27 = comp_PCK(gt_j27, pred_j27)      -- PCK for j27
     local sad_seg = comp_SAD(gt_seg, pred_seg)      -- SAD for seg
@@ -123,6 +124,9 @@ function eval_jsdc (dataset)
     print(string.format('--EVALUATION  [%.2fsec]', timer:time().real))
     print(string.format('PCK (j27):  %.2f ', pck_j27))
     print(string.format('SAD (seg/dep/cen):  %.2f | %.2f | %.2f ',sad_seg,sad_dep,sad_cen))
+    pckLogger:add{ ['pck_j27'] = pck_j27 }
 
+    -- SAVE prediction for qualitative results
+    matio.save(paths.concat(opt.save, 'pred.mat'), pred:float())
 end
 

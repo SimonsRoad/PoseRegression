@@ -50,13 +50,17 @@
 #find $pathToImages -name "*.png" ! -type d > $outFile
 
 # frame_y144_x256_new (covers all heights and it has segmentations)
-pathToImages1='/home/namhoon/develop/PoseRegression/data/rendout/tmp_y144_x256_new/pos'
-pathToImages2='/home/namhoon/develop/PoseRegression/data/rendout/tmp_y144_x256_new/mask'
-outFile1='pos_y144_x256_new.txt'
-outFile2='mask_y144_x256_new.txt'
-find $pathToImages1 -maxdepth 1 -name "*.jpg" ! -type d > $outFile1
-find $pathToImages2 -maxdepth 1 -name "*.jpg" ! -type d > $outFile2
+#pathToImages1='/home/namhoon/develop/PoseRegression/data/rendout/tmp_y144_x256_new/pos'
+#pathToImages2='/home/namhoon/develop/PoseRegression/data/rendout/tmp_y144_x256_new/mask'
+#outFile1='pos_y144_x256_new.txt'
+#outFile2='mask_y144_x256_new.txt'
+#find $pathToImages1 -maxdepth 1 -name "*.jpg" ! -type d > $outFile1
+#find $pathToImages2 -maxdepth 1 -name "*.jpg" ! -type d > $outFile2
 
+# frame_y144_x256_aug 
+path_pos='/home/namhoon/develop/PoseRegression/data/rendout/tmp_y144_x256_aug/pos'
+outFile_pos='/home/namhoon/develop/PoseRegression/data/rendout/tmp_y144_x256_aug/lists/pos.txt'
+find $path_pos -name "*.jpg" ! -type d > $outFile_pos
 
 
 

@@ -371,11 +371,40 @@ function dataset:load_original(indices)
 	return out
 end
 
+function dataset:load_img(indices, nchannel)
+
+	-- at first, measure the size of image
+	local tmp = image.load(ffi.string(torch.data(self.imagePath[indices[1]]), self.pathLength[indices[1]]), nchannel, 'float')
+	local w = tmp:size(3)
+	local h = tmp:size(2)
+	
+    -- images 
+	local imgtensor = torch.Tensor(indices:size(1), nchannel, h, w)
+    
+    for i=1, indices:size(1) do
+        local imgpath = ffi.string(torch.data(self.imagePath[indices[i]]), self.pathLength[indices[i]])
+        local img = image.load(imgpath, nchannel, 'float')
+        imgtensor[i] = img
+    end
+    
+    return imgtensor
+end
+
+function dataset:load_j27(indices)
+    -- load from .mat files 
+
+    local j27tensor = torch.Tensor(indices:size(1), 27, h, w)
+
+    for i=1, indices:size(1) do
+        local j27path = ffi.string(torch.data(self.imagePath[indices[i]]), self.pathLength[indices[i]])
+        local j27 = matio.load(j27path)
+        j27tensor[i] = j27
+    end
+
+    return j27tensor
+end
 
 return dataset
-
-
-
 
 
 

@@ -18,9 +18,8 @@ local function processBatch(inputsCPU, labelsCPU)
 	local pred = model:forward(inputs)
 	local gt = labelsCPU
 
-	local pred_new = torch.Tensor(opt.batchSize, 28):cuda()
-	local gt_new   = torch.Tensor(opt.batchSize, 28):cuda()
-	--local gt_fcn, pred_fcn
+	local pred_new = torch.Tensor(opt.batchSize, nJoints*2):cuda()
+	local gt_new   = torch.Tensor(opt.batchSize, nJoints*2):cuda()
 
 	-- resize pred
 	if type(pred) == 'table' then
@@ -47,18 +46,11 @@ local function processBatch(inputsCPU, labelsCPU)
 		end
 	else
 		-- case 3: fcn label
-		if pred:size(2) == nJoints and pred:size(3) == 32 and pred:size(4) == 16 then
-			-- before converting, save the heatmap
-			--gt_fcn   = gt:float()
-			--pred_fcn = pred:float()
-
-			-- convert
-			for i=1,pred:size(1) do
-				pred_new[i] = convert_fcnlabel(pred[i])
-				gt_new[i]   = convert_fcnlabel(gt[i])
-			end
+		-- convert
+		for i=1,pred:size(1) do
+			pred_new[i] = convert_fcnlabel(pred[i])
+			gt_new[i]   = convert_fcnlabel(gt[i])
 		end
-
 	end
 
 	-- At this stage, the size of lable should be 28
@@ -72,12 +64,10 @@ local function processBatch(inputsCPU, labelsCPU)
 
 end
 
-local function forwardpass(inputdataset)
-	local nData = inputdataset.label:size(1)
-	local gt		= torch.Tensor(nData, 28):cuda()
-	local pred 		= torch.Tensor(nData, 28):cuda()
-	--local gt_fcn  	= torch.Tensor(nData, 14, 32, 16)	--fcn labels to see heatmap
-	--local pred_fcn	= torch.Tensor(nData, 14, 32, 16)	--fcn labels to see heatmap
+local function forwardpass(dataset)
+	local nData = dataset.label:size(1)
+	local gt	= torch.Tensor(nData, nJoints*2):cuda()
+	local pred 	= torch.Tensor(nData, nJoints*2):cuda()
 
 	for i=1, math.ceil(nData/opt.batchSize) do
 		local idx_start = (i-1) * opt.batchSize + 1
@@ -92,14 +82,15 @@ local function forwardpass(inputdataset)
 		end
 		
 		local inputs, labels
-		inputs = inputdataset.data:index(1, idx_batch:long())
-		labels = inputdataset.label:index(1, idx_batch:long())
+		inputs = dataset.data:index(1, idx_batch:long())
+		labels = dataset.label:index(1, idx_batch:long())
 
 		-- process batch
-		--local gt_batch, pred_batch, gt_fcn_batch, pred_fcn_batch = processBatch(inputs, labels)
 		local gt_batch, pred_batch = processBatch(inputs, labels)
 
-		
+        print(gt_batch:size())
+        adf=adf+1
+
 		if opt.t == 'PR_multi' then
 			if idx_end <= nData then
 				gt[{ {idx_start,idx_end}, {} }]				= gt_batch
@@ -113,31 +104,23 @@ local function forwardpass(inputdataset)
 			if idx_end <= nData then
 				gt[{ {idx_start,idx_end}, {} }]				= gt_batch
 				pred[{ {idx_start,idx_end}, {}}]	 		= pred_batch
-				--gt_fcn[{ {idx_start,idx_end},{},{},{}}] 	= gt_fcn_batch
-				--pred_fcn[{ {idx_start,idx_end},{},{},{}}] 	= pred_fcn_batch
 			else 
 				local len = nData-idx_start+1
 				gt[{ {idx_start,nData}, {} }]			= gt_batch[{{1,len},{}}]
 				pred[{ {idx_start,nData}, {}}]	 		= pred_batch[{{1,len},{}}]
-				--gt_fcn[{ {idx_start,nData},{},{},{}}] 	= gt_fcn_batch[{{1,len},{},{},{}}]
-				--pred_fcn[{ {idx_start,nData},{},{},{}}] = pred_fcn_batch[{{1,len},{},{},{}}]
 			end
 		end
 	
 	end
 
-	--return gt, pred, gt_fcn, pred_fcn
 	return gt, pred
-
 end
 
-
-function evaluate(inputdataset, kind, savedir)
+function evaluate(dataset, kind, savedir)
 
 	-- 0. forward pass and convert labels to single vectors
 	-- labels are all #Data x 28
-	--label_gt, label_pred, label_gt_fcn, label_pred_fcn = forwardpass(inputdataset)
-	label_gt, label_pred = forwardpass(inputdataset)
+	label_gt, label_pred = forwardpass(dataset)
 	
 
 	-- EVALUATE

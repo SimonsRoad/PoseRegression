@@ -24,15 +24,13 @@ end
 
 -- 2. Create loggers.
 trainLogger = optim.Logger(paths.concat(opt.save, 'train.log'))
-local batchNumber
 local loss_epoch
 
 
 --3. Train - this function handles the high-level training loop,
 --		     i.e. load data, train model, save model and state to disk
-function train(trainset)
+function train()
 
-	batchNumber = 0
 	cutorch.synchronize()
 
 	-- set the dropouts to training mode
@@ -42,28 +40,24 @@ function train(trainset)
 	loss_epoch = 0
 
 	-- randomize dataset (actually just indices)
-	local idx_rand = torch.randperm(trainset.label:size(1))
+	local idx_rand = torch.randperm(nTrainData)
 
-	for i=1, opt.epochSize do
-
+    -- training
+	for i=1,opt.epochSize do
 		-- create indices for a batch
-		local idx_start = batchNumber*opt.batchSize + 1
-		local idx_end = idx_start + opt.batchSize - 1
+		local idx_start = (i-1)*opt.batchSize + 1
+		local idx_end   = idx_start + opt.batchSize - 1
 		local idx_batch
-		if idx_end <= trainset.label:size(1) then
+		if idx_end <= nTrainData then
 			idx_batch = idx_rand[{{idx_start,idx_end}}] 
 		else 
-			local idx1 = idx_rand[{{idx_start,trainset.label:size(1)}}]
-			local idx2 = idx_rand[{{1,idx_end-trainset.label:size(1)}}]
+			local idx1 = idx_rand[{{idx_start,nTrainData}}]
+			local idx2 = idx_rand[{{1,idx_end-nTrainData}}]
 			idx_batch = torch.cat(idx1, idx2, 1)
 		end
-		
-		-- loading "inputs" and "lables" for a batch
-		local inputs, labels
-		inputs = trainset.data:index(1, idx_batch:long())
-		labels = trainset.label:index(1, idx_batch:long())
 
-		trainBatch(inputs, labels)
+        local trainset_batch = load_batch(idx_batch)
+		trainBatch(trainset_batch.data, trainset_batch.label)
 	end
 
 	cutorch.synchronize()
@@ -90,7 +84,7 @@ function train(trainset)
 		end
 	end
 	sanitize(model)
-	if epoch % 200 == 0 then
+	if epoch % 100 == 0 then
 		--model:clearState()
 		saveDataParallel(paths.concat(opt.save, opt.t.. '_model_' .. epoch .. '.t7'), model)
 		torch.save(paths.concat(opt.save, opt.t.. '_optimState_' .. epoch .. '.t7'), optimState)
@@ -103,7 +97,6 @@ local inputs = torch.CudaTensor()
 local labels = torch.CudaTensor()
 
 local timer = torch.Timer()
-local dataTimer = torch.Timer()
 
 local parameters, gradParameters = model:getParameters()
 
@@ -112,7 +105,6 @@ local parameters, gradParameters = model:getParameters()
 function trainBatch(inputsCPU, labelsCPU)
 	cutorch.synchronize()
 	collectgarbage()
-	local dataLoadingTime = dataTimer:time().real
 	timer:reset()
 
 	-- transfer over to GPU
@@ -136,12 +128,7 @@ function trainBatch(inputsCPU, labelsCPU)
 	end
 
 	cutorch.synchronize()
-	batchNumber = batchNumber + 1
 	loss_epoch = loss_epoch + err
-
-	--print(('Ep. [%d/%d][%d/%d]\tTime %.3f Err %.5f LR %.0e DLTime %.3f'):format(epoch, opt.nEpochs, batchNumber, opt.epochSize, timer:time().real, err, optimState.learningRate, dataLoadingTime))
-
-	dataTimer:reset()
 
 end
 

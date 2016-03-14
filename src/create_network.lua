@@ -843,11 +843,11 @@ function create_network_model14() -- PR_fcn
 
 	feat:add(nn.SpatialConvolution(3,128,5,5,1,1,2,2))
 	feat:add(nn.ReLU())
-	feat:add(nn.SpatialMaxPooling(2,2,2,2))
+	feat:add(nn.SpatialMaxPooling(3,3,1,1,1,1))
 
 	feat:add(nn.SpatialConvolution(128,128,5,5,1,1,2,2))
 	feat:add(nn.ReLU())
-	feat:add(nn.SpatialMaxPooling(2,2,2,2))
+	feat:add(nn.SpatialMaxPooling(3,3,1,1,1,1))
 
 	feat:add(nn.SpatialConvolution(128,32,5,5,1,1,2,2))
 	feat:add(nn.ReLU())
@@ -858,7 +858,7 @@ function create_network_model14() -- PR_fcn
 	feat:add(nn.SpatialConvolution(512,512,1,1))
 	feat:add(nn.ReLU())
 	
-	feat:add(nn.SpatialConvolution(512,14,1,1))
+	feat:add(nn.SpatialConvolution(512,3,1,1))
 	--feat:add(nn.ReLU()) -- No ReLU from Shih-Wen's Pose Machine (2016/03/06)
 
 	feat = makeDataParallel(feat, opt.nGPU)
@@ -866,6 +866,8 @@ function create_network_model14() -- PR_fcn
 
 	return feat
 end
+
+
 
 
 function create_network(modelNumber)

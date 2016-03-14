@@ -22,18 +22,16 @@ function test()
    	-- set the dropouts to evaluate mode
    	model:evaluate()
 
-	local nTest = testset.label:size(1)
-
    	loss_epoch = 0
-   	for i=1,nTest/opt.batchSize do 
+   	for i=1,nTestData/opt.batchSize do 
 	  	local idx_start = (i-1) * opt.batchSize + 1
 		local idx_end   = idx_start + opt.batchSize - 1
 		local idx_batch
-		if idx_end <= nTest then
+		if idx_end <= nTestData then
 			idx_batch = torch.range(idx_start, idx_end)
 		else
-			local idx1 = torch.range(idx_start, nTest)
-			local idx2 = torch.range(1, idx_end-nTest)
+			local idx1 = torch.range(idx_start, nTestData)
+			local idx2 = torch.range(1, idx_end-nTestData)
 			idx_batch = torch.cat(idx1, idx2, 1)
 		end
 
@@ -46,7 +44,7 @@ function test()
 
    	cutorch.synchronize()
 
-   	loss_epoch = loss_epoch / (nTest/opt.batchSize) -- because loss is calculated per batch
+   	loss_epoch = loss_epoch / (nTestData/opt.batchSize) -- because loss is calculated per batch
    	testLogger:add{
 		['avg loss (test set)'] = loss_epoch
    	}

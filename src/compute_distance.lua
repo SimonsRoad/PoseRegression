@@ -145,17 +145,20 @@ function convert_multi_label(pred)
 end
 
 function convert_fcnlabel (label)
+
 	local label_new = torch.Tensor(2*nJoints):cuda()
 
-	for i =1, nJoints do
+	for i = 1, nJoints do
+        print(i)
+        adf=adf+1
 
-		local max, idx = torch.max(torch.reshape(label[i], 32*16), 1)
-		local j = math.floor(idx[1]/16)+1
-		local k = idx[1] % 16
+		local max, idx = torch.max(torch.reshape(label[i], 128*64), 1)
+		local j = math.floor(idx[1]/64)+1
+		local k = idx[1] % 64
 
 		-- new label. 
-		label_new[2*i-1] = k / 16
-		label_new[2*i] = j / 32
+		label_new[2*i-1] = k / 64
+		label_new[2*i] = j / 128
 	end
 
 	return label_new

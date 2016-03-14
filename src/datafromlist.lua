@@ -371,37 +371,35 @@ function dataset:load_original(indices)
 	return out
 end
 
-function dataset:load_img(indices, nchannel)
+function dataset:load_img(indices)
 
 	-- at first, measure the size of image
-	local tmp = image.load(ffi.string(torch.data(self.imagePath[indices[1]]), self.pathLength[indices[1]]), nchannel, 'float')
-	local w = tmp:size(3)
-	local h = tmp:size(2)
-	
+	local tmp = image.load(ffi.string(torch.data(self.imagePath[indices[1]]), self.pathLength[indices[1]]), 3, 'float')
+    local w = tmp:size(3)
+    local h = tmp:size(2)
+        
     -- images 
-	local imgtensor = torch.Tensor(indices:size(1), nchannel, h, w)
-    
+	local imgtensor = torch.Tensor(indices:size(1), 3, h, w)
     for i=1, indices:size(1) do
         local imgpath = ffi.string(torch.data(self.imagePath[indices[i]]), self.pathLength[indices[i]])
-        local img = image.load(imgpath, nchannel, 'float')
+        local img = image.load(imgpath, 3, 'float')
         imgtensor[i] = img
     end
     
     return imgtensor
 end
 
-function dataset:load_j27(indices)
+function dataset:load_jsdc(indices)
     -- load from .mat files 
-
-    local j27tensor = torch.Tensor(indices:size(1), 27, h, w)
+    local jsdc_tensor = torch.Tensor(indices:size(1), 30, 128, 64)
 
     for i=1, indices:size(1) do
-        local j27path = ffi.string(torch.data(self.imagePath[indices[i]]), self.pathLength[indices[i]])
-        local j27 = matio.load(j27path)
-        j27tensor[i] = j27
+        local jsdc_path = ffi.string(torch.data(self.imagePath[indices[i]]), self.pathLength[indices[i]])
+        local jsdc_table = matio.load(jsdc_path)
+        jsdc_tensor[i] = jsdc_table.jsdc
     end
 
-    return j27tensor
+    return jsdc_tensor
 end
 
 return dataset

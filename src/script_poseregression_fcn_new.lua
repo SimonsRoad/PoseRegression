@@ -26,22 +26,18 @@ os.execute('mkdir -p ' .. opt.save)
 
 -- 1. load and normalize data
 -- 
-loader_pos = dataLoader{filename = '../data/rendout/tmp_y144_x256_aug/lists/pos.txt'}
-loader_seg = dataLoader{filename = '../data/rendout/tmp_y144_x256_aug/lists/seg.txt'}
-loader_dep = dataLoader{filename = '../data/rendout/tmp_y144_x256_aug/lists/dep.txt'}
-loader_cen = dataLoader{filename = '../data/rendout/tmp_y144_x256_aug/lists/cen.txt'}
---loader_j27 = dataLoader{filename = '../data/rendout/tmp_y144_x256_aug/lists/j27.txt'}
+loader_pos  = dataLoader{filename = '../data/rendout/tmp_y144_x256_aug/lists/pos.txt'}
+loader_jsdc = dataLoader{filename = '../data/rendout/tmp_y144_x256_aug/lists/jsdc.txt'}
 
-nTrainData = 30000
-nTestData  = 2000
+nTrainData = 300
+nTestData  = 20
 
-mean, stdv = compute_meanstdv(torch.range(1,nTrainData, 10))
+mean, stdv = compute_meanstdv(torch.range(1,nTrainData, 20))
 
 testset = load_batch(torch.range(nTrainData+1, nTrainData+nTestData))
 --matio.save(paths.concat(opt.save, 'testdata.mat'), testset)
 print(testset)
-assert(testset.label:size(1) == nTestData); assert(testset.label:size(2) == 3)
---assert(testset.label:size(1) == nTestData); assert(testset.label:size(2) == 30)
+assert(testset.label:size(1) == nTestData); assert(testset.label:size(2) == 30)
 
 
 -- 2. network

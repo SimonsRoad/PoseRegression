@@ -6,7 +6,7 @@
 
 function compute_meanstdv(indices)
 
-    local pos = loader_pos:load_img(indices, 3)
+    local pos = loader_pos:load_img(indices)
 
     -- compute mean and stdv from images
     local mean = {}

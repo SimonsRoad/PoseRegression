@@ -26,23 +26,6 @@ local function processBatch(inputsCPU, labelsCPU)
 		if table.getn(pred)==2 and opt.t=='PR_multi' then           -- structured & no filter
 			pred_new = convert_multi_label(pred)
 			gt_new = gt
-		elseif table.getn(pred)==2 and opt.t=='PR_torsolimbs' then
-			assert(false, 'no implemented correctly yet')
-			for i=1,opt.batchSize do
-				pred_new[i] = convert_torsolimbs_label(pred[i])
-			end
-		elseif table.getn(pred) == 14 then
-			assert(false, 'no implemented correctly yet')
-			if pred:size(3) == 2 then        -- structured & no filter & each joint
-				for i=1,opt.batchSize do
-					pred_new[i] = convert_multi_nofilt_label(pred[i])
-				end
-			elseif pred:size(3) == 192 then  -- structured & filter
-				for i=1,opt.batchSize do
-					gt_new[i] = convert_filt_label(gt_new[i])
-					pred_new[i] = convert_multi_filt_label(pred[i])
-				end
-			end
 		end
 	else
 		-- case 3: fcn label
@@ -127,14 +110,12 @@ function evaluate(dataset, kind, savedir)
 	PCP = compute_PCP(label_gt, label_pred)
 	PCK = compute_PCK(label_gt, label_pred)
 	--EPJ, EPJ_avg = compute_epj(label_gt, label_pred)
-	--MSE_avg = compute_MSE(label_gt, label_pred)
 
 	-- print out the results
 	print(string.format('-- (%s)', kind))
 	print(string.format('PCP     :   %.2f  (%%)', PCP))
 	print(string.format('PCK     :   %.2f  (%%)', PCK))
 	--print(string.format('EPJ_avg :   %.4f', EPJ_avg))
-	--print(string.format('MSE_avg :   %.4f', MSE_avg))
 
 	-- save into log
 	if kind == 'test' then

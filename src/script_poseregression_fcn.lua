@@ -29,8 +29,8 @@ os.execute('mkdir -p ' .. opt.save)
 loader_pos  = dataLoader{filename = '../data/rendout/tmp_y144_x256_aug/lists/pos.txt'}
 loader_jsdc = dataLoader{filename = '../data/rendout/tmp_y144_x256_aug/lists/jsdc.txt'}
 
-nTrainData = 300
-nTestData  = 20
+nTrainData = 300000
+nTestData  = 2000
 
 mean, stdv = compute_meanstdv(torch.range(1,nTrainData, 20))
 

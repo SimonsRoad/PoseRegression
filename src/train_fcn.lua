@@ -95,7 +95,7 @@ function train()
 		end
 	end
 	sanitize(model)
-	if epoch % 50 == 0 then
+	if epoch % 5 == 0 then
 		--model:clearState()
 		saveDataParallel(paths.concat(opt.save, opt.t.. '_model_' .. epoch .. '.t7'), model)
 		torch.save(paths.concat(opt.save, opt.t.. '_optimState_' .. epoch .. '.t7'), optimState)
@@ -145,7 +145,7 @@ function trainBatch(inputsCPU, labelsCPU)
     batchNumber = batchNumber + 1
 	loss_epoch = loss_epoch + err
 
-    print(string.format('Ep. [%d/%d][%d] Time(s): %.2f  ' .. 'batch err: %.8f | dataLoadingTime: %.3f', epoch, opt.nEpochs, batchNumber, timer:time().real, err, dataLoadingTime))
+    print(string.format('Ep. [%d/%d][%d/%d] Time(s): %.2f  ' .. 'batch err: %.7f | dataLoadingTime: %.3f', epoch, opt.nEpochs, batchNumber, opt.epochSize, timer:time().real, err, dataLoadingTime))
     dataTimer:reset()
 
 end

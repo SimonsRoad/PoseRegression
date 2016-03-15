@@ -22,32 +22,32 @@ function M.parse(arg)
                defaultDir,
                'subdirectory in which to save/log experiments')
     --cmd:option('-manualSeed',         2, 'Manually set RNG seed')
-    cmd:option('-GPU',                1, 'Default preferred GPU')
-    cmd:option('-nGPU',               1, 'Number of GPUs to use by default')
-    cmd:option('-backend',      'cudnn', 'Options: cudnn | ccn2 | cunn')
+    cmd:option('-GPU',                1,  'Default preferred GPU')
+    cmd:option('-nGPU',               1,  'Number of GPUs to use by default')
+    cmd:option('-backend',      'cudnn',  'Options: cudnn | ccn2 | cunn')
 
 	------------- Task options ------------------------
-	cmd:option('-t',		   'PR_fcn', 'The name of task')
+	cmd:option('-t',		   'PR_fcn',  'The name of task')
 
     ------------- Data options ------------------------
-    cmd:option('-nDonkeys',           3, 'number of donkeys to initialize (data loading threads)')
+    cmd:option('-nDonkeys',           1,  '# of donkeys to initialize (data loading threads)')
     cmd:option('-txtpos',      '../data/rendout/tmp_y144_x256_aug/lists/pos.txt',  'pos list')
     cmd:option('-txtjsdc',     '../data/rendout/tmp_y144_x256_aug/lists/jsdc.txt', 'jsdc list')
-    cmd:option('-nTrainData',    300000,    'number of train data')
-    cmd:option('-nTestData',       2000,    'number of test data')
-    cmd:option('-W',                 64,    'image width')
-    cmd:option('-H',                128,    'image height')
+    cmd:option('-nTrainData',    300000,  'number of train data')
+    cmd:option('-nTestData',       2000,  'number of test data')
+    cmd:option('-W',                 64,  'image width')
+    cmd:option('-H',                128,  'image height')
 
     ------------- Training options --------------------
-    cmd:option('-nEpochs',         100,   'Number of total epochs to run')
+    cmd:option('-nEpochs',        1000,   'Number of total epochs to run')
     cmd:option('-epochSize',      6250,   'Number of batches per epoch')
-    cmd:option('-epochNumber',       5,   'Manual epoch number (useful on restarts)')
+    cmd:option('-epochNumber',       1,   'Manual epoch number (useful on restarts)')
     cmd:option('-batchSize',        48,   'mini-batch size (1 = pure stochastic)')
 
     ---------- Optimization options ----------------------
-    cmd:option('-LR',    		   0.001, 'learning rate; if set, overrides default LR/WD recipe')
-    cmd:option('-momentum',        0.9,  'momentum')
-    cmd:option('-weightDecay',     5e-4, 'weight decay')
+    cmd:option('-LR',    		 0.001,   'learning rate ')
+    cmd:option('-momentum',        0.9,   'momentum')
+    cmd:option('-weightDecay',     5e-4,  'weight decay')
     ---------- Model options ----------------------------------
     --cmd:option('-netType',     'alexnetowtbn', 'Options: alexnet | overfeat | alexnetowtbn | vgg | googlenet')
     cmd:option('-retrain',     'none', 'provide path to model to retrain with')

@@ -61,7 +61,7 @@ for i=1,opt.nEpochs do
 	test()
 
 	-- evaluation
-	if epoch % 10 == 0 then
+	if epoch % 5 == 0 then
         eval_jsdc(testset)
 		--evaluate(testset,  'test')
 		--evaluate(trainset, 'train')

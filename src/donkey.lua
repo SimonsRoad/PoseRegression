@@ -25,7 +25,6 @@ local meanstdCache = paths.concat(opt.cache, 'meanstdCache.t7')
 
 if paths.filep(meanstdCache) then
     local meanstd = torch.load(meanstdCache)
-    print(meanstd)
     mean = meanstd.mean
     std  = meanstd.std
     print('Loaded mean and std from cache.')

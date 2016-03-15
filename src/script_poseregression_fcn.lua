@@ -13,7 +13,6 @@ require 'cunn';
 paths.dofile('util.lua')
 paths.dofile('create_network.lua')
 paths.dofile('compute_distance.lua')
-paths.dofile('compute_meanstdv.lua')
 paths.dofile('evaluate.lua')
 paths.dofile('load_batch.lua')
 paths.dofile('eval_jsdc.lua')
@@ -24,7 +23,6 @@ cutorch.setDevice(opt.GPU)
 paths.dofile('load_settings.lua')
 print('Saving everything to: ' .. opt.save) 
 os.execute('mkdir -p ' .. opt.save)
-
 
 
 -- 2. network

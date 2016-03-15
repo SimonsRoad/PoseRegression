@@ -92,7 +92,6 @@ function dataset:load_jsdc(indices)
     return jsdc_tensor
 end
 
-
 function dataset:load_batch(indices)
      -- load all
      local pos  = self:load_img(indices)
@@ -101,7 +100,8 @@ function dataset:load_batch(indices)
     -- normalize images (pos)
     for i=1,3 do
         pos[{ {}, {i}, {}, {} }]:add(-mean[i])
-        pos[{ {}, {i}, {}, {} }]:div(stdv[i])
+        pos[{ {}, {i}, {}, {} }]:div(std[i])
+        
     end
 
     -- out

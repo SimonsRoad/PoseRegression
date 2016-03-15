@@ -25,22 +25,22 @@ function M.parse(arg)
     cmd:option('-GPU',                1, 'Default preferred GPU')
     cmd:option('-nGPU',               1, 'Number of GPUs to use by default')
     cmd:option('-backend',      'cudnn', 'Options: cudnn | ccn2 | cunn')
+
 	------------- Task options ------------------------
-	cmd:option('-t',		   'noname', 'The name of task')
+	cmd:option('-t',		   'PR_fcn', 'The name of task')
+
     ------------- Data options ------------------------
-    cmd:option('-nDonkeys',           2, 'number of donkeys to initialize (data loading threads)')
-    cmd:option('-txtpos',      '../data/rendout/tmp_y144_x256_aug/lists/pos.txt',    'list of pos in text file')
-    cmd:option('-txtjsdc',     '../data/rendout/tmp_y144_x256_aug/lists/jsdc.txt',   'list of jsdc in text file')
+    cmd:option('-nDonkeys',           3, 'number of donkeys to initialize (data loading threads)')
+    cmd:option('-txtpos',      '../data/rendout/tmp_y144_x256_aug/lists/pos.txt',  'pos list')
+    cmd:option('-txtjsdc',     '../data/rendout/tmp_y144_x256_aug/lists/jsdc.txt', 'jsdc list')
     cmd:option('-nTrainData',    300000,    'number of train data')
     cmd:option('-nTestData',       2000,    'number of test data')
     cmd:option('-W',                 64,    'image width')
     cmd:option('-H',                128,    'image height')
 
-    cmd:option('-t',               'PR_fcn', 'task')
-
     ------------- Training options --------------------
     cmd:option('-nEpochs',         100,   'Number of total epochs to run')
-    cmd:option('-epochSize',       6250,   'Number of batches per epoch')
+    cmd:option('-epochSize',      6250,   'Number of batches per epoch')
     cmd:option('-epochNumber',       5,   'Manual epoch number (useful on restarts)')
     cmd:option('-batchSize',        48,   'mini-batch size (1 = pure stochastic)')
 

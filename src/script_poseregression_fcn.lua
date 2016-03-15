@@ -3,13 +3,14 @@
 --Namhoon Lee, The Robotics Institute, Carnegie Mellon University
 --]]
 
+local opts = paths.dofile('opts.lua')
+opt = opts.parse(arg)
 
 local matio = require 'matio'
 require 'optim'
 require 'cudnn'
 require 'cunn';
 paths.dofile('util.lua')
-paths.dofile('datafromlist.lua')
 paths.dofile('create_network.lua')
 paths.dofile('compute_distance.lua')
 paths.dofile('compute_meanstdv.lua')
@@ -24,21 +25,6 @@ paths.dofile('load_settings.lua')
 print('Saving everything to: ' .. opt.save) 
 os.execute('mkdir -p ' .. opt.save)
 
-
--- 1. load and normalize data
--- 
-loader_pos  = dataLoader{filename = '../data/rendout/tmp_y144_x256_aug/lists/pos.txt'}
-loader_jsdc = dataLoader{filename = '../data/rendout/tmp_y144_x256_aug/lists/jsdc.txt'}
-
-nTrainData = 300000
-nTestData  = 2000
-
-mean, stdv = compute_meanstdv(torch.range(1,nTrainData, 20))
-
-testset = load_batch(torch.range(nTrainData+1, nTrainData+nTestData))
-matio.save(paths.concat(opt.save, 'testdata.mat'), testset)
-print(testset)
-assert(testset.label:size(1) == nTestData); assert(testset.label:size(2) == 30)
 
 
 -- 2. network
@@ -63,6 +49,7 @@ criterion = criterion:cuda()
 --
 print(opt)
 
+paths.dofile('data.lua')
 paths.dofile('train_fcn.lua')
 paths.dofile('test_fcn.lua')
 

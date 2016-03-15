@@ -35,13 +35,16 @@ function test()
 			idx_batch = torch.cat(idx1, idx2, 1)
 		end
 
-		local inputs, labels
-		inputs = testset.data:index(1, idx_batch:long())
-		labels = testset.label:index(1, idx_batch:long())
-
-        testBatch(inputs, labels)
+        donkeys:addjob(
+            function()
+                local testset_batch = load_batch(idx_batch)
+                return testset_batch.data, testset_batch.label
+            end,
+            testBatch
+        )
    	end
 
+    donkeys:synchronize()
    	cutorch.synchronize()
 
    	loss_epoch = loss_epoch / (nTestData/opt.batchSize) -- because loss is calculated per batch

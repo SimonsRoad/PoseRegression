@@ -25,6 +25,7 @@ end
 -- 2. Create loggers.
 trainLogger = optim.Logger(paths.concat(opt.save, 'train.log'))
 local loss_epoch
+local batchNumber 
 
 
 --3. Train - this function handles the high-level training loop,
@@ -38,9 +39,10 @@ function train()
 
 	local tm = torch.Timer()
 	loss_epoch = 0
+    batchNumber = 0
 
 	-- randomize dataset (actually just indices)
-	local idx_rand = torch.randperm(nTrainData)
+	local idx_rand = torch.randperm(opt.nTrainData)
 
     -- training
 	for i=1,opt.epochSize do
@@ -48,18 +50,27 @@ function train()
 		local idx_start = (i-1)*opt.batchSize + 1
 		local idx_end   = idx_start + opt.batchSize - 1
 		local idx_batch
-		if idx_end <= nTrainData then
+		if idx_end <= opt.nTrainData then
 			idx_batch = idx_rand[{{idx_start,idx_end}}] 
 		else 
-			local idx1 = idx_rand[{{idx_start,nTrainData}}]
-			local idx2 = idx_rand[{{1,idx_end-nTrainData}}]
+			local idx1 = idx_rand[{{idx_start,opt.nTrainData}}]
+			local idx2 = idx_rand[{{1,idx_end-opt.nTrainData}}]
 			idx_batch = torch.cat(idx1, idx2, 1)
 		end
 
-        local trainset_batch = load_batch(idx_batch)
-		trainBatch(trainset_batch.data, trainset_batch.label)
+
+        donkeys:addjob(
+            -- the job callback (runs in data-worker thread)
+            function()
+                local trainset_batch = loader:load_batch(idx_batch)
+                return trainset_batch.data, trainset_batch.label
+            end,
+             -- the end callback (runs in the main thread)
+		    trainBatch
+        )
 	end
 
+    donkeys:synchronize()
 	cutorch.synchronize()
 
 	loss_epoch = loss_epoch / opt.epochSize
@@ -97,6 +108,7 @@ local inputs = torch.CudaTensor()
 local labels = torch.CudaTensor()
 
 local timer = torch.Timer()
+local dataTimer = torch.Timer()
 
 local parameters, gradParameters = model:getParameters()
 
@@ -105,7 +117,9 @@ local parameters, gradParameters = model:getParameters()
 function trainBatch(inputsCPU, labelsCPU)
 	cutorch.synchronize()
 	collectgarbage()
+    local dataLoadingTime = dataTimer:time().real
 	timer:reset()
+
 
 	-- transfer over to GPU
 	inputs:resize(inputsCPU:size()):copy(inputsCPU)
@@ -128,7 +142,11 @@ function trainBatch(inputsCPU, labelsCPU)
 	end
 
 	cutorch.synchronize()
+    batchNumber = batchNumber + 1
 	loss_epoch = loss_epoch + err
+
+    print(string.format('Ep. [%d/%d][%d] Time(s): %.2f  ' .. 'batch err: %.8f | dataLoadingTime: %.3f', epoch, opt.nEpochs, batchNumber, timer:time().real, err, dataLoadingTime))
+    dataTimer:reset()
 
 end
 

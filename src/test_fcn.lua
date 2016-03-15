@@ -23,21 +23,21 @@ function test()
    	model:evaluate()
 
    	loss_epoch = 0
-   	for i=1,nTestData/opt.batchSize do 
+   	for i=1,opt.nTestData/opt.batchSize do 
 	  	local idx_start = (i-1) * opt.batchSize + 1
 		local idx_end   = idx_start + opt.batchSize - 1
 		local idx_batch
-		if idx_end <= nTestData then
+		if idx_end <= opt.nTestData then
 			idx_batch = torch.range(idx_start, idx_end)
 		else
-			local idx1 = torch.range(idx_start, nTestData)
-			local idx2 = torch.range(1, idx_end-nTestData)
+			local idx1 = torch.range(idx_start, opt.nTestData)
+			local idx2 = torch.range(1, idx_end-opt.nTestData)
 			idx_batch = torch.cat(idx1, idx2, 1)
 		end
 
         donkeys:addjob(
             function()
-                local testset_batch = load_batch(idx_batch)
+                local testset_batch = loader:load_batch(idx_batch)
                 return testset_batch.data, testset_batch.label
             end,
             testBatch
@@ -47,7 +47,7 @@ function test()
     donkeys:synchronize()
    	cutorch.synchronize()
 
-   	loss_epoch = loss_epoch / (nTestData/opt.batchSize) -- because loss is calculated per batch
+   	loss_epoch = loss_epoch / (opt.nTestData/opt.batchSize) -- because loss is calculated per batch
    	testLogger:add{
 		['avg loss (test set)'] = loss_epoch
    	}

@@ -30,7 +30,7 @@ function M.parse(arg)
 	cmd:option('-t',		   'PR_fcn',  'The name of task')
 
     ------------- Data options ------------------------
-    cmd:option('-nDonkeys',           1,  '# of donkeys to initialize (data loading threads)')
+    cmd:option('-nDonkeys',           3,  '# of donkeys to initialize (data loading threads)')
     cmd:option('-txtpos',      '../data/rendout/tmp_y144_x256_aug/lists/pos.txt',  'pos list')
     cmd:option('-txtjsdc',     '../data/rendout/tmp_y144_x256_aug/lists/jsdc.txt', 'jsdc list')
     cmd:option('-nTrainData',    300000,  'number of train data')
@@ -47,7 +47,7 @@ function M.parse(arg)
     ---------- Optimization options ----------------------
     cmd:option('-LR',    		 0.001,   'learning rate ')
     cmd:option('-momentum',        0.9,   'momentum')
-    cmd:option('-weightDecay',     5e-4,  'weight decay')
+    cmd:option('-weightDecay',    5e-4,   'weight decay')
     ---------- Model options ----------------------------------
     --cmd:option('-netType',     'alexnetowtbn', 'Options: alexnet | overfeat | alexnetowtbn | vgg | googlenet')
     cmd:option('-retrain',     'none', 'provide path to model to retrain with')

@@ -46,7 +46,7 @@ for i=1,opt.nEpochs do
 	test()
 
 	-- evaluation
-	if epoch % 1 == 0 then
+	if epoch % 5 == 0 then
         eval_jsdc()         -- evaluate on testset
 	end
 	epoch = epoch + 1

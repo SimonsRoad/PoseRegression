@@ -22,14 +22,11 @@ if opt.optimState ~= 'none' then
 end
 
 
--- 2. Create loggers.
 trainLogger = optim.Logger(paths.concat(opt.save, 'train.log'))
 local loss_epoch
 local batchNumber 
 
 
---3. Train - this function handles the high-level training loop,
---		     i.e. load data, train model, save model and state to disk
 function train()
 
 	cutorch.synchronize()
@@ -147,11 +144,5 @@ function trainBatch(inputsCPU, labelsCPU)
     dataTimer:reset()
 
 end
-
-
-
-
-
-
 
 

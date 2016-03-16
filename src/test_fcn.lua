@@ -9,18 +9,19 @@
 --  **Modified by Namhoon Lee (namhoonl@andrew.cmu.edu), RI CMU
 --
 --
-testLogger = optim.Logger(paths.concat(opt.save, 'test.log'))
 
+testLogger = optim.Logger(paths.concat(opt.save, 'test.log'))
 local loss_epoch
-local timer = torch.Timer()
+
 
 function test()
 
    	cutorch.synchronize()
-   	timer:reset()
 
    	-- set the dropouts to evaluate mode
    	model:evaluate()
+
+    local tm = torch.Timer()
    	loss_epoch = 0
 
     -- randomize dataset (actually just indices)
@@ -56,7 +57,7 @@ function test()
    	testLogger:add{
 		['avg loss (test set)'] = loss_epoch
    	}
-   	print(string.format('Ep. [%d/%d]  (Test) Time(s): %.2f  ' .. 'avg loss (per batch): %.8f ', epoch, opt.nEpochs, timer:time().real, loss_epoch))
+   	print(string.format('Ep. [%d/%d]  (Test) Time(s): %.2f  ' .. 'avg loss (per batch): %.8f ', epoch, opt.nEpochs, tm:time().real, loss_epoch))
 
 
 end -- of test()

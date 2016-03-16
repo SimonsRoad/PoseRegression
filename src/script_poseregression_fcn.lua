@@ -13,6 +13,7 @@ local opts          = require 'opts'
 local checkpoints   = require 'checkpoints'
 
 opt = opts.parse(arg)
+print(opt)
 
 paths.dofile('util.lua')
 paths.dofile('compute_distance.lua')
@@ -21,7 +22,7 @@ paths.dofile('load_batch.lua')
 paths.dofile('eval_jsdc.lua')
 
 
--- 0. settings 
+-- Settings 
 cutorch.setDevice(opt.GPU)
 paths.dofile('load_settings.lua')
 print('Saving everything to: ' .. opt.save) 
@@ -32,10 +33,7 @@ os.execute('mkdir -p ' .. opt.save)
 model, criterion = models.setup(opt, checkpoint)
 
 
--- 4. Training
---
-print(opt)
-
+-- Training
 paths.dofile('data.lua')
 paths.dofile('train_fcn.lua')
 paths.dofile('test_fcn.lua')

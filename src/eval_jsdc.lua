@@ -70,7 +70,7 @@ function comp_SAD (gt, pred) -- average squard distance
     return sad
 end
 
-evalLogger = optim.Logger(paths.concat(opt.save, 'pck.log'))
+evalLogger = optim.Logger(paths.concat(opt.save, 'eval.log'))
 
 local pck_j27 -- PCK for j27
 local sad_seg -- SAD for seg

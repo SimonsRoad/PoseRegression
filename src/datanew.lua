@@ -1,12 +1,11 @@
--- datafromlist.lua
+-- datanew.lua
 
-require 'torch'
 torch.setdefaulttensortype('torch.FloatTensor')
-local ffi = require 'ffi'
-local class = require('pl.class')
-local dir = require 'pl.dir'
-local tablex = require 'pl.tablex'
-local argcheck = require 'argcheck'
+local ffi       = require 'ffi'
+local class     = require('pl.class')
+local dir       = require 'pl.dir'
+local tablex    = require 'pl.tablex'
+local argcheck  = require 'argcheck'
 require 'sys'
 require 'xlua'
 require 'image'

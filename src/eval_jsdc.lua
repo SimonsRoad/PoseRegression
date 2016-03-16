@@ -70,36 +70,85 @@ function comp_SAD (gt, pred) -- average squard distance
     return sad
 end
 
-function eval_jsdc (dataset)
-    local timer = torch.Timer()
+evalLogger = optim.Logger(paths.concat(opt.save, 'pck.log'))
+
+local pck_j27 -- PCK for j27
+local sad_seg -- SAD for seg
+local sad_dep -- SAD for dep
+local sad_cen -- SAD for cen
+
+local timer = torch.Timer()
+
+function eval_jsdc ()
+
+    cutorch.synchronize()
     timer:reset()
 
-    local nData = dataset.label:size(1)
+    -- set the dropouts to evaluate mode
+    model:evaluate()
+    pck_j27 = 0
+    sad_seg = 0
+    sad_dep = 0
+    sad_cen = 0
 
-    -- forward pass
-    local gt   = torch.CudaTensor(nData, 30, 128, 64)
-    local pred = torch.CudaTensor(nData, 30, 128, 64)
+    -- randomize dataset (actually just indices)
+    local idx_rand = torch.randperm(opt.nTestData)
 
-    for i=1,math.ceil(nData/opt.batchSize) do
+    for i=1,opt.nTestData/opt.batchSize do
         local idx_start = (i-1) * opt.batchSize + 1
         local idx_end   = idx_start + opt.batchSize - 1
         local idx_batch
-        if idx_end <= nTestData then
-            idx_batch = torch.range(idx_start, idx_end)
+        if idx_end <= opt.nTestData then
+            idx_batch = idx_rand[{{idx_start,idx_end}}]
         else
-            idx_batch = torch.range(idx_start, nTestData)
+            local idx1 = idx_rand[{{idx_start,opt.nTestData}}]
+            local idx2 = idx_rand[{{1,idx_end-opt.nTestData}}]
+            idx_batch = torch.cat(idx1, idx2, 1)
         end
+        idx_batch = idx_batch + opt.nTrainData
 
-        local inputs, labels
-        inputs = dataset.data:index(1, idx_batch:long())
-        labels = dataset.label:index(1, idx_batch:long())
-
-        local outputs = model:forward(inputs:cuda())
-
-        -- save into gt and pred
-        gt[{ {idx_batch[1], idx_batch[opt.batchSize]}, {}, {}, {} }] = labels:cuda()
-        pred[{ {idx_batch[1], idx_batch[opt.batchSize]}, {}, {}, {} }] = outputs
+        donkeys:addjob(
+            function()
+                local testset_batch = loader:load_batch(idx_batch)
+                return testset_batch.data, testset_batch.label
+            end,
+            evalBatch
+        )
     end
+
+    donkeys:synchronize()
+    cutorch.synchronize()
+
+    pck_j27 = pck_j27 / (opt.nTestData/opt.batchSize)
+    sad_seg = sad_seg / (opt.nTestData/opt.batchSize)
+    sad_dep = sad_dep / (opt.nTestData/opt.batchSize)
+    sad_cen = sad_cen / (opt.nTestData/opt.batchSize)
+
+    evalLogger:add{ 
+        ['pck_j27'] = pck_j27,
+        ['sad_seg'] = sad_seg,
+        ['sad_dep'] = sad_dep,
+        ['sad_cen'] = sad_cen,
+    }
+
+    print(string.format('--EVALUATION  [%.2fsec]', timer:time().real))
+    print(string.format('  PCK (j27):  %.2f ', pck_j27))
+    print(string.format('  SAD (seg/dep/cen):  %.2f | %.2f | %.2f ',sad_seg,sad_dep,sad_cen))
+
+end
+
+local inputs = torch.CudaTensor()
+local labels = torch.CudaTensor()
+
+function evalBatch(inputsCPU, labelsCPU)
+    
+    inputs:resize(inputsCPU:size()):copy(inputsCPU)
+    labels:resize(labelsCPU:size()):copy(labelsCPU)
+
+    local outputs = model:forward(inputs)
+
+    local gt = labelsCPU:cuda()
+    local pred = outputs
 
     -- separation
     local gt_j27_hmap = gt[{ {}, {1,27}, {}, {} }]
@@ -112,21 +161,15 @@ function eval_jsdc (dataset)
     local pred_cen = pred[{ {}, {30}, {}, {} }]
 
     -- find peak for joints 
-    gt_j27   = find_peak(gt_j27_hmap) 
-    pred_j27 = find_peak(pred_j27_hmap) 
+    local gt_j27   = find_peak(gt_j27_hmap) 
+    local pred_j27 = find_peak(pred_j27_hmap) 
 
     -- EVALUATION
-    local pck_j27 = comp_PCK(gt_j27, pred_j27)      -- PCK for j27
-    local sad_seg = comp_SAD(gt_seg, pred_seg)      -- SAD for seg
-    local sad_dep = comp_SAD(gt_dep, pred_dep)      -- SAD for dep
-    local sad_cen = comp_SAD(gt_cen, pred_cen)      -- SAD for cen
+    pck_j27 = pck_j27 + comp_PCK(gt_j27, pred_j27)      -- PCK for j27
+    sad_seg = sad_seg + comp_SAD(gt_seg, pred_seg)      -- SAD for seg
+    sad_dep = sad_dep + comp_SAD(gt_dep, pred_dep)      -- SAD for dep
+    sad_cen = sad_cen + comp_SAD(gt_cen, pred_cen)      -- SAD for cen
 
-    print(string.format('--EVALUATION  [%.2fsec]', timer:time().real))
-    print(string.format('PCK (j27):  %.2f ', pck_j27))
-    print(string.format('SAD (seg/dep/cen):  %.2f | %.2f | %.2f ',sad_seg,sad_dep,sad_cen))
-    pckLogger:add{ ['pck_j27'] = pck_j27 }
+    cutorch.synchronize()
 
-    -- SAVE prediction for qualitative results
-    matio.save(paths.concat(opt.save, 'pred.mat'), pred:float())
 end
-

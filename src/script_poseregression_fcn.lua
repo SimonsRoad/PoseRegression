@@ -3,15 +3,18 @@
 --Namhoon Lee, The Robotics Institute, Carnegie Mellon University
 --]]
 
-local opts = paths.dofile('opts.lua')
+require 'torch'
+require 'paths'
+require 'optim'
+require 'nn'
+
+local models        = require 'models/init'
+local opts          = require 'opts'
+local checkpoints   = require 'checkpoints'
+
 opt = opts.parse(arg)
 
-local matio = require 'matio'
-require 'optim'
-require 'cudnn'
-require 'cunn';
 paths.dofile('util.lua')
-paths.dofile('create_network.lua')
 paths.dofile('compute_distance.lua')
 paths.dofile('evaluate.lua')
 paths.dofile('load_batch.lua')
@@ -25,22 +28,8 @@ print('Saving everything to: ' .. opt.save)
 os.execute('mkdir -p ' .. opt.save)
 
 
--- 2. network
---
-if opt.retrain ~= 'none' then
-	assert(paths.filep(opt.retrain), 'File not found: ' .. opt.retrain)
-	print('Loading model from file: ' .. opt.retrain)
-	model = loadDataParallel(opt.retrain, opt.nGPU)
-else
-	model = create_network(modelNumber)
-	cudnn.convert(model, cudnn)
-end
-
-
--- 3. loss function
--- 
-criterion = nn.MSECriterion()
-criterion = criterion:cuda()
+-- Create model
+model, criterion = models.setup(opt, checkpoint)
 
 
 -- 4. Training
@@ -51,8 +40,6 @@ paths.dofile('data.lua')
 paths.dofile('train_fcn.lua')
 paths.dofile('test_fcn.lua')
 
-pckLogger = optim.Logger(paths.concat(opt.save, 'pck_test.log'))
-
 epoch = opt.epochNumber
 for i=1,opt.nEpochs do
 
@@ -61,10 +48,8 @@ for i=1,opt.nEpochs do
 	test()
 
 	-- evaluation
-	if epoch % 5 == 0 then
-        eval_jsdc(testset)
-		--evaluate(testset,  'test')
-		--evaluate(trainset, 'train')
+	if epoch % 1 == 0 then
+        eval_jsdc()         -- evaluate on testset
 	end
 	epoch = epoch + 1
 end

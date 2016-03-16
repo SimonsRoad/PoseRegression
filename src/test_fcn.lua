@@ -21,19 +21,24 @@ function test()
 
    	-- set the dropouts to evaluate mode
    	model:evaluate()
-
    	loss_epoch = 0
+
+    -- randomize dataset (actually just indices)
+    local idx_rand = torch.randperm(opt.nTestData)
+
+    -- test
    	for i=1,opt.nTestData/opt.batchSize do 
 	  	local idx_start = (i-1) * opt.batchSize + 1
 		local idx_end   = idx_start + opt.batchSize - 1
 		local idx_batch
 		if idx_end <= opt.nTestData then
-			idx_batch = torch.range(idx_start, idx_end)
+            idx_batch = idx_rand[{{idx_start,idx_end}}]
 		else
-			local idx1 = torch.range(idx_start, opt.nTestData)
-			local idx2 = torch.range(1, idx_end-opt.nTestData)
+			local idx1 = idx_rand[{{idx_start,opt.nTestData}}]
+			local idx2 = idx_rand[{{1,idx_end-opt.nTestData}}]
 			idx_batch = torch.cat(idx1, idx2, 1)
 		end
+        idx_batch = idx_batch + opt.nTrainData      -- after # number of train.. 
 
         donkeys:addjob(
             function()

@@ -60,12 +60,10 @@ function train()
 
 
         donkeys:addjob(
-            -- the job callback (runs in data-worker thread)
             function()
                 local trainset_batch = loader:load_batch(idx_batch)
                 return trainset_batch.data, trainset_batch.label
             end,
-             -- the end callback (runs in the main thread)
 		    trainBatch
         )
 	end

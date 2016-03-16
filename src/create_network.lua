@@ -842,20 +842,25 @@ function create_network_model14() -- PR_fcn
 	local feat = nn.Sequential()
 
 	feat:add(nn.SpatialConvolution(3,128,5,5,1,1,2,2))
+    feat:add(nn.SpatialBatchNormalization(128))
 	feat:add(nn.ReLU())
 	feat:add(nn.SpatialMaxPooling(3,3,1,1,1,1))
 
 	feat:add(nn.SpatialConvolution(128,128,5,5,1,1,2,2))
+    feat:add(nn.SpatialBatchNormalization(128))
 	feat:add(nn.ReLU())
 	feat:add(nn.SpatialMaxPooling(3,3,1,1,1,1))
 
 	feat:add(nn.SpatialConvolution(128,32,5,5,1,1,2,2))
+    feat:add(nn.SpatialBatchNormalization(32))
 	feat:add(nn.ReLU())
 
 	feat:add(nn.SpatialConvolution(32,512,9,9,1,1,4,4))
+    feat:add(nn.SpatialBatchNormalization(512))
 	feat:add(nn.ReLU())
 	--
 	feat:add(nn.SpatialConvolution(512,512,1,1))
+    feat:add(nn.SpatialBatchNormalization(512))
 	feat:add(nn.ReLU())
 	
 	feat:add(nn.SpatialConvolution(512,30,1,1))

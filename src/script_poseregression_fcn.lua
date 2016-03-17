@@ -10,34 +10,20 @@ require 'nn'
 
 local models        = require 'models/init'
 local opts          = require 'opts'
-local checkpoints   = require 'checkpoints'
-
 opt = opts.parse(arg)
 print(opt)
 
-paths.dofile('util.lua')
-paths.dofile('compute_distance.lua')
-paths.dofile('evaluate.lua')
-paths.dofile('load_batch.lua')
-paths.dofile('eval_jsdc.lua')
-
-
--- Settings 
-cutorch.setDevice(opt.GPU)
-paths.dofile('load_settings.lua')
-print('Saving everything to: ' .. opt.save) 
-os.execute('mkdir -p ' .. opt.save)
-
 
 -- Create model
-model, criterion = models.setup(opt, checkpoint)
+model, criterion = models.setup(opt)
 
 
--- Training
 paths.dofile('data.lua')
 paths.dofile('train_fcn.lua')
 paths.dofile('test_fcn.lua')
+paths.dofile('eval_jsdc.lua')
 
+-- Training
 epoch = opt.epochNumber
 for i=1,opt.nEpochs do
 
@@ -46,12 +32,11 @@ for i=1,opt.nEpochs do
 	test()
 
 	-- evaluation
-	if epoch % 5 == 0 then
+	if epoch % 1 == 0 then
         eval_jsdc()         -- evaluate on testset
 	end
 	epoch = epoch + 1
 end
-
 
 
 

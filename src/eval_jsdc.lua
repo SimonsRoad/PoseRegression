@@ -31,6 +31,7 @@ end
 
 function comp_PCK(gt, pred)
     -- input: {nData, 27, 2} 
+    local nJoints = 27
     assert(gt:size(1) == pred:size(1))
     assert(gt:size(2) == nJoints and gt:size(3) == 2)
     
@@ -147,18 +148,15 @@ function evalBatch(inputsCPU, labelsCPU)
 
     local outputs = model:forward(inputs)
 
-    local gt = labelsCPU:cuda()
-    local pred = outputs
-
     -- separation
-    local gt_j27_hmap = gt[{ {}, {1,27}, {}, {} }]
-    local gt_seg = gt[{ {}, {28}, {}, {} }]
-    local gt_dep = gt[{ {}, {29}, {}, {} }]
-    local gt_cen = gt[{ {}, {30}, {}, {} }]
-    local pred_j27_hmap = pred[{ {}, {1,27}, {}, {} }]
-    local pred_seg = pred[{ {}, {28}, {}, {} }]
-    local pred_dep = pred[{ {}, {29}, {}, {} }]
-    local pred_cen = pred[{ {}, {30}, {}, {} }]
+    local gt_j27_hmap = labels[{ {}, {1,27}, {}, {} }]
+    local gt_seg = labels[{ {}, {28}, {}, {} }]
+    local gt_dep = labels[{ {}, {29}, {}, {} }]
+    local gt_cen = labels[{ {}, {30}, {}, {} }]
+    local pred_j27_hmap = outputs[{ {}, {1,27}, {}, {} }]
+    local pred_seg = outputs[{ {}, {28}, {}, {} }]
+    local pred_dep = outputs[{ {}, {29}, {}, {} }]
+    local pred_cen = outputs[{ {}, {30}, {}, {} }]
 
     -- find peak for joints 
     local gt_j27   = find_peak(gt_j27_hmap) 

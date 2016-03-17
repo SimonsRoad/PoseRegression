@@ -16,14 +16,9 @@ require 'cudnn'
 
 local M = {}
 
-function M.setup(opt, checkpoint)
+function M.setup(opt)
    local model
-   if checkpoint then
-      local modelPath = paths.concat(opt.resume, checkpoint.modelFile)
-      assert(paths.filep(modelPath), 'Saved model not found: ' .. modelPath)
-      print('=> Resuming model from ' .. modelPath)
-      model = torch.load(modelPath)
-   elseif opt.retrain ~= 'none' then
+   if opt.retrain ~= 'none' then
       assert(paths.filep(opt.retrain), 'File not found: ' .. opt.retrain)
       print('Loading model from file: ' .. opt.retrain)
       model = torch.load(opt.retrain)
@@ -57,21 +52,6 @@ function M.setup(opt, checkpoint)
          end
          m.gradInput = torch.CudaTensor(cache[i % 2], 1, 0)
       end
-   end
-
-   -- For resetting the classifier when fine-tuning on a different Dataset
-   if opt.resetClassifier and not checkpoint then
-      print(' => Replacing classifier with ' .. opt.nClasses .. '-way classifier')
-
-      local orig = model:get(#model.modules)
-      assert(torch.type(orig) == 'nn.Linear',
-         'expected last layer to be fully connected')
-
-      local linear = nn.Linear(orig.weight:size(2), opt.nClasses)
-      linear.bias:zero()
-
-      model:remove(#model.modules)
-      model:add(linear:cuda())
    end
 
    -- Set the CUDNN flags

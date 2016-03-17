@@ -78,22 +78,12 @@ function train()
 
 	collectgarbage()
 
-	local function sanitize(net)
-		local list = net:listModules()
-		for _,val in ipairs(list) do
-			for name, field in pairs(val) do
-				if torch.type(field) == 'cdata' then val[name] = nil end
-				--if (name == 'output' or name == 'gradInput') then
-				--	val[name] = field.new()
-				--end
-			end
-		end
-	end
-	sanitize(model)
-	if epoch % 5 == 0 then
-		--model:clearState()
-		saveDataParallel(paths.concat(opt.save, opt.t.. '_model_' .. epoch .. '.t7'), model)
-		torch.save(paths.concat(opt.save, opt.t.. '_optimState_' .. epoch .. '.t7'), optimState)
+	if epoch % 1 == 0 then
+        if torch.type(model) == 'nn.DataParallelTable' then
+            model = model:get(1)
+        end
+        torch.save(paths.concat(opt.save, 'model_'..epoch..'.t7'), model)
+        torch.save(paths.concat(opt.save, 'optimState_'..epoch..'.t7'), optimState)
 	end
 
 end

@@ -29,6 +29,7 @@ function M.setup(opt)
 
    -- First remove any DataParallelTable
    if torch.type(model) == 'nn.DataParallelTable' then
+       print(model)
       model = model:get(1)
    end
 

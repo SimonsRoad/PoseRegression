@@ -67,6 +67,25 @@ local function createModel(opt)
          :add(ReLU(true))
    end
 
+    local function preActBlock(n, stride)
+        local nInputPlane = iChannels
+        iChannels = n
+
+        local s = nn.Sequential()
+        s:add(SBatchNorm(nInputPlane))
+        s:add(ReLU(true))
+        s:add(Convolution(nInputPlane,n,3,3,1,1,1,1))
+        s:add(SBatchNorm(n))
+        s:add(ReLU(true))
+        s:add(Convolution(n,n,3,3,1,1,1,1))
+
+        return nn.Sequential()
+            :add(nn.ConcatTable()
+                :add(s)
+                :add(shortcut(nInputPlane, n, stride)))
+            :add(nn.CAddTable(true))
+   end
+
    -- Creates count residual blocks with specified number of features
    local function layer(block, features, count, stride)
       local s = nn.Sequential()
@@ -81,8 +100,8 @@ local function createModel(opt)
    if opt.dataset == 'towncenter' then
        -- num residual bocks, num features, residual block function
        local cfg = {
-           [18]  = {{2, 2, 2, 2}, 512, basicblock},
-           [34]  = {{3, 4, 6, 3}, 512, basicblock},
+           [18]  = {{2, 2, 2, 2}, 512, preActBlock},
+           [34]  = {{3, 4, 6, 3}, 512, preActBlock},
            -- there are more number of possible layers..
        }
 

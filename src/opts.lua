@@ -31,23 +31,24 @@ function M.parse(arg)
 	cmd:option('-t',		   'PR_fcn',  'The name of task')
 
     ------------- Data options ------------------------
-    cmd:option('-nDonkeys',           1,  '# of donkeys to initialize (data loading threads)')
+    cmd:option('-nDonkeys',           3,  '# of donkeys to initialize (data loading threads)')
     cmd:option('-txtpos',      '../data/rendout/tmp_y144_x256_aug/lists/pos.txt',  'pos list')
     cmd:option('-txtjsdc',     '../data/rendout/tmp_y144_x256_aug/lists/jsdc.txt', 'jsdc list')
-    cmd:option('-nTrainData',    3000,  'number of train data')
-    cmd:option('-nTestData',       100,  'number of test data')
+    cmd:option('-txttest',           '',  'test list')
+    cmd:option('-nTrainData',    300000,  'number of train data')
+    cmd:option('-nTestData',       2000,  'number of test data')
     cmd:option('-W',                 64,  'image width')
     cmd:option('-H',                128,  'image height')
 
     ------------- Training options --------------------
     cmd:option('-nEpochs',         100,   'Number of total epochs to run')
-    cmd:option('-epochSize',        10,   'Number of batches per epoch')
+    cmd:option('-epochSize',     37500,   'Number of batches per epoch')
     cmd:option('-epochNumber',       1,   'Manual epoch number (useful on restarts)')
-    cmd:option('-batchSize',        8,   'mini-batch size (1 = pure stochastic)')
+    cmd:option('-batchSize',         8,   'mini-batch size (1 = pure stochastic)')
     cmd:option('-resume',       'none',   'Path to directory containing checkpoint')
 
     ---------- Optimization options ----------------------
-    cmd:option('-LR',    	   	  0.0001,   'learning rate ')
+    cmd:option('-LR',    	      0.01,   'learning rate ')
     cmd:option('-momentum',        0.9,   'momentum')
     cmd:option('-weightDecay',    5e-4,   'weight decay')
 

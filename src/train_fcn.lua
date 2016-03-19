@@ -80,9 +80,10 @@ function train()
 
 	if epoch % 1 == 0 then
         if torch.type(model) == 'nn.DataParallelTable' then
-            model = model:get(1)
+            torch.save(paths.concat(opt.save, 'model_'..epoch..'.t7'), model:get(1))
+        else
+            torch.save(paths.concat(opt.save, 'model_'..epoch..'.t7'), model)
         end
-        torch.save(paths.concat(opt.save, 'model_'..epoch..'.t7'), model)
         torch.save(paths.concat(opt.save, 'optimState_'..epoch..'.t7'), optimState)
 	end
 

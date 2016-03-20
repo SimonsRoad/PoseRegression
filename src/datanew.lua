@@ -15,7 +15,7 @@ local matio = require 'matio'
 local dataset = torch.class('dataLoader')
 local initcheck = argcheck{
    pack=true,
-    {name="txtpos",
+    {name="txtimg",
     type="string",
     help=""},
     {name="txtjsdc",
@@ -26,12 +26,12 @@ local initcheck = argcheck{
 function dataset:__init(...)
 	local args =  initcheck(...)
 	for k,v in pairs(args) do self[k] = v end
-	self.imageNumSamples = tonumber(sys.fexecute("cat " .. self.txtpos .. " |  wc -l"))
-	self.imageMaxFileLength = tonumber(sys.fexecute("cat " .. self.txtpos .. " |  awk '{print length($0)}' | datamash max 1"))
+	self.imageNumSamples = tonumber(sys.fexecute("cat " .. self.txtimg .. " |  wc -l"))
+	self.imageMaxFileLength = tonumber(sys.fexecute("cat " .. self.txtimg .. " |  awk '{print length($0)}' | datamash max 1"))
    	self.imagePath = torch.CharTensor() -- path to each image in dataset
 	self.imagePath:resize(self.imageNumSamples, self.imageMaxFileLength)
    	local i_data = self.imagePath:data()
-   	local file = assert(io.open(self.txtpos, "r"))
+   	local file = assert(io.open(self.txtimg, "r"))
    	self.imagePathLength = torch.LongTensor(self.imageNumSamples):fill(0)   
    	local count = 1
    	for line in file:lines() do

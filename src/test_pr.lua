@@ -5,7 +5,7 @@
 -- set opt.nDonkeys 1 (no use of donkey, directly load data)
 -- set testindices properly..
 -- set opt.retrain with a saved model to test
--- set opt.txtpos
+-- set opt.txtpos (Remember that since neg images added, you might need to change this)
 -- test data needs to be pre-processed (resize!)
 -- prepare a .txt for test data
 --]]

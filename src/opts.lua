@@ -32,7 +32,8 @@ function M.parse(arg)
 
     ------------- Data options ------------------------
     cmd:option('-nDonkeys',           3,  '# of donkeys to initialize (data loading threads)')
-    cmd:option('-txtpos',      '../data/rendout/tmp_y144_x256_aug/lists/pos.txt',  'pos list')
+    cmd:option('-txtimg',      '../data/rendout/tmp_y144_x256_aug/lists/img.txt',  'img list')
+    --cmd:option('-txtpos',      '../data/rendout/tmp_y144_x256_aug/lists/pos.txt',  'pos list')
     cmd:option('-txtjsdc',     '../data/rendout/tmp_y144_x256_aug/lists/jsdc.txt', 'jsdc list')
     cmd:option('-txttest',           '',  'test list')
     cmd:option('-nTrainData',    300000,  'number of train data')
@@ -48,7 +49,7 @@ function M.parse(arg)
     cmd:option('-resume',       'none',   'Path to directory containing checkpoint')
 
     ---------- Optimization options ----------------------
-    cmd:option('-LR',    	      0.01,   'learning rate ')
+    cmd:option('-LR',    	     0.001,   'learning rate ')
     cmd:option('-momentum',        0.9,   'momentum')
     cmd:option('-weightDecay',    5e-4,   'weight decay')
 

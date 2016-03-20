@@ -58,8 +58,7 @@ function train()
 
         donkeys:addjob(
             function()
-                local trainset_batch = loader:load_batch(idx_batch)
-                return trainset_batch.data, trainset_batch.label
+                return loader:load_batch_new(idx_batch)
             end,
 		    trainBatch
         )
@@ -131,7 +130,7 @@ function trainBatch(inputsCPU, labelsCPU)
     batchNumber = batchNumber + 1
 	loss_epoch = loss_epoch + err
 
-    print(string.format('Ep. [%d/%d][%d/%d] Time(s): %.2f  ' .. 'batch err: %.7f | dataLoadingTime: %.3f', epoch, opt.nEpochs, batchNumber, opt.epochSize, timer:time().real, err, dataLoadingTime))
+    print(string.format('Ep. [%d/%d][%d/%d] Time(s): %.2f  ' .. 'batch err: %.7f | dataLoadingTime: %.3f | memUse: %.2f', epoch, opt.nEpochs, batchNumber, opt.epochSize, timer:time().real, err, dataLoadingTime, collectgarbage('count')))
     dataTimer:reset()
 
 end

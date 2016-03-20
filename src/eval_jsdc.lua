@@ -136,12 +136,16 @@ function eval_jsdc ()
     print(string.format('  PCK (j27):  %.2f ', pck_j27))
     print(string.format('  SAD (seg/dep/cen):  %.2f | %.2f | %.2f ',sad_seg,sad_dep,sad_cen))
 
+    collectgarbage()
+
 end
 
 local inputs = torch.CudaTensor()
 local labels = torch.CudaTensor()
 
 function evalBatch(inputsCPU, labelsCPU)
+    cutorch.synchronize()
+    collectgarbage()
     
     inputs:resize(inputsCPU:size()):copy(inputsCPU)
     labels:resize(labelsCPU:size()):copy(labelsCPU)

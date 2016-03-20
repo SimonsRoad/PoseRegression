@@ -13,7 +13,7 @@ function M.parse(arg)
 
     local cmd = torch.CmdLine()
     cmd:text()
-    cmd:text('Let me hit ECCV!!!')
+    cmd:text('Let me hit NIPS!!!')
     cmd:text()
     cmd:text('Options:')
     ------------ General options --------------------
@@ -43,9 +43,9 @@ function M.parse(arg)
 
     ------------- Training options --------------------
     cmd:option('-nEpochs',         100,   'Number of total epochs to run')
-    cmd:option('-epochSize',     37500,   'Number of batches per epoch')
+    cmd:option('-epochSize',     5,   'Number of batches per epoch')
     cmd:option('-epochNumber',       1,   'Manual epoch number (useful on restarts)')
-    cmd:option('-batchSize',         8,   'mini-batch size (1 = pure stochastic)')
+    cmd:option('-batchSize',        16,   'mini-batch size (1 = pure stochastic)')
     cmd:option('-resume',       'none',   'Path to directory containing checkpoint')
 
     ---------- Optimization options ----------------------

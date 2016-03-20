@@ -59,6 +59,8 @@ function test()
    	}
    	print(string.format('Ep. [%d/%d]  (Test) Time(s): %.2f  ' .. 'avg loss (per batch): %.8f ', epoch, opt.nEpochs, tm:time().real, loss_epoch))
 
+    collectgarbage()
+
 
 end -- of test()
 -----------------------------------------------------------------------------
@@ -67,6 +69,8 @@ local labels = torch.CudaTensor()
 
 
 function testBatch(inputsCPU, labelsCPU)
+    cutorch.synchronize()
+    collectgarbage()
 
    	inputs:resize(inputsCPU:size()):copy(inputsCPU)
    	labels:resize(labelsCPU:size()):copy(labelsCPU)

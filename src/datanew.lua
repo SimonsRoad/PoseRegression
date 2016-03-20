@@ -12,6 +12,11 @@ require 'image'
 local matio = require 'matio'
 
 
+local imgtensor = torch.Tensor(opt.batchSize, 3, opt.H, opt.W) 
+local jsdc_tensor = torch.Tensor(opt.batchSize, 30, opt.H, opt.W) 
+local pos = torch.Tensor(opt.batchSize, 3, opt.H, opt.W) 
+local jsdc = torch.Tensor(opt.batchSize, 30, opt.H, opt.W) 
+
 local dataset = torch.class('dataLoader')
 local initcheck = argcheck{
    pack=true,
@@ -66,46 +71,59 @@ function dataset:size()
 end
 
 function dataset:load_img(indices)
-        
     -- images 
-	local imgtensor = torch.Tensor(indices:size(1), 3, opt.H, opt.W)
     for i=1, indices:size(1) do
         local imgpath = ffi.string(torch.data(self.imagePath[indices[i]]), self.imagePathLength[indices[i]])
-        local img = image.load(imgpath, 3, 'float')
-        imgtensor[i] = img
+        imgtensor[i] = image.load(imgpath, 3, 'float')
     end
-    
     return imgtensor
 end
 
 function dataset:load_jsdc(indices)
     -- load from .mat files 
-    local jsdc_tensor = torch.Tensor(indices:size(1), 30, opt.H, opt.W)
-
     for i=1, indices:size(1) do
         local jsdc_path = ffi.string(torch.data(self.labelPath[indices[i]]), self.labelPathLength[indices[i]])
-        local jsdc_table = matio.load(jsdc_path)
-        jsdc_tensor[i] = jsdc_table.jsdc
+        jsdc_tensor[i] = matio.load(jsdc_path, 'jsdc')
     end
-
     return jsdc_tensor
 end
 
 function dataset:load_batch(indices)
-     -- load all
-     local pos  = self:load_img(indices)
-     local jsdc = self:load_jsdc(indices)
-     
+    -- load all
+    pos[{}] = self:load_img(indices)
+    jsdc[{}] = self:load_jsdc(indices)
+        
     -- normalize images (pos)
     for i=1,3 do
         pos[{ {}, {i}, {}, {} }]:add(-mean[i])
         pos[{ {}, {i}, {}, {} }]:div(std[i])
-        
     end
 
     -- out
     local out = {data = pos, label = jsdc}
     return out
+end
+
+function dataset:load_batch_new(indices)
+    -- images
+    for i=1, indices:size(1) do
+        local imgpath = ffi.string(torch.data(self.imagePath[indices[i]]), self.imagePathLength[indices[i]])
+        imgtensor[i] = image.load(imgpath, 3, 'float')
+    end
+    -- load from .mat files 
+    for i=1, indices:size(1) do
+        local jsdc_path = ffi.string(torch.data(self.labelPath[indices[i]]), self.labelPathLength[indices[i]])
+        jsdc_tensor[i] = matio.load(jsdc_path, 'jsdc')
+    end
+
+    -- normalize images (pos)
+    for i=1,3 do
+        imgtensor[{ {}, {i}, {}, {} }]:add(-mean[i])
+        imgtensor[{ {}, {i}, {}, {} }]:div(std[i])
+    end
+
+    return imgtensor, jsdc_tensor
+
 end
 
 

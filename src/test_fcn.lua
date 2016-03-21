@@ -15,6 +15,7 @@ local loss_epoch
 
 
 function test()
+    print('[ TEST STARTS.. ]')
 
    	cutorch.synchronize()
 
@@ -43,8 +44,7 @@ function test()
 
         donkeys:addjob(
             function()
-                local testset_batch = loader:load_batch(idx_batch)
-                return testset_batch.data, testset_batch.label
+                return loader:load_batch_new(idx_batch)
             end,
             testBatch
         )

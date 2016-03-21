@@ -81,6 +81,7 @@ local sad_cen -- SAD for cen
 local timer = torch.Timer()
 
 function eval_jsdc ()
+    print('[ EVAL_JSDC STARTS.. ]')
 
     cutorch.synchronize()
     timer:reset()
@@ -110,8 +111,7 @@ function eval_jsdc ()
 
         donkeys:addjob(
             function()
-                local testset_batch = loader:load_batch(idx_batch)
-                return testset_batch.data, testset_batch.label
+                return loader:load_batch_new(idx_batch)
             end,
             evalBatch
         )

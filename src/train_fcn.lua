@@ -28,6 +28,7 @@ local batchNumber
 
 
 function train()
+    print('[ TRAIN STARTS.. ]')
 
 	cutorch.synchronize()
 
@@ -79,12 +80,20 @@ function train()
 
 	if epoch % 1 == 0 then
         if torch.type(model) == 'nn.DataParallelTable' then
-            torch.save(paths.concat(opt.save, 'model_'..epoch..'.t7'), model:get(1))
+            local tmpmodel = model:get(1):float():clone()
+            tmpmodel:clearState()
+            torch.save(paths.concat(opt.save, 'model_'..epoch..'.t7'), tmpmodel)
+            --torch.save(paths.concat(opt.save, 'model_'..epoch..'.t7'), model:get(1))
         else
-            torch.save(paths.concat(opt.save, 'model_'..epoch..'.t7'), model)
+            local tmpmodel = model:float():clone()
+            tmpmodel:clearState()
+            torch.save(paths.concat(opt.save, 'model_'..epoch..'.t7'), tmpmodel)
+            --torch.save(paths.concat(opt.save, 'model_'..epoch..'.t7'), model)
         end
         torch.save(paths.concat(opt.save, 'optimState_'..epoch..'.t7'), optimState)
 	end
+
+    collectgarbage()
 
 end
 

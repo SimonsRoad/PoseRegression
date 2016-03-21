@@ -29,12 +29,11 @@ for i=1,opt.nEpochs do
 
 	-- train and test
 	train()
-    --print('Test starts..')
-	--test()
+	test()
 
 	-- evaluation
 	if epoch % 1 == 0 then
-    --    eval_jsdc()         -- evaluate on testset
+        eval_jsdc()         -- evaluate on testset
 	end
 	epoch = epoch + 1
 end

@@ -49,7 +49,7 @@ function M.parse(arg)
     cmd:option('-resume',       'none',   'Path to directory containing checkpoint')
 
     ---------- Optimization options ----------------------
-    cmd:option('-LR',    	     0.001,   'learning rate ')
+    cmd:option('-LR',    	      0.01,   'learning rate ')
     cmd:option('-momentum',        0.9,   'momentum')
     cmd:option('-weightDecay',    5e-4,   'weight decay')
 

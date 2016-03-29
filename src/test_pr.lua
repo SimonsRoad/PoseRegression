@@ -14,11 +14,13 @@
 require 'torch'
 require 'paths'
 require 'nn'
+require 'optim'
 
 local matio     = require 'matio'
 local models    = require 'models/init'
 local opts      = require 'opts'
 opt = opts.parse(arg)
+paths.dofile('datanew.lua')
 
 
 -- **SETTING**
@@ -26,64 +28,73 @@ opt.nDonkeys = 1
 
 
 -- load model
-local mNum  = 5
-local mName = string.format('ori_model_%d.t7', mNum)
-local pathToModel = '../save/PR_fcn/option/t_SunMar2709:01:552016'
-opt.retrain = paths.concat(pathToModel, mName)  
+--local mNum  = 11
+for mNum = 1, 11 do
 
-model, criterion = models.setup(opt)
-model:cuda()
+    local mName = string.format('clear_model_%d.t7', mNum)
+    local pathToModel = '../save/PR_fcn/option/t_SunMar2721:48:402016'
+    opt.retrain = paths.concat(pathToModel, mName)  
+
+    local model, criterion = models.setup(opt)
+    model:cuda()
 
 
--- TEST DATA: 1) sTrain, 2) sTest, 3) rTest
---
-testsettype = 'rTest'
+    -- TEST DATA: 1) sTrain, 2) sTest, 3) rTest
+    --
+    testsettype = 'rTest'
 
-savedir         = paths.concat(pathToModel, 'results/' .. testsettype)
-savefile_img    = savedir..string.format('/img_model%d.mat', mNum)
-savefile_pred   = savedir..string.format('/jsdc_pred_model%d.mat', mNum)
-savefile_gt     = savedir..string.format('/jsdc_gt_model%d.mat', mNum)
+    savedir         = paths.concat(pathToModel, 'results/' .. testsettype)
+    savefile_img    = savedir..string.format('/img_model%d.mat', mNum)
+    savefile_pred   = savedir..string.format('/jsdc_pred_model%d.mat', mNum)
+    savefile_gt     = savedir..string.format('/jsdc_gt_model%d.mat', mNum)
 
-if testsettype == 'sTrain' then
-    testindices = torch.randperm(opt.nTrainData):index(1, torch.range(1,20):long())
-    opt.txtimg  = '../data/rendout/tmp_y144_x256_aug/lists/img.txt'
-    opt.txtjsdc = '../data/rendout/tmp_y144_x256_aug/lists/jsdc.txt'
-elseif testsettype == 'sTest' then
-    testindices = torch.randperm(opt.nTestData):index(1, torch.range(1,20):long()) + opt.nTrainData
-    opt.txtimg  = '../data/rendout/tmp_y144_x256_aug/lists/img.txt'
-    opt.txtjsdc = '../data/rendout/tmp_y144_x256_aug/lists/jsdc.txt'
-elseif testsettype == 'rTest' then
-    testindices = torch.range(1,22)
-    opt.txtimg  = '../../towncenter/data/frames_y144_x256_sel/lists/img.txt'
-    opt.txtjsdc = '../../towncenter/data/frames_y144_x256_sel/lists/jsdc.txt'
+    if testsettype == 'sTrain' then
+        testindices = torch.randperm(opt.nTrainData):index(1, torch.range(1,20):long())
+        opt.txtimg  = '../data/rendout/tmp_y144_x256_aug/lists/img.txt'
+        opt.txtjsdc = '../data/rendout/tmp_y144_x256_aug/lists/jsdc.txt'
+    elseif testsettype == 'sTest' then
+        testindices = torch.randperm(opt.nTestData):index(1, torch.range(1,20):long()) + opt.nTrainData
+        opt.txtimg  = '../data/rendout/tmp_y144_x256_aug/lists/img.txt'
+        opt.txtjsdc = '../data/rendout/tmp_y144_x256_aug/lists/jsdc.txt'
+    elseif testsettype == 'rTest' then
+        testindices = torch.range(1,22)
+        opt.txtimg  = '../../towncenter/data/frames_y144_x256_sel/lists/img.txt'
+        opt.txtjsdc = '../../towncenter/data/frames_y144_x256_sel/lists/jsdc.txt'
+        opt.nJoints = 14
+    end
+
+    -- Load test data
+    local loader = dataLoader{txtimg=opt.txtimg, txtjsdc=opt.txtjsdc}
+    local testimg  = loader:load_img(testindices)
+    local testjsdc = loader:load_jsdc(testindices)
+    matio.save(savefile_img,  testimg)
+
+    meanstdCache = paths.concat(opt.cache, 'meanstdCache.t7')
+    meanstd = torch.load(meanstdCache)
+    mean = meanstd.mean
+    std  = meanstd.std
+    for i=1,3 do
+        testimg[{ {}, {i}, {}, {} }]:add(-mean[i])
+        testimg[{ {}, {i}, {}, {} }]:div(std[i])
+    end
+    --print(testimg:size())
+
+
+    -- Forward pass and save the results
+    local output = model:forward(testimg:cuda())
+
+
+    -- Save results
+    matio.save(savefile_pred, output:float())
+    matio.save(savefile_gt,   testjsdc) 
+
+
+    -- compute PCK
+    paths.dofile('eval_jsdc.lua')
+    local gt_j27_hmap   = testjsdc[{ {}, {1,opt.nJoints}, {}, {} }]
+    local pred_j27_hmap = output[{ {}, {1,opt.nJoints}, {}, {} }]
+    local gt_j27   = find_peak(gt_j27_hmap)
+    local pred_j27 = find_peak(pred_j27_hmap)
+    local pck = comp_PCK(gt_j27, pred_j27)
+    print(string.format('#model: %d | PCK: %.2f ', mNum, pck))
 end
-
--- Load test data
-paths.dofile('datanew.lua')
-loader = dataLoader{txtimg=opt.txtimg, txtjsdc=opt.txtjsdc}
-testimg = loader:load_img(testindices)
-matio.save(savefile_img,  testimg)
-
-meanstdCache = paths.concat(opt.cache, 'meanstdCache.t7')
-meanstd = torch.load(meanstdCache)
-mean = meanstd.mean
-std  = meanstd.std
-for i=1,3 do
-    testimg[{ {}, {i}, {}, {} }]:add(-mean[i])
-    testimg[{ {}, {i}, {}, {} }]:div(std[i])
-end
-print(testimg:size())
-
-
--- Forward pass and save the results
-output = model:forward(testimg:cuda())
-
-
--- Save results
-matio.save(savefile_pred, output:float())
-matio.save(savefile_gt,   loader:load_jsdc(testindices)) 
-
--- compute PCK
-
-
-

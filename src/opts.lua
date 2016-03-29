@@ -39,6 +39,7 @@ function M.parse(arg)
     cmd:option('-nTestData',       1000,  'number of test data')
     cmd:option('-W',                 64,  'image width')
     cmd:option('-H',                128,  'image height')
+    cmd:option('-nJoints',           27,  'number of joints')
 
     ------------- Training options --------------------
     cmd:option('-nEpochs',          50,   'Number of total epochs to run')

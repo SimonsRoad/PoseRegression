@@ -9,13 +9,13 @@ local matio = require 'matio'
 function find_peak(hmap)
     -- 1. hmap expects {ndata x 27 x 128 x 64}
     -- 2. returns {ndata x 27 x 2} 
-    assert(hmap:size(2) == 27 and hmap:size(3) == 128 and hmap:size(4) == 64)
+    assert(hmap:size(2) == opt.nJoints and hmap:size(3) == 128 and hmap:size(4) == 64)
 
     local nData = hmap:size(1)
-    local j27 = torch.CudaTensor(nData, 27, 2)
+    local j27 = torch.CudaTensor(nData, opt.nJoints, 2)
 
     for i=1,nData do
-        for j=1,27 do
+        for j=1,opt.nJoints do
             -- find max and idx
             local max, idx = torch.max(torch.reshape(hmap[i][j], 128*64), 1)
             local k = math.floor(idx[1]/64)+1
@@ -31,9 +31,8 @@ end
 
 function comp_PCK(gt, pred)
     -- input: {nData, 27, 2} 
-    local nJoints = 27
     assert(gt:size(1) == pred:size(1))
-    assert(gt:size(2) == nJoints and gt:size(3) == 2)
+    assert(gt:size(2) == opt.nJoints and gt:size(3) == 2)
     
     local nData = gt:size(1)
 
@@ -48,15 +47,15 @@ function comp_PCK(gt, pred)
         local hsize = math.sqrt(math.pow(g[1][1]-g[2][1], 2)+math.pow(g[1][2]-g[2][2], 2))
 
         -- if distance is lses than alpha * head size then passed!
-        for j=1,nJoints do
-            local d=math.sqrt(math.pow(g[j][1]-p[j][1], 2)+math.pow(g[j][2]-g[j][2], 2))
+        for j=1,opt.nJoints do
+            local d=torch.sqrt(math.pow(g[j][1]-p[j][1], 2)+math.pow(g[j][2]-p[j][2], 2))
             if d <= hsize * alpha then
                 pck_cnt = pck_cnt + 1
             end
         end
     end
 
-    local PCK = ( pck_cnt / (nJoints * nData) ) * 100
+    local PCK = ( pck_cnt / (opt.nJoints * nData) ) * 100
     return PCK
 end
 
@@ -167,11 +166,11 @@ function evalBatch(inputsCPU, labelsCPU)
     outputs = model:forward(inputs)
 
     -- separation
-    gt_j27_hmap = labels[{ {}, {1,27}, {}, {} }]
+    gt_j27_hmap = labels[{ {}, {1,opt.nJoints}, {}, {} }]
     gt_seg = labels[{ {}, {28}, {}, {} }]
     gt_dep = labels[{ {}, {29}, {}, {} }]
     gt_cen = labels[{ {}, {30}, {}, {} }]
-    pred_j27_hmap = outputs[{ {}, {1,27}, {}, {} }]
+    pred_j27_hmap = outputs[{ {}, {1,opt.nJoints}, {}, {} }]
     pred_seg = outputs[{ {}, {28}, {}, {} }]
     pred_dep = outputs[{ {}, {29}, {}, {} }]
     pred_cen = outputs[{ {}, {30}, {}, {} }]

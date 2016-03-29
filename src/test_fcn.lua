@@ -26,7 +26,8 @@ function test()
    	loss_epoch = 0
 
     -- randomize dataset (actually just indices)
-    local idx_rand = torch.randperm(opt.nTestData)
+    --local idx_rand = torch.randperm(opt.nTestData)
+    local idx_rand = torch.range(1,opt.nTestData)
 
     -- test
    	for i=1,opt.nTestData/opt.batchSize do 

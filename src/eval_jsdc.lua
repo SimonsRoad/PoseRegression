@@ -81,7 +81,7 @@ local sad_cen -- SAD for cen
 local timer = torch.Timer()
 
 function eval_jsdc ()
-    print('[ EVAL_JSDC STARTS.. ]')
+    print('--EVAL_JSDC STARTS..')
 
     cutorch.synchronize()
     timer:reset()
@@ -94,7 +94,8 @@ function eval_jsdc ()
     sad_cen = 0
 
     -- randomize dataset (actually just indices)
-    local idx_rand = torch.randperm(opt.nTestData)
+    --local idx_rand = torch.randperm(opt.nTestData)
+    local idx_rand = torch.range(1, opt.nTestData)
 
     for i=1,opt.nTestData/opt.batchSize do
         local idx_start = (i-1) * opt.batchSize + 1
@@ -132,9 +133,9 @@ function eval_jsdc ()
         ['sad_cen'] = sad_cen,
     }
 
-    print(string.format('--EVALUATION  [%.2fsec]', timer:time().real))
     print(string.format('  PCK (j27):  %.2f ', pck_j27))
     print(string.format('  SAD (seg/dep/cen):  %.2f | %.2f | %.2f ',sad_seg,sad_dep,sad_cen))
+    print(string.format('  time(s): %.2f', timer:time().real))
 
     collectgarbage()
 
@@ -143,6 +144,19 @@ end
 local inputs = torch.CudaTensor()
 local labels = torch.CudaTensor()
 
+local outputs
+local gt_j27_hmap
+local gt_seg
+local gt_dep
+local gt_cen
+local pred_j27_hmap
+local pred_seg
+local pred_dep
+local pred_cen
+
+local gt_j27
+local pred_j27
+
 function evalBatch(inputsCPU, labelsCPU)
     cutorch.synchronize()
     collectgarbage()
@@ -150,21 +164,21 @@ function evalBatch(inputsCPU, labelsCPU)
     inputs:resize(inputsCPU:size()):copy(inputsCPU)
     labels:resize(labelsCPU:size()):copy(labelsCPU)
 
-    local outputs = model:forward(inputs)
+    outputs = model:forward(inputs)
 
     -- separation
-    local gt_j27_hmap = labels[{ {}, {1,27}, {}, {} }]
-    local gt_seg = labels[{ {}, {28}, {}, {} }]
-    local gt_dep = labels[{ {}, {29}, {}, {} }]
-    local gt_cen = labels[{ {}, {30}, {}, {} }]
-    local pred_j27_hmap = outputs[{ {}, {1,27}, {}, {} }]
-    local pred_seg = outputs[{ {}, {28}, {}, {} }]
-    local pred_dep = outputs[{ {}, {29}, {}, {} }]
-    local pred_cen = outputs[{ {}, {30}, {}, {} }]
+    gt_j27_hmap = labels[{ {}, {1,27}, {}, {} }]
+    gt_seg = labels[{ {}, {28}, {}, {} }]
+    gt_dep = labels[{ {}, {29}, {}, {} }]
+    gt_cen = labels[{ {}, {30}, {}, {} }]
+    pred_j27_hmap = outputs[{ {}, {1,27}, {}, {} }]
+    pred_seg = outputs[{ {}, {28}, {}, {} }]
+    pred_dep = outputs[{ {}, {29}, {}, {} }]
+    pred_cen = outputs[{ {}, {30}, {}, {} }]
 
     -- find peak for joints 
-    local gt_j27   = find_peak(gt_j27_hmap) 
-    local pred_j27 = find_peak(pred_j27_hmap) 
+    gt_j27   = find_peak(gt_j27_hmap) 
+    pred_j27 = find_peak(pred_j27_hmap) 
 
     -- EVALUATION
     pck_j27 = pck_j27 + comp_PCK(gt_j27, pred_j27)      -- PCK for j27
@@ -173,5 +187,7 @@ function evalBatch(inputsCPU, labelsCPU)
     sad_cen = sad_cen + comp_SAD(gt_cen, pred_cen)      -- SAD for cen
 
     cutorch.synchronize()
+
+    collectgarbage()
 
 end

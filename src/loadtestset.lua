@@ -40,6 +40,11 @@ function testset:__init(...)
         count = count + 1
     end
     file:close()
+    
+end
+
+function testset:size()
+    return self.numSamples
 end
 
 function testset:load_img(indices)
@@ -56,12 +61,15 @@ function testset:load_img(indices)
     return imgtensor
 end
 
-
-
-
-
-
-
+function testset:load_jsdc(indices)
+    -- load from .mat files
+    local jsdc_tensor = torch.Tensor(indices:size(1), 30, opt.H, opt.W)
+    for i=1, indices:size(1) do
+        local jsdc_path = ffi.string(torch.data(self.labelPath[indices[i]]), self.labelPathLength[indices[i]])
+        jsdc_tensor[i] = matio.load(jsdc_path, 'jsdc')
+    end
+    return jsdc_tensor
+end
 
 
 

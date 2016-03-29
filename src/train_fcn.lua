@@ -19,6 +19,7 @@ if opt.optimState ~= 'none' then
 	assert(paths.filep(opt.optimState), 'File not found: ' .. opt.optimState)
 	print('Loading optimState from file: ' .. opt.optimState)
 	optimState = torch.load(opt.optimState)
+    print(optimState)
 end
 
 
@@ -28,7 +29,7 @@ local batchNumber
 
 
 function train()
-    print('[ TRAIN STARTS.. ]')
+    print('--TRAIN STARTS..')
 
 	cutorch.synchronize()
 
@@ -80,11 +81,15 @@ function train()
 
 	if epoch % 1 == 0 then
         if torch.type(model) == 'nn.DataParallelTable' then
+            --[[
             local tmpmodel = model:get(1):float():clone()
             tmpmodel:clearState()
             torch.save(paths.concat(opt.save, 'model_'..epoch..'.t7'), tmpmodel)
-            --torch.save(paths.concat(opt.save, 'model_'..epoch..'.t7'), model:get(1))
+            tmpmodel = {}
+            --]]
+            torch.save(paths.concat(opt.save, 'model_'..epoch..'.t7'), model:get(1))
         else
+            adf=adf+1
             local tmpmodel = model:float():clone()
             tmpmodel:clearState()
             torch.save(paths.concat(opt.save, 'model_'..epoch..'.t7'), tmpmodel)
@@ -139,8 +144,10 @@ function trainBatch(inputsCPU, labelsCPU)
     batchNumber = batchNumber + 1
 	loss_epoch = loss_epoch + err
 
-    print(string.format('Ep. [%d/%d][%d/%d] Time(s): %.2f  ' .. 'batch err: %.7f | dataLoadingTime: %.3f | memUse: %.2f', epoch, opt.nEpochs, batchNumber, opt.epochSize, timer:time().real, err, dataLoadingTime, collectgarbage('count')))
+    print(string.format('Ep. [%d/%d][%d/%d] Time(s): %.2f  ' .. 'batch err: %.7f | dataLoadTime: %.3f | mem: %.2f', epoch, opt.nEpochs, batchNumber, opt.epochSize, timer:time().real, err, dataLoadingTime, collectgarbage('count')))
     dataTimer:reset()
+
+    collectgarbage()
 
 end
 

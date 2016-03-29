@@ -1,4 +1,7 @@
+--[[
 -- datanew.lua
+--
+--]]
 
 torch.setdefaulttensortype('torch.FloatTensor')
 local ffi       = require 'ffi'
@@ -50,7 +53,7 @@ function dataset:__init(...)
 	self.labelNumSamples = tonumber(sys.fexecute("cat " .. self.txtjsdc.. " |  wc -l"))
     assert(self.imageNumSamples == self.labelNumSamples)
 	self.labelMaxFileLength = tonumber(sys.fexecute("cat " .. self.txtjsdc.. " |  awk '{print length($0)}' | datamash max 1"))
-   	self.labelPath = torch.CharTensor() -- path to each image in dataset
+   	self.labelPath = torch.CharTensor() -- path to each label in dataset
 	self.labelPath:resize(self.labelNumSamples, self.labelMaxFileLength)
    	local i_data = self.labelPath:data()
    	local file = assert(io.open(self.txtjsdc, "r"))
@@ -72,22 +75,26 @@ end
 
 function dataset:load_img(indices)
     -- images 
+    local img = torch.Tensor(indices:size(1), 3, opt.H, opt.W)
     for i=1, indices:size(1) do
         local imgpath = ffi.string(torch.data(self.imagePath[indices[i]]), self.imagePathLength[indices[i]])
-        imgtensor[i] = image.load(imgpath, 3, 'float')
+        img[i] = image.load(imgpath, 3, 'float')
     end
-    return imgtensor
+    return img
 end
 
 function dataset:load_jsdc(indices)
     -- load from .mat files 
+    local jsdc = torch.Tensor(indices:size(1), 30, opt.H, opt.W)
     for i=1, indices:size(1) do
         local jsdc_path = ffi.string(torch.data(self.labelPath[indices[i]]), self.labelPathLength[indices[i]])
-        jsdc_tensor[i] = matio.load(jsdc_path, 'jsdc')
+        jsdc[i] = matio.load(jsdc_path, 'jsdc')
     end
-    return jsdc_tensor
+    return jsdc
 end
 
+
+--[[
 function dataset:load_batch(indices)
     -- load all
     pos[{}] = self:load_img(indices)
@@ -103,6 +110,7 @@ function dataset:load_batch(indices)
     local out = {data = pos, label = jsdc}
     return out
 end
+--]]
 
 function dataset:load_batch_new(indices)
     -- images

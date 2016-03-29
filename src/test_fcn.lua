@@ -15,7 +15,7 @@ local loss_epoch
 
 
 function test()
-    print('[ TEST STARTS.. ]')
+    print('--TEST STARTS..')
 
    	cutorch.synchronize()
 
@@ -67,6 +67,8 @@ end -- of test()
 local inputs = torch.CudaTensor()
 local labels = torch.CudaTensor()
 
+local outputs
+local err
 
 function testBatch(inputsCPU, labelsCPU)
     cutorch.synchronize()
@@ -75,10 +77,12 @@ function testBatch(inputsCPU, labelsCPU)
    	inputs:resize(inputsCPU:size()):copy(inputsCPU)
    	labels:resize(labelsCPU:size()):copy(labelsCPU)
 
-   	local outputs = model:forward(inputs)
-   	local err = criterion:forward(outputs, labels)
+   	outputs = model:forward(inputs)
+   	err = criterion:forward(outputs, labels)
    	cutorch.synchronize()
 
    	loss_epoch = loss_epoch + err
+
+    collectgarbage()
 
 end

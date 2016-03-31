@@ -29,10 +29,11 @@ opt.nDonkeys = 1
 
 -- load model
 --local mNum  = 11
-for mNum = 1, 11 do
+for mNum = 1, 4 do
 
     local mName = string.format('clear_model_%d.t7', mNum)
-    local pathToModel = '../save/PR_fcn/option/t_SunMar2721:48:402016'
+    --local pathToModel = '../save/PR_fcn/option/t_SunMar2721:48:402016'
+    local pathToModel = '../save/PR_fcn/option/t_TueMar2922:11:592016'
     opt.retrain = paths.concat(pathToModel, mName)  
 
     local model, criterion = models.setup(opt)
@@ -41,7 +42,7 @@ for mNum = 1, 11 do
 
     -- TEST DATA: 1) sTrain, 2) sTest, 3) rTest
     --
-    testsettype = 'rTest'
+    testsettype = 'sTrain'
 
     savedir         = paths.concat(pathToModel, 'results/' .. testsettype)
     savefile_img    = savedir..string.format('/img_model%d.mat', mNum)

@@ -45,7 +45,7 @@ function M.parse(arg)
     cmd:option('-nEpochs',          50,   'Number of total epochs to run')
     cmd:option('-epochSize',     5,   'Number of batches per epoch')
     cmd:option('-epochNumber',       1,   'Manual epoch number (useful on restarts)')
-    cmd:option('-batchSize',         4,   'mini-batch size (1 = pure stochastic)')
+    cmd:option('-batchSize',         1,   'mini-batch size (1 = pure stochastic)')
     cmd:option('-resume',       'none',   'Path to directory containing checkpoint')
 
     ---------- Optimization options ----------------------
@@ -54,7 +54,7 @@ function M.parse(arg)
     cmd:option('-weightDecay',    5e-4,   'weight decay')
 
     ---------- Model options ----------------------------------
-    cmd:option('-netType',    'resnet',   'Options: resnet')
+    cmd:option('-netType',  'sposenet',   'Options: resnet, sposenet')
     cmd:option('-depth',            18,   'ResNet depth: 18 | 34 | 50 | 101 | ...', 'number')
     cmd:option('-shortcutType',    'A',   'Options: A | B | C')
     cmd:option('-retrain',      'none',   'provide path to model to retrain with')

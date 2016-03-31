@@ -43,7 +43,7 @@ function M.parse(arg)
 
     ------------- Training options --------------------
     cmd:option('-nEpochs',          50,   'Number of total epochs to run')
-    cmd:option('-epochSize',     5,   'Number of batches per epoch')
+    cmd:option('-epochSize',     50,   'Number of batches per epoch')
     cmd:option('-epochNumber',       1,   'Manual epoch number (useful on restarts)')
     cmd:option('-batchSize',         1,   'mini-batch size (1 = pure stochastic)')
     cmd:option('-resume',       'none',   'Path to directory containing checkpoint')

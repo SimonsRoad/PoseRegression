@@ -39,64 +39,35 @@ local function createModel(opt)
       end
    end
 
-   -- The basic residual layer block for 18 and 34 layer network, and the
-   -- CIFAR networks
-   local function basicblock(n, stride)
-      local nInputPlane = iChannels
-      iChannels = n
+    local function shortcut_basic(nChIn, nChOut)
+        if nChIn ~= nChOut then
+            return nn.Sequential()
+                :add(nn.Concat(2)
+                    :add(nn.Identity())
+                    :add(nn.MulConstant(0)))
+        else
+            return nn.Identity()
+        end
+    end
 
-      local s = nn.Sequential()
-      s:add(Convolution(nInputPlane,n,3,3,stride,stride,1,1))
-      s:add(SBatchNorm(n))
-      s:add(ReLU(true))
-      s:add(Convolution(n,n,3,3,1,1,1,1))
-      s:add(SBatchNorm(n))
-
-      return nn.Sequential()
-         :add(nn.ConcatTable()
-            :add(s)
-            :add(shortcut(nInputPlane, n, stride)))
-         :add(nn.CAddTable(true))
-         :add(ReLU(true))
-   end
-
-    local function preActBlock(n, stride)
-        local nInputPlane = iChannels
-        iChannels = n
+    local function resBlock(nChIn, nChOut, sz)
 
         local s = nn.Sequential()
-        s:add(SBatchNorm(nInputPlane))
+        s:add(SBatchNorm(nChIn))
         s:add(ReLU(true))
-        s:add(Convolution(nInputPlane,n,3,3,1,1,1,1))
-        s:add(SBatchNorm(n))
+        s:add(Convolution(nChIn,nChOut,sz,sz,1,1,(sz-1)/2,(sz-1)/2))
+        s:add(SBatchNorm(nChOut))
         s:add(ReLU(true))
-        s:add(Convolution(n,n,3,3,1,1,1,1))
+        s:add(Convolution(nChOut,nChOut,sz,sz,1,1,(sz-1)/2,(sz-1)/2))
 
         return nn.Sequential()
             :add(nn.ConcatTable()
                 :add(s)
-                :add(shortcut(nInputPlane, n, stride)))
+                :add(shortcut_basic(nChIn, nChOut)))
             :add(nn.CAddTable(true))
-   end
+    end
 
-   local function resBlock(nChIn, nChOut, sz)
-
-       local s = nn.Sequential()
-       s:add(SBatchNorm(nChIn))
-       s:add(ReLU(true))
-       s:add(Convolution(nChIn,nChOut,sz,sz,1,1,(sz-1)/2,(sz-1)/2))
-       s:add(SBatchNorm(nChOut))
-       s:add(ReLU(true))
-       s:add(Convolution(nChOut,nChOut,sz,sz,1,1,(sz-1)/2,(sz-1)/2))
-
-       return nn.Sequential()
-            :add(nn.ConcatTable()
-                :add(s)
-                :add(shortcut(nChIn, nChOut, 1)))
-            :add(nn.CAddTable(true))
-   end
-
-    local function shortcut_new(nChIn, nChConf)
+    local function shortcut_cf(nChIn, nChConf)
         local zeropad = nn.Sequential()
         zeropad:add(Convolution(nChIn,nChConf,1,1))
         zeropad:add(nn.MulConstant(0))
@@ -104,42 +75,35 @@ local function createModel(opt)
             :add(nn.Concat(2)
                 :add(nn.Identity())
                 :add(zeropad))
-   end
+    end
 
-   local function confFeatBlock(nChIn, nChOut, nChConf, sz)
+    local function confFeatBlock(nChIn, nChOut, nChConf, sz)
 
-       local f = nn.Sequential()
-       f:add(SBatchNorm(nChIn))
-       f:add(ReLU(true))
-       f:add(Convolution(nChIn,nChOut,sz,sz,1,1,(sz-1)/2,(sz-1)/2))
-       f:add(SBatchNorm(nChOut))
-       f:add(ReLU(true))
-       f:add(Convolution(nChOut,nChOut,sz,sz,1,1,(sz-1)/2,(sz-1)/2))
+        local f = nn.Sequential()
+        f:add(SBatchNorm(nChIn))
+        f:add(ReLU(true))
+        f:add(Convolution(nChIn,nChOut-nChConf,sz,sz,1,1,(sz-1)/2,(sz-1)/2))
+        f:add(SBatchNorm(nChOut))
+        f:add(ReLU(true))
+        f:add(Convolution(nChOut-nChConf,nChOut-nChConf,sz,sz,1,1,(sz-1)/2,(sz-1)/2))
 
-       local c = nn.Sequential()
-       c:add(SBatchNorm(nChIn))
-       c:add(ReLU(true))
-       c:add(Convolution(nChIn,nChConf,sz,sz,1,1,(sz-1)/2,(sz-1)/2))
+        local c = nn.Sequential()
+        c:add(SBatchNorm(nChIn))
+        c:add(ReLU(true))
+        c:add(Convolution(nChIn,nChConf,sz,sz,1,1,(sz-1)/2,(sz-1)/2))
 
-       local fc = nn.Concat(2)
+        local fc = nn.Concat(2)
             :add(f)
             :add(c)
 
-       return nn.Sequential()
+        return nn.Sequential()
             :add(nn.ConcatTable()
                 :add(fc)
-                :add(shortcut_new(nChIn, nChConf)))
+                --:add(shortcut_cf(nChIn, nChConf)))
+                :add(shortcut_basic(nChIn, nChOut)))
             :add(nn.CAddTable(true))
-   end
+    end
 
-   -- Creates count residual blocks with specified number of features
-   local function layer(block, features, count, stride)
-      local s = nn.Sequential()
-      for i=1,count do
-         s:add(block(features, i == 1 and stride or 1))
-      end
-      return s
-   end
 
    local model = nn.Sequential()
 
@@ -156,15 +120,16 @@ local function createModel(opt)
        model:add(resBlock(128, 128, 3))
        model:add(resBlock(128, 256, 3))
        model:add(resBlock(256, 256, 3))
-       model:add(resBlock(256, 512, 3))
-       model:add(resBlock(512, 512, 3))
+       model:add(resBlock(256, 256, 3))
+       model:add(resBlock(256, 256, 3))
 
-       model:add(confFeatBlock(512, 512, 30, 17))
-       model:add(confFeatBlock(512+30, 512+30, 30, 17))
+       model:add(confFeatBlock(256, 256, 30, 17))
+       model:add(confFeatBlock(256, 256, 30, 17))
+       model:add(confFeatBlock(256, 256, 30, 17))
 
-       model:add(SBatchNorm(512+30+30))
+       model:add(SBatchNorm(256))
        model:add(ReLU(true))
-       model:add(Convolution(512+30+30,30,1,1))
+       model:add(Convolution(256,30,1,1))
    else
       error('invalid dataset: ' .. opt.dataset)
    end

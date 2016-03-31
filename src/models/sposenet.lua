@@ -50,6 +50,16 @@ local function createModel(opt)
         end
     end
 
+    local function shortcut_cf(nChIn, nChConf)
+        local zeropad = nn.Sequential()
+        zeropad:add(Convolution(nChIn,nChConf,1,1))
+        zeropad:add(nn.MulConstant(0))
+        return nn.Sequential()
+            :add(nn.Concat(2)
+                :add(nn.Identity())
+                :add(zeropad))
+    end
+
     local function resBlock(nChIn, nChOut, sz)
 
         local s = nn.Sequential()
@@ -65,16 +75,6 @@ local function createModel(opt)
                 :add(s)
                 :add(shortcut_basic(nChIn, nChOut)))
             :add(nn.CAddTable(true))
-    end
-
-    local function shortcut_cf(nChIn, nChConf)
-        local zeropad = nn.Sequential()
-        zeropad:add(Convolution(nChIn,nChConf,1,1))
-        zeropad:add(nn.MulConstant(0))
-        return nn.Sequential()
-            :add(nn.Concat(2)
-                :add(nn.Identity())
-                :add(zeropad))
     end
 
     local function confFeatBlock(nChIn, nChOut, nChConf, sz)
@@ -116,11 +116,12 @@ local function createModel(opt)
        model:add(Max(3,3,1,1,1,1))
 
        model:add(resBlock(64, 64, 3))
+       model:add(resBlock(64, 64, 3))
        model:add(resBlock(64, 128, 3))
        model:add(resBlock(128, 128, 3))
        model:add(resBlock(128, 256, 3))
        model:add(resBlock(256, 256, 3))
-       model:add(resBlock(256, 256, 3))
+       model:add(resBlock(256, 256, 3))     -- 512 -> 256
        model:add(resBlock(256, 256, 3))
 
        model:add(confFeatBlock(256, 256, 30, 17))

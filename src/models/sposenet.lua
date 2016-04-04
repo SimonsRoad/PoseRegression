@@ -90,21 +90,21 @@ local function createModel(opt)
         local res4  = ResBlock(256, 256, 3, res3)
 
         local cf1, c1  = CFBlock(256,256,30,9,res4)
-        local cf2, c2  = CFBlock(256,256,30,9,cf1)
-        local cf3, c3  = CFBlock(256,256,30,11,cf2)
-        local cf4, c4  = CFBlock(256,256,30,13,cf3)
+        --local cf2, c2  = CFBlock(256,256,30,9,cf1)
+        local cf2, c2  = CFBlock(256,256,30,11,cf1)
+        local cf3, c3  = CFBlock(256,256,30,13,cf2)
 
-        local bn_end   = nn.SpatialBatchNormalization(256)(cf4)
+        local bn_end   = nn.SpatialBatchNormalization(256)(cf3)
         local act_end  = nn.ReLU(true)(bn_end)
         local conv_end = nn.SpatialConvolution(256,30,1,1)(act_end)
 
-        local sum = nn.CAddTable()({c1,c2,c3,c4, conv_end})
+        local sum = nn.CAddTable()({c1,c2,c3, conv_end})
 
-        model = nn.gModule({input}, {c1,c2,c3,c4, sum})
+        model = nn.gModule({input}, {c1,c2,c3, sum})
 
 
         -- draw and save model
-        graph.dot(model.fg, 'forward graph', './tmp/fg')
+        --graph.dot(model.fg, 'forward graph', './tmp/fg')
    else
       error('invalid dataset: ' .. opt.dataset)
    end

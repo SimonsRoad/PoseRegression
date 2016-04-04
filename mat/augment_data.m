@@ -15,7 +15,7 @@ path_dep  = fullfile(path_data, 'dep');
 % create save directories
 path_data_aug       = [path_data, '_aug'];
 path_pos_aug        = fullfile(path_data_aug, 'pos');
-path_jsdc_aug       = fullfile(path_data_aug, 'jsdc');
+path_jsdc_aug       = fullfile(path_data_aug, 'jsdc_8192');
 if ~exist(path_data_aug,    'dir'), mkdir(path_data_aug); end;
 if ~exist(path_pos_aug,     'dir'), mkdir(path_pos_aug); end;
 if ~exist(path_jsdc_aug,    'dir'), mkdir(path_jsdc_aug); end;
@@ -105,25 +105,29 @@ for i = 1:numel(data)
         lt_crop_y_max = bh_outer-bh_crop-1;
     end
     
+    % resize
+    pos = imresize(pos, [bh_outer, bw_outer]);
+    seg = imresize(seg, [bh_outer, bw_outer]);
+    dep = imresize(dep, [bh_outer, bw_outer]);
     
     for dx = round(lt_crop_x_min):2:round(lt_crop_x_max)
         for dy = round(lt_crop_y_min):2:round(lt_crop_y_max)
-            %% augmentations..
-            % resize
-            pos_new = imresize(pos, [bh_outer, bw_outer]);
-            seg_new = imresize(seg, [bh_outer, bw_outer]);
-            dep_new = imresize(dep, [bh_outer, bw_outer]);
             
+            %% augmentations..
             % crop images (pos, seg, dep)
-            pos_new = pos_new(dy+1:dy+bh_crop, dx+1:dx+bw_crop, :);
-            seg_new = seg_new(dy+1:dy+bh_crop, dx+1:dx+bw_crop, :);
-            dep_new = dep_new(dy+1:dy+bh_crop, dx+1:dx+bw_crop, :);
+            pos_new = pos(dy+1:dy+bh_crop, dx+1:dx+bw_crop, :);
+            seg_new = seg(dy+1:dy+bh_crop, dx+1:dx+bw_crop, :);
+            dep_new = dep(dy+1:dy+bh_crop, dx+1:dx+bw_crop, :);
             cen_new = cen(dy+1:dy+bh_crop, dx+1:dx+bw_crop);
             
-            % normalize 
-            seg_new = seg_new/max(seg_new(:));
-            dep_new = dep_new/max(dep_new(:));
-            cen_new = cen_new/max(cen_new(:));
+            % normalize1 
+%             seg_new = seg_new/max(seg_new(:));
+%             dep_new = dep_new/max(dep_new(:));
+%             cen_new = cen_new/max(cen_new(:));
+            % normalize2 
+            seg_new = seg_new/sum(seg_new(:))*8192;
+            dep_new = dep_new/sum(dep_new(:))*8192;
+            cen_new = cen_new/sum(cen_new(:))*8192;
 
             assert(size(pos_new,1) == bh_crop & size(pos_new,2) == bw_crop);
             
@@ -140,9 +144,9 @@ for i = 1:numel(data)
             hmap = single(zeros(128,64,size(j27,1)));
             for j = 1:size(j27,1)
                 hmap(j27(j,2), j27(j,1), j) = 1;
-%                 hmap(:,:,j) = i                                                                                                                                           mgaussfilt(hmap(:,:,j), 2);       % gaussian
                 hmap(:,:,j) = imgaussfilt(hmap(:,:,j), 3);       % gaussian
-                hmap(:,:,j) = hmap(:,:,j)/max(max(hmap(:,:,j))); % normalize
+%                 hmap(:,:,j) = hmap(:,:,j)/max(max(hmap(:,:,j)));  % normalize approach1
+                hmap(:,:,j) = hmap(:,:,j)/sum(sum(hmap(:,:,j)))*8192;  % normalize approach2
             end
             
             %% visualize and check
@@ -151,22 +155,22 @@ for i = 1:numel(data)
             end
     
             %% create concatenated label: JSDC
-%             jsdc = single([]); 
-%             jsdc(:,:,1:27) = hmap;
-%             jsdc(:,:,28)   = seg_new;
-%             jsdc(:,:,29)   = dep_new;
-%             jsdc(:,:,30)   = cen_new;
-%             jsdc = permute(jsdc,[3, 1, 2]);         % following Torch standard
+            jsdc = single([]); 
+            jsdc(:,:,1:27) = hmap;
+            jsdc(:,:,28)   = seg_new;
+            jsdc(:,:,29)   = dep_new;
+            jsdc(:,:,30)   = cen_new;
+            jsdc = permute(jsdc,[3, 1, 2]);         % following Torch standard
 
             
             %% save
             % image: pos
-            fname_pos = fullfile(path_pos_aug, sprintf('im%05d_dx%03d_dy%03d.jpg',i,dx,dy));
-            imwrite(pos_new, fname_pos);
+%             fname_pos = fullfile(path_pos_aug, sprintf('im%05d_dx%03d_dy%03d.jpg',i,dx,dy));
+%             imwrite(pos_new, fname_pos);
             
             % label: jsdc
-%             fname_jsdc = fullfile(path_jsdc_aug, sprintf('jsdc%05d_dx%03d_dy%03d.mat',i,dx,dy));
-%             save(fname_jsdc, 'jsdc');
+            fname_jsdc = fullfile(path_jsdc_aug, sprintf('jsdc%05d_dx%03d_dy%03d.mat',i,dx,dy));
+            save(fname_jsdc, 'jsdc');
         end
     end
     
@@ -174,6 +178,7 @@ end
 
 
 %% generate negative samples
+if 0
 path_neg            = fullfile(path_data, 'neg');
 path_neg_aug        = fullfile(path_data_aug, 'neg');
 path_jsdc_neg_aug   = fullfile(path_data_aug, 'jsdc_neg');
@@ -207,7 +212,7 @@ for i=1:numel(negatives)
     fname_neg_jsdc = fullfile(path_jsdc_neg_aug, sprintf('%d.mat',i));
     save(fname_neg_jsdc, 'jsdc');
 end
-
+end
 
 %% sanity check: visualize joints on images
 if 0

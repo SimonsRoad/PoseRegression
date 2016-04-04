@@ -16,6 +16,8 @@ require 'cudnn'
 
 local M = {}
 
+torch.setdefaulttensortype('torch.FloatTensor')
+
 function M.setup(opt)
    local model
    if opt.retrain ~= 'none' then
@@ -82,8 +84,20 @@ function M.setup(opt)
       model = dpt:cuda()
    end
 
-   local criterion = nn.MSECriterion():cuda()
-   return model, criterion
+
+    -- single out
+    --local criterion = nn.MSECriterion():cuda()
+    --return model, criterion
+
+    -- multi out
+    local l1 = nn.MSECriterion():cuda()
+    local l2 = nn.MSECriterion():cuda()
+    local l3 = nn.MSECriterion():cuda()
+    local lFinal = nn.MSECriterion():cuda()
+    local criterion = nn.ParallelCriterion(true):add(l1):add(l2):add(l3):add(lFinal):cuda()
+
+    return model, criterion
+   
 end
 
 return M

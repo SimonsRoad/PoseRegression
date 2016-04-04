@@ -31,7 +31,7 @@ function M.parse(arg)
 	cmd:option('-t',		   'PR_fcn',  'The name of task')
 
     ------------- Data options ------------------------
-    cmd:option('-nDonkeys',           1,  '# of donkeys to initialize (data loading threads)')
+    cmd:option('-nDonkeys',           2,  '# of donkeys to initialize (data loading threads)')
     cmd:option('-txtimg',      '../data/rendout/tmp_y144_x256_aug/lists/img.txt',  'img list')
     --cmd:option('-txtpos',      '../data/rendout/tmp_y144_x256_aug/lists/pos.txt',  'pos list')
     cmd:option('-txtjsdc',     '../data/rendout/tmp_y144_x256_aug/lists/jsdc.txt', 'jsdc list')
@@ -43,20 +43,19 @@ function M.parse(arg)
 
     ------------- Training options --------------------
     cmd:option('-nEpochs',          50,   'Number of total epochs to run')
-    cmd:option('-epochSize',     50,   'Number of batches per epoch')
+    cmd:option('-epochSize',       100,   'Number of batches per epoch')
     cmd:option('-epochNumber',       1,   'Manual epoch number (useful on restarts)')
     cmd:option('-batchSize',         1,   'mini-batch size (1 = pure stochastic)')
     cmd:option('-resume',       'none',   'Path to directory containing checkpoint')
 
     ---------- Optimization options ----------------------
-    cmd:option('-LR',    	      0.01,   'learning rate ')
+    cmd:option('-LR',    	      0.1,   'learning rate ')
     cmd:option('-momentum',        0.9,   'momentum')
     cmd:option('-weightDecay',    5e-4,   'weight decay')
 
     ---------- Model options ----------------------------------
     cmd:option('-netType',  'sposenet',   'Options: resnet, sposenet')
     cmd:option('-depth',            18,   'ResNet depth: 18 | 34 | 50 | 101 | ...', 'number')
-    cmd:option('-shortcutType',    'A',   'Options: A | B | C')
     cmd:option('-retrain',      'none',   'provide path to model to retrain with')
     cmd:option('-optimState',   'none',   'provide path to an optimState to reload from')
     ---------- Model options ----------------------------------

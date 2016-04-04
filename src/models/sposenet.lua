@@ -16,45 +16,6 @@ require 'nngraph'
 --local SBatchNorm = nn.SpatialBatchNormalization
 
 local function createModel(opt)
-    local iChannels
-
-    local function shortcut_basic(nChIn, nChOut)
-        if nChIn ~= nChOut then
-            return nn.Sequential()
-                :add(nn.Concat(2)
-                    :add(nn.Identity())
-                    :add(nn.MulConstant(0)))
-        else
-            return nn.Identity()
-        end
-    end
-
-    local function shortcut_cf(nChIn, nChConf)
-        local zeropad = nn.Sequential()
-        zeropad:add(Convolution(nChIn,nChConf,1,1))
-        zeropad:add(nn.MulConstant(0))
-        return nn.Sequential()
-            :add(nn.Concat(2)
-                :add(nn.Identity())
-                :add(zeropad))
-    end
-
-    local function resBlock(nChIn, nChOut, sz)
-
-        local s = nn.Sequential()
-        s:add(nn.SpatialBatchNormalization(nChIn))
-        s:add(nn.ReLU(true))
-        s:add(nn.SpatialConvolution(nChIn,nChOut,sz,sz,1,1,(sz-1)/2,(sz-1)/2))
-        s:add(nn.SpatialBatchNormalization(nChOut))
-        s:add(nn.ReLU(true))
-        s:add(nn.SpatialConvolution(nChOut,nChOut,sz,sz,1,1,(sz-1)/2,(sz-1)/2))
-
-        return nn.Sequential()
-            :add(nn.ConcatTable()
-                :add(s)
-                :add(shortcut_basic(nChIn, nChOut)))
-            :add(nn.CAddTable(true))
-    end
 
     local function shortcut(nChIn, nChOut, input)
         if nChIn ~= nChOut then
@@ -129,16 +90,18 @@ local function createModel(opt)
         local res4  = ResBlock(256, 256, 3, res3)
 
         local cf1, c1  = CFBlock(256,256,30,9,res4)
-        local cf2, c2  = CFBlock(256,256,30,11,cf1)
-        local cf3, c3  = CFBlock(256,256,30,13,cf2)
+        local cf2, c2  = CFBlock(256,256,30,9,cf1)
+        local cf3, c3  = CFBlock(256,256,30,11,cf2)
+        local cf4, c4  = CFBlock(256,256,30,13,cf3)
 
-        local bn_end   = nn.SpatialBatchNormalization(256)(cf3)
+        local bn_end   = nn.SpatialBatchNormalization(256)(cf4)
         local act_end  = nn.ReLU(true)(bn_end)
         local conv_end = nn.SpatialConvolution(256,30,1,1)(act_end)
 
-        local sum = nn.CAddTable()({c1,c2,c3, conv_end})
+        local sum = nn.CAddTable()({c1,c2,c3,c4, conv_end})
 
-        model = nn.gModule({input}, {c1, c2, c3, sum})
+        model = nn.gModule({input}, {c1,c2,c3,c4, sum})
+
 
         -- draw and save model
         graph.dot(model.fg, 'forward graph', './tmp/fg')
@@ -165,7 +128,7 @@ local function createModel(opt)
          v.bias:zero()
       end
    end
-
+   
    ConvInit('cudnn.SpatialConvolution')
    ConvInit('nn.SpatialConvolution')
    BNInit('fbnn.SpatialBatchNormalization')
@@ -175,17 +138,18 @@ local function createModel(opt)
       v.bias:zero()
    end
    --]]
-   model:cuda()
+   
+    model:cuda()
 
-   if opt.cudnn == 'deterministic' then
-      model:apply(function(m)
-         if m.setMode then m:setMode(1,1,1) end
-      end)
-   end
+    if opt.cudnn == 'deterministic' then
+        model:apply(function(m)
+            if m.setMode then m:setMode(1,1,1) end
+        end)
+    end
 
-   model:get(1).gradInput = nil
+    model:get(1).gradInput = nil
 
-   return model
+    return model
 end
 
 return createModel

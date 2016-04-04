@@ -1,524 +1,598 @@
 digraph G {
-	graph [bb="0,0,1464,7188"];
+	graph [bb="0,0,1590,8124"];
 	node [label="\N",
 		shape=oval
 	];
 	n1	 [height=1.041,
 		label="Node1\nmodule = nn.SpatialConvolution(256 -> 30, 1x1)\lreverseMap = {}",
-		pos="202,3110",
-		tooltip="[./models/sposenet.lua]:100_",
+		pos="1388,4046",
+		tooltip="[./models/sposenet.lua]:61_",
 		width=5.6242];
 	n2	 [height=1.3356,
-		label="Node2\ninput = {}\lmapindex = {Node1,Node3,Node4,Node5}\lreverseMap = {}",
-		pos="908,48",
+		label="Node2\ninput = {}\lmapindex = {Node1,Node3,Node4,Node5,Node6}\lreverseMap = {}",
+		pos="1277,48",
 		tooltip="[[C]]:-1_",
-		width=5.0043];
-	n1 -> n2	 [pos="e,750.24,71.384 196.91,3072.2 191.28,3028.2 183,2952.4 183,2887 183,2887 183,2887 183,301 183,183.68 525.99,108.53 740.14,73.044"];
-	n5	 [height=1.3356,
-		label="Node5\nmodule = nn.CAddTable\lreverseMap = {}\lmapindex = {Node1,Node3,Node4,Node9}",
-		pos="804,180",
-		tooltip="[./models/sposenet.lua]:139_",
-		width=5.0043];
-	n1 -> n5	 [pos="e,639.38,199.77 207.09,3072.2 212.72,3028.2 221,2952.4 221,2887 221,2887 221,2887 221,413 221,303.93 316.93,309.63 416,264 482.49,\
-233.38 560.65,213.87 629.32,201.54"];
-	n21	 [height=1.3356,
-		label="Node21\nmodule = nn.JoinTable\lreverseMap = {}\lmapindex = {Node27,Node1}",
-		pos="655,2652",
-		tooltip="[./models/sposenet.lua]:103_",
+		width=5.7861];
+	n1 -> n2	 [pos="e,1322.3,95.283 1396.3,4008.3 1405.5,3964.5 1419,3888.8 1419,3823 1419,3823 1419,3823 1419,301 1419,225.13 1369.5,151.03 1329,103.05"];
+	n6	 [height=1.3356,
+		label="Node6\nmodule = nn.CAddTable\lreverseMap = {}\lmapindex = {Node1,Node3,Node4,Node5,Node11}",
+		pos="1032,180",
+		tooltip="[./models/sposenet.lua]:101_",
+		width=5.9243];
+	n1 -> n6	 [pos="e,1175.2,215.63 1386.1,4008.5 1384.1,3964.5 1381,3888.4 1381,3823 1381,3823 1381,3823 1381,413 1381,312.15 1278.7,252.49 1184.8,\
+218.99"];
+	n25	 [height=1.3356,
+		label="Node25\nmodule = nn.JoinTable\lreverseMap = {}\lmapindex = {Node33,Node1}",
+		pos="935,3588",
+		tooltip="[./models/sposenet.lua]:64_",
 		width=3.5652];
-	n1 -> n21	 [pos="e,538.26,2672 219.79,3072.4 263.41,2983.2 374.21,2760.1 403,2736 438.53,2706.2 485.07,2687 528.48,2674.7"];
+	n1 -> n25	 [pos="e,1051.6,3608.2 1378.2,4008.4 1356.3,3934.1 1296.7,3764.6 1186,3672 1150.7,3642.4 1104.4,3623.3 1061.3,3610.9"];
 	n3	 [height=1.041,
 		label="Node3\nmodule = nn.SpatialConvolution(256 -> 30, 1x1)\lreverseMap = {}",
-		pos="1262,1838",
-		tooltip="[./models/sposenet.lua]:100_",
+		pos="202,2774",
+		tooltip="[./models/sposenet.lua]:61_",
 		width=5.6242];
-	n3 -> n2	 [pos="e,1040.8,80.571 1266.5,1800.3 1272.1,1751.3 1281,1661.8 1281,1585 1281,1585 1281,1585 1281,301 1281,185.14 1155.9,118.96 1050.6,\
-83.776"];
-	n3 -> n5	 [pos="e,966.84,200.75 1257.5,1800.3 1251.9,1751.3 1243,1661.8 1243,1585 1243,1585 1243,1585 1243,413 1243,286.89 1099.6,229.15 976.78,\
-202.82"];
-	n23	 [height=1.3356,
-		label="Node23\nmodule = nn.JoinTable\lreverseMap = {}\lmapindex = {Node28,Node3}",
-		pos="789,1716",
-		tooltip="[./models/sposenet.lua]:103_",
+	n3 -> n2	 [pos="e,1070.6,54.826 197.5,2736.3 191.88,2687.3 183,2597.8 183,2521 183,2521 183,2521 183,301 183,122.77 741.36,70.583 1060.3,55.311"];
+	n3 -> n6	 [pos="e,834.39,198.09 206.5,2736.3 212.12,2687.3 221,2597.8 221,2521 221,2521 221,2521 221,413 221,287.62 583.82,226.17 824.11,199.23"];
+	n27	 [height=1.3356,
+		label="Node27\nmodule = nn.JoinTable\lreverseMap = {}\lmapindex = {Node34,Node3}",
+		pos="665,2652",
+		tooltip="[./models/sposenet.lua]:64_",
 		width=3.5652];
-	n3 -> n23	 [pos="e,894.1,1743.7 1145.1,1807.3 1071.5,1788.7 976.99,1764.7 903.82,1746.1"];
+	n3 -> n27	 [pos="e,560.57,2680.1 317.34,2743.1 388.58,2724.6 479.63,2701 550.68,2682.6"];
 	n4	 [height=1.041,
 		label="Node4\nmodule = nn.SpatialConvolution(256 -> 30, 1x1)\lreverseMap = {}",
-		pos="1012,902",
-		tooltip="[./models/sposenet.lua]:100_",
+		pos="1150,1838",
+		tooltip="[./models/sposenet.lua]:61_",
 		width=5.6242];
-	n4 -> n2	 [pos="e,965.2,93.96 1012,864.27 1012,815.21 1012,725.56 1012,649 1012,649 1012,649 1012,301 1012,225.42 1026.2,199.91 993,132 987.69,121.14 \
-980.36,110.91 972.21,101.58"];
-	n4 -> n5	 [pos="e,858.47,226.06 999.78,864.32 984.7,815.68 961,726.89 961,649 961,649 961,649 961,413 961,341.82 909.69,276.2 865.73,233.05"];
-	n30	 [height=1.3356,
-		label="Node30\nmodule = nn.JoinTable\lreverseMap = {}\lmapindex = {Node36,Node4}",
-		pos="590,780",
-		tooltip="[./models/sposenet.lua]:103_",
+	n4 -> n2	 [pos="e,1288.4,96.055 1192.9,1801.3 1241.8,1756.3 1315,1674.2 1315,1585 1315,1585 1315,1585 1315,301 1315,233.39 1301.5,156.7 1290.5,105.87"];
+	n4 -> n6	 [pos="e,1108.2,225.14 1172.8,1800.6 1200.3,1752.9 1243,1665.9 1243,1585 1243,1585 1243,1585 1243,1013 1243,851.21 1239,810.79 1239,649 \
+1239,649 1239,649 1239,413 1239,335.44 1173.8,271.86 1116.6,231"];
+	n29	 [height=1.3356,
+		label="Node29\nmodule = nn.JoinTable\lreverseMap = {}\lmapindex = {Node35,Node4}",
+		pos="677,1716",
+		tooltip="[./models/sposenet.lua]:64_",
 		width=3.5652];
-	n4 -> n30	 [pos="e,690.96,809.71 903.87,870.25 841.63,852.55 763.58,830.36 700.89,812.53"];
-	n5 -> n2	 [pos="e,870.81,95.488 840.96,132.8 848.53,123.34 856.57,113.29 864.35,103.56"];
-	n6	 [height=1.041,
-		label="Node6\nmodule = nn.ReLU\lreverseMap = {}",
-		pos="229,3222",
-		tooltip="[./models/sposenet.lua]:99_",
-		width=2.4261];
-	n6 -> n1	 [pos="e,211,3147.7 220.08,3184.7 217.94,3175.9 215.62,3166.5 213.38,3157.4"];
+	n4 -> n29	 [pos="e,782.1,1743.7 1033.1,1807.3 959.51,1788.7 864.99,1764.7 791.82,1746.1"];
+	n5	 [height=1.041,
+		label="Node5\nmodule = nn.SpatialConvolution(256 -> 30, 1x1)\lreverseMap = {}",
+		pos="1012,902",
+		tooltip="[./models/sposenet.lua]:61_",
+		width=5.6242];
+	n5 -> n2	 [pos="e,1277,96.374 1089.7,867.28 1167.9,827.48 1277,753.28 1277,649 1277,649 1277,649 1277,301 1277,234.28 1277,157.63 1277,106.56"];
+	n5 -> n6	 [pos="e,1029.7,228.09 1015.1,864.3 1018.9,815.27 1025,725.66 1025,649 1025,649 1025,649 1025,413 1025,353.43 1027.3,285.3 1029.3,238.36"];
+	n37	 [height=1.3356,
+		label="Node37\nmodule = nn.JoinTable\lreverseMap = {}\lmapindex = {Node44,Node5}",
+		pos="666,780",
+		tooltip="[./models/sposenet.lua]:64_",
+		width=3.5652];
+	n5 -> n37	 [pos="e,759.04,813.27 918.82,868.68 872.48,852.61 816.34,833.14 768.75,816.64"];
+	n6 -> n2	 [pos="e,1195.2,92.428 1113.9,135.53 1137.1,123.23 1162.5,109.76 1186.2,97.195"];
 	n7	 [height=1.041,
 		label="Node7\nmodule = nn.ReLU\lreverseMap = {}",
-		pos="1204,2174",
-		tooltip="[./models/sposenet.lua]:99_",
+		pos="1361,4158",
+		tooltip="[./models/sposenet.lua]:60_",
 		width=2.4261];
-	n7 -> n3	 [pos="e,1255.6,1875.6 1210.3,2136.6 1220.9,2075.6 1242.3,1952.7 1253.9,1885.5"];
+	n7 -> n1	 [pos="e,1379,4083.7 1369.9,4120.7 1372.1,4111.9 1374.4,4102.5 1376.6,4093.4"];
 	n8	 [height=1.041,
 		label="Node8\nmodule = nn.ReLU\lreverseMap = {}",
-		pos="949,1238",
-		tooltip="[./models/sposenet.lua]:99_",
+		pos="216,3110",
+		tooltip="[./models/sposenet.lua]:60_",
 		width=2.4261];
-	n8 -> n4	 [pos="e,1005.1,939.59 955.86,1200.6 967.37,1139.6 990.56,1016.7 1003.2,949.48"];
+	n8 -> n3	 [pos="e,203.53,2811.5 214.46,3072.3 211.9,3011.3 206.78,2888.9 203.96,2821.8"];
 	n9	 [height=1.041,
-		label="Node9\nmodule = nn.SpatialConvolution(256 -> 30, 1x1)\lreverseMap = {}",
-		pos="628,302",
-		tooltip="[./models/sposenet.lua]:137_",
-		width=5.6242];
-	n9 -> n5	 [pos="e,739.4,225.04 679.85,265.65 695.89,254.71 713.86,242.46 731.04,230.74"];
+		label="Node9\nmodule = nn.ReLU\lreverseMap = {}",
+		pos="1114,2174",
+		tooltip="[./models/sposenet.lua]:60_",
+		width=2.4261];
+	n9 -> n4	 [pos="e,1146.1,1875.5 1118,2136.3 1124.5,2075.3 1137.7,1952.9 1145,1885.8"];
 	n10	 [height=1.041,
-		label="Node10\nmodule = nn.SpatialBatchNormalization\lreverseMap = {}",
-		pos="256,3334",
-		tooltip="[./models/sposenet.lua]:98_",
-		width=4.6805];
-	n10 -> n6	 [pos="e,237.95,3259.5 247.01,3296.4 244.89,3287.7 242.61,3278.4 240.4,3269.4"];
+		label="Node10\nmodule = nn.ReLU\lreverseMap = {}",
+		pos="989,1238",
+		tooltip="[./models/sposenet.lua]:60_",
+		width=2.4261];
+	n10 -> n5	 [pos="e,1009.5,939.51 991.53,1200.3 995.73,1139.3 1004.2,1016.9 1008.8,949.79"];
 	n11	 [height=1.041,
-		label="Node11\nmodule = nn.SpatialBatchNormalization\lreverseMap = {}",
-		pos="1145,2398",
-		tooltip="[./models/sposenet.lua]:98_",
-		width=4.6805];
-	n11 -> n7	 [pos="e,1194.3,2211.3 1154.7,2360.3 1164.9,2322.2 1180.8,2262.5 1191.7,2221.2"];
+		label="Node11\nmodule = nn.SpatialConvolution(256 -> 30, 1x1)\lreverseMap = {}",
+		pos="778,302",
+		tooltip="[./models/sposenet.lua]:99_",
+		width=5.6242];
+	n11 -> n6	 [pos="e,941.59,223.71 850.11,266.93 875.67,254.86 904.91,241.04 932.36,228.08"];
 	n12	 [height=1.041,
 		label="Node12\nmodule = nn.SpatialBatchNormalization\lreverseMap = {}",
-		pos="907,1462",
-		tooltip="[./models/sposenet.lua]:98_",
+		pos="1334,4270",
+		tooltip="[./models/sposenet.lua]:59_",
 		width=4.6805];
-	n12 -> n8	 [pos="e,942.05,1275.7 913.94,1424.3 921.11,1386.4 932.34,1327.1 940.15,1285.8"];
+	n12 -> n7	 [pos="e,1352,4195.5 1343,4232.4 1345.1,4223.7 1347.4,4214.4 1349.6,4205.4"];
 	n13	 [height=1.041,
-		label="Node13\nmodule = nn.ReLU\lreverseMap = {}",
-		pos="603,414",
-		tooltip="[./models/sposenet.lua]:136_",
+		label="Node13\nmodule = nn.SpatialBatchNormalization\lreverseMap = {}",
+		pos="256,3334",
+		tooltip="[./models/sposenet.lua]:59_",
+		width=4.6805];
+	n13 -> n8	 [pos="e,222.61,3147.7 249.39,3296.3 242.56,3258.4 231.87,3199.1 224.43,3157.8"];
+	n14	 [height=1.041,
+		label="Node14\nmodule = nn.SpatialBatchNormalization\lreverseMap = {}",
+		pos="1041,2398",
+		tooltip="[./models/sposenet.lua]:59_",
+		width=4.6805];
+	n14 -> n9	 [pos="e,1102,2211.3 1053.1,2360.3 1065.6,2322.1 1085.3,2262.2 1098.9,2220.9"];
+	n15	 [height=1.041,
+		label="Node15\nmodule = nn.SpatialBatchNormalization\lreverseMap = {}",
+		pos="949,1350",
+		tooltip="[./models/sposenet.lua]:59_",
+		width=4.6805];
+	n15 -> n10	 [pos="e,975.87,1275.1 962.32,1312.4 965.56,1303.5 969.06,1293.8 972.43,1284.6"];
+	n16	 [height=1.041,
+		label="Node16\nmodule = nn.ReLU\lreverseMap = {}",
+		pos="746,414",
+		tooltip="[./models/sposenet.lua]:98_",
 		width=2.4261];
-	n13 -> n9	 [pos="e,619.67,339.66 611.26,376.68 613.22,368.04 615.34,358.7 617.39,349.67"];
-	n14	 [height=1.3356,
-		label="Node14\nmodule = nn.CAddTable\lreverseMap = {}\lmapindex = {Node18,Node19}",
-		pos="665,3456",
-		tooltip="[./models/sposenet.lua]:83_",
+	n16 -> n11	 [pos="e,767.34,339.66 756.57,376.68 759.11,367.95 761.85,358.5 764.51,349.38"];
+	n17	 [height=1.3356,
+		label="Node17\nmodule = nn.CAddTable\lreverseMap = {}\lmapindex = {Node22,Node23}",
+		pos="925,4392",
+		tooltip="[./models/sposenet.lua]:44_",
 		width=3.7034];
-	n14 -> n10	 [pos="e,355.79,3364.3 562.85,3425 502.77,3407.4 426.81,3385.1 365.5,3367.1"];
-	n20	 [height=1.041,
-		label="Node20\nmodule = nn.Identity\lreverseMap = {}",
-		pos="936,2998",
-		tooltip="[./models/sposenet.lua]:106_",
+	n17 -> n12	 [pos="e,1234.2,4300.3 1027.2,4361 1087.2,4343.4 1163.2,4321.1 1224.5,4303.1"];
+	n24	 [height=1.041,
+		label="Node24\nmodule = nn.Identity\lreverseMap = {}",
+		pos="654,3934",
+		tooltip="[./models/sposenet.lua]:67_",
 		width=2.6117];
-	n14 -> n20	 [pos="e,937.25,3035.6 766.18,3424.4 793.83,3411.9 821.73,3394.8 842,3372 924.65,3278.8 936.77,3123.5 937.25,3046"];
-	n61	 [height=1.041,
-		label="Node61\nmodule = nn.SpatialBatchNormalization\lreverseMap = {}",
-		pos="665,3334",
-		tooltip="[./models/sposenet.lua]:90_",
-		width=4.6805];
-	n14 -> n61	 [pos="e,665,3371.7 665,3407.6 665,3399.1 665,3390.3 665,3381.8"];
-	n15	 [height=1.3356,
-		label="Node15\nmodule = nn.CAddTable\lreverseMap = {}\lmapindex = {Node20,Node21}",
-		pos="789,2520",
-		tooltip="[./models/sposenet.lua]:109_",
-		width=3.7034];
-	n15 -> n11	 [pos="e,1054.1,2429.6 885.34,2486.5 934.67,2469.9 994.68,2449.7 1044.6,2432.8"];
-	n22	 [height=1.041,
-		label="Node22\nmodule = nn.Identity\lreverseMap = {}",
-		pos="530,2286",
-		tooltip="[./models/sposenet.lua]:106_",
-		width=2.6117];
-	n15 -> n22	 [pos="e,542.23,2323.4 691.58,2486.9 663.27,2474.3 633.85,2457.5 611,2436 580.77,2407.6 559.28,2365.3 546.06,2333"];
-	n62	 [height=1.041,
-		label="Node62\nmodule = nn.SpatialBatchNormalization\lreverseMap = {}",
-		pos="789,2398",
-		tooltip="[./models/sposenet.lua]:90_",
-		width=4.6805];
-	n15 -> n62	 [pos="e,789,2435.7 789,2471.6 789,2463.1 789,2454.3 789,2445.8"];
-	n16	 [height=1.3356,
-		label="Node16\nmodule = nn.CAddTable\lreverseMap = {}\lmapindex = {Node22,Node23}",
-		pos="543,1584",
-		tooltip="[./models/sposenet.lua]:109_",
-		width=3.7034];
-	n16 -> n12	 [pos="e,814.59,1493.5 640.07,1551 691.02,1534.2 753.42,1513.6 805.08,1496.6"];
-	n29	 [height=1.041,
-		label="Node29\nmodule = nn.Identity\lreverseMap = {}",
-		pos="343,1350",
-		tooltip="[./models/sposenet.lua]:106_",
-		width=2.6117];
-	n16 -> n29	 [pos="e,339.23,1387.7 437.74,1554.2 410.18,1541.8 383.14,1524.3 365,1500 343.38,1471 338.7,1429.8 338.97,1398.1"];
-	n67	 [height=1.041,
-		label="Node67\nmodule = nn.SpatialBatchNormalization\lreverseMap = {}",
-		pos="543,1462",
-		tooltip="[./models/sposenet.lua]:90_",
-		width=4.6805];
-	n16 -> n67	 [pos="e,543,1499.7 543,1535.6 543,1527.1 543,1518.3 543,1509.8"];
-	n17	 [height=1.041,
-		label="Node17\nmodule = nn.SpatialBatchNormalization\lreverseMap = {}",
-		pos="597,526",
-		tooltip="[./models/sposenet.lua]:135_",
-		width=4.6805];
-	n17 -> n13	 [pos="e,601.01,451.47 599,488.37 599.46,479.84 599.97,470.63 600.45,461.73"];
-	n18	 [height=1.041,
-		label="Node18\nmodule = nn.Identity\lreverseMap = {}",
-		pos="548,4026",
-		tooltip="[./models/sposenet.lua]:80_",
-		width=2.6117];
-	n18 -> n14	 [pos="e,590.91,3496.2 543.22,3988.5 537.89,3944.6 530,3868.5 530,3803 530,3803 530,3803 530,3689 530,3622.2 514.78,3597.3 549,3540 557.52,\
-3525.7 569.53,3513.3 582.63,3502.6"];
-	n19	 [height=1.041,
-		label="Node19\nmodule = nn.SpatialConvolution(256 -> 256, 3x3, 1,1, 1,1)\lreverseMap = {}",
-		pos="801,3578",
-		tooltip="[./models/sposenet.lua]:77_",
-		width=6.7297];
-	n19 -> n14	 [pos="e,714.91,3501 760.2,3541 748.4,3530.6 735.3,3519 722.69,3507.9"];
-	n20 -> n15	 [pos="e,820.79,2566.9 936.16,2960.2 935.4,2908.8 930.42,2813.2 906,2736 887.63,2677.9 853.16,2617.5 826.38,2575.6"];
-	n21 -> n15	 [pos="e,743.22,2565.4 700.37,2607 711.81,2595.9 724.2,2583.9 735.98,2572.4"];
-	n22 -> n16	 [pos="e,532.8,1632.1 524.43,2248.6 518.21,2204.7 509,2128.6 509,2063 509,2063 509,2063 509,1837 509,1769.5 521.11,1692.8 530.88,1641.9"];
-	n23 -> n16	 [pos="e,617.14,1624.2 715.86,1676.3 687.62,1661.4 655.16,1644.3 626.05,1628.9"];
-	n24	 [height=1.3356,
-		label="Node24\nmodule = nn.CAddTable\lreverseMap = {}\lmapindex = {Node29,Node30}",
-		pos="590,648",
-		tooltip="[./models/sposenet.lua]:109_",
-		width=3.7034];
-	n24 -> n17	 [pos="e,594.87,563.56 592.75,599.92 593.25,591.33 593.77,582.37 594.27,573.79"];
-	n25	 [height=1.3356,
-		label="Node25\nmodule = nn.CAddTable\lreverseMap = {}\lmapindex = {Node31,Node32}",
-		pos="647,4260",
-		tooltip="[./models/sposenet.lua]:83_",
-		width=3.7034];
-	n25 -> n18	 [pos="e,547.09,4063.7 596.39,4215 585.77,4203.4 575.76,4190.1 569,4176 553.74,4144.2 548.74,4104.5 547.42,4074"];
-	n53	 [height=1.041,
-		label="Node53\nmodule = nn.SpatialBatchNormalization\lreverseMap = {}",
-		pos="747,4138",
-		tooltip="[./models/sposenet.lua]:72_",
-		width=4.6805];
-	n25 -> n53	 [pos="e,716.93,4175.1 684.81,4213.6 693.19,4203.6 702.05,4192.9 710.38,4182.9"];
-	n26	 [height=1.041,
-		label="Node26\nmodule = nn.ReLU\lreverseMap = {}",
-		pos="801,3690",
-		tooltip="[./models/sposenet.lua]:76_",
-		width=2.4261];
-	n26 -> n19	 [pos="e,801,3615.8 801,3652.4 801,3643.9 801,3634.8 801,3626"];
-	n27	 [height=1.041,
-		label="Node27\nmodule = nn.SpatialConvolution(226 -> 226, 9x9, 1,1, 4,4)\lreverseMap = {}",
-		pos="655,2774",
-		tooltip="[./models/sposenet.lua]:95_",
-		width=6.7297];
-	n27 -> n21	 [pos="e,655,2700.5 655,2736.3 655,2728.2 655,2719.4 655,2710.7"];
-	n28	 [height=1.041,
-		label="Node28\nmodule = nn.SpatialConvolution(226 -> 226, 11x11, 1,1, 5,5)\lreverseMap = {}",
-		pos="789,1838",
-		tooltip="[./models/sposenet.lua]:95_",
-		width=6.9824];
-	n28 -> n23	 [pos="e,789,1764.5 789,1800.3 789,1792.2 789,1783.4 789,1774.7"];
-	n29 -> n24	 [pos="e,487.99,678.98 307.36,1315 297.31,1303.6 287.38,1290.1 281,1276 253.38,1215 259,1193.9 259,1127 259,1127 259,1127 259,901 259,788.12 \
-382.38,719.14 478.48,682.53"];
-	n30 -> n24	 [pos="e,590,696.48 590,731.7 590,723.54 590,714.99 590,706.6"];
-	n31	 [height=1.3356,
-		label="Node31\nmodule = nn.JoinTable\lreverseMap = {}\lmapindex = {Node37,Node38}",
-		pos="510,4840",
-		tooltip="[./models/sposenet.lua]:80_",
-		width=3.7034];
-	n31 -> n25	 [pos="e,572.91,4300.2 510.64,4791.9 511.23,4745 512,4671 512,4607 512,4607 512,4607 512,4493 512,4426.2 496.78,4401.3 531,4344 539.52,\
-4329.7 551.53,4317.3 564.63,4306.6"];
-	n32	 [height=1.041,
-		label="Node32\nmodule = nn.SpatialConvolution(256 -> 256, 3x3, 1,1, 1,1)\lreverseMap = {}",
-		pos="783,4382",
-		tooltip="[./models/sposenet.lua]:77_",
-		width=6.7297];
-	n32 -> n25	 [pos="e,696.91,4305 742.2,4345 730.4,4334.6 717.3,4323 704.69,4311.9"];
-	n33	 [height=1.041,
-		label="Node33\nmodule = nn.SpatialBatchNormalization\lreverseMap = {}",
-		pos="801,3802",
-		tooltip="[./models/sposenet.lua]:75_",
-		width=4.6805];
-	n33 -> n26	 [pos="e,801,3727.8 801,3764.4 801,3755.9 801,3746.8 801,3738"];
-	n34	 [height=1.041,
-		label="Node34\nmodule = nn.ReLU\lreverseMap = {}",
-		pos="655,2886",
-		tooltip="[./models/sposenet.lua]:94_",
-		width=2.4261];
-	n34 -> n27	 [pos="e,655,2811.8 655,2848.4 655,2839.9 655,2830.8 655,2822"];
-	n35	 [height=1.041,
-		label="Node35\nmodule = nn.ReLU\lreverseMap = {}",
-		pos="789,1950",
-		tooltip="[./models/sposenet.lua]:94_",
-		width=2.4261];
-	n35 -> n28	 [pos="e,789,1875.8 789,1912.4 789,1903.9 789,1894.8 789,1886"];
-	n36	 [height=1.041,
-		label="Node36\nmodule = nn.SpatialConvolution(226 -> 226, 13x13, 1,1, 6,6)\lreverseMap = {}",
-		pos="539,902",
-		tooltip="[./models/sposenet.lua]:95_",
-		width=6.9824];
-	n36 -> n30	 [pos="e,570.18,827.63 554.58,864.34 558.27,855.66 562.29,846.2 566.25,836.88"];
-	n37	 [height=1.041,
-		label="Node37\nmodule = nn.Identity\lreverseMap = {}",
-		pos="510,4962",
-		tooltip="[./models/sposenet.lua]:61_",
-		width=2.6117];
-	n37 -> n31	 [pos="e,510,4888.5 510,4924.3 510,4916.2 510,4907.4 510,4898.7"];
-	n38	 [height=1.041,
-		label="Node38\nmodule = nn.MulConstant\lreverseMap = {}",
-		pos="283,4962",
-		tooltip="[./models/sposenet.lua]:62_",
-		width=3.1743];
-	n38 -> n31	 [pos="e,435.79,4880.2 342.05,4929.8 367.89,4916.1 398.67,4899.9 426.77,4885"];
-	n39	 [height=1.041,
-		label="Node39\nmodule = nn.ReLU\lreverseMap = {}",
-		pos="783,4494",
-		tooltip="[./models/sposenet.lua]:76_",
-		width=2.4261];
-	n39 -> n32	 [pos="e,783,4419.8 783,4456.4 783,4447.9 783,4438.8 783,4430"];
-	n40	 [height=1.041,
-		label="Node40\nmodule = nn.SpatialConvolution(256 -> 256, 3x3, 1,1, 1,1)\lreverseMap = {}",
-		pos="801,3914",
-		tooltip="[./models/sposenet.lua]:74_",
-		width=6.7297];
-	n40 -> n33	 [pos="e,801,3839.8 801,3876.4 801,3867.9 801,3858.8 801,3850"];
-	n41	 [height=1.041,
-		label="Node41\nmodule = nn.SpatialBatchNormalization\lreverseMap = {}",
-		pos="655,2998",
-		tooltip="[./models/sposenet.lua]:93_",
-		width=4.6805];
-	n41 -> n34	 [pos="e,655,2923.8 655,2960.4 655,2951.9 655,2942.8 655,2934"];
-	n42	 [height=1.041,
-		label="Node42\nmodule = nn.SpatialBatchNormalization\lreverseMap = {}",
-		pos="789,2062",
-		tooltip="[./models/sposenet.lua]:93_",
-		width=4.6805];
-	n42 -> n35	 [pos="e,789,1987.8 789,2024.4 789,2015.9 789,2006.8 789,1998"];
-	n43	 [height=1.041,
-		label="Node43\nmodule = nn.ReLU\lreverseMap = {}",
-		pos="539,1014",
-		tooltip="[./models/sposenet.lua]:94_",
-		width=2.4261];
-	n43 -> n36	 [pos="e,539,939.84 539,976.37 539,967.93 539,958.83 539,950.01"];
-	n44	 [height=1.3356,
-		label="Node44\nmodule = nn.CAddTable\lreverseMap = {}\lmapindex = {Node50,Node51}",
-		pos="510,5084",
-		tooltip="[./models/sposenet.lua]:83_",
-		width=3.7034];
-	n44 -> n37	 [pos="e,510,4999.7 510,5035.6 510,5027.1 510,5018.3 510,5009.8"];
-	n44 -> n38	 [pos="e,342.19,4994.3 435.99,5043.9 408.67,5029.4 377.87,5013.1 351.1,4999"];
-	n66	 [height=1.041,
-		label="Node66\nmodule = nn.SpatialBatchNormalization\lreverseMap = {}",
-		pos="791,4962",
-		tooltip="[./models/sposenet.lua]:72_",
-		width=4.6805];
-	n44 -> n66	 [pos="e,714.61,4995.6 594.69,5046.8 629.7,5031.9 670.23,5014.6 705.34,4999.6"];
-	n45	 [height=1.041,
-		label="Node45\nmodule = nn.SpatialBatchNormalization\lreverseMap = {}",
-		pos="784,4606",
-		tooltip="[./models/sposenet.lua]:75_",
-		width=4.6805];
-	n45 -> n39	 [pos="e,783.33,4531.8 783.67,4568.4 783.59,4559.9 783.51,4550.8 783.43,4542"];
-	n46	 [height=1.041,
-		label="Node46\nmodule = nn.ReLU\lreverseMap = {}",
-		pos="783,4026",
-		tooltip="[./models/sposenet.lua]:73_",
-		width=2.4261];
-	n46 -> n40	 [pos="e,795.03,3951.5 788.99,3988.4 790.41,3979.7 791.93,3970.4 793.4,3961.4"];
-	n47	 [height=1.041,
-		label="Node47\nmodule = nn.SpatialConvolution(256 -> 226, 9x9, 1,1, 4,4)\lreverseMap = {}",
-		pos="665,3110",
-		tooltip="[./models/sposenet.lua]:92_",
-		width=6.7297];
-	n47 -> n41	 [pos="e,658.35,3035.8 661.67,3072.4 660.9,3063.9 660.08,3054.8 659.27,3046"];
-	n48	 [height=1.041,
-		label="Node48\nmodule = nn.SpatialConvolution(256 -> 226, 11x11, 1,1, 5,5)\lreverseMap = {}",
-		pos="789,2174",
-		tooltip="[./models/sposenet.lua]:92_",
-		width=6.9824];
-	n48 -> n42	 [pos="e,789,2099.8 789,2136.4 789,2127.9 789,2118.8 789,2110"];
-	n49	 [height=1.041,
-		label="Node49\nmodule = nn.SpatialBatchNormalization\lreverseMap = {}",
-		pos="540,1126",
-		tooltip="[./models/sposenet.lua]:93_",
-		width=4.6805];
-	n49 -> n43	 [pos="e,539.33,1051.8 539.67,1088.4 539.59,1079.9 539.51,1070.8 539.43,1062"];
-	n50	 [height=1.3356,
-		label="Node50\nmodule = nn.JoinTable\lreverseMap = {}\lmapindex = {Node57,Node58}",
-		pos="373,5664",
-		tooltip="[./models/sposenet.lua]:80_",
-		width=3.7034];
-	n50 -> n44	 [pos="e,435.91,5124.2 373.64,5615.9 374.23,5569 375,5495 375,5431 375,5431 375,5431 375,5317 375,5250.2 359.78,5225.3 394,5168 402.52,\
-5153.7 414.53,5141.3 427.63,5130.6"];
-	n51	 [height=1.041,
-		label="Node51\nmodule = nn.SpatialConvolution(128 -> 128, 3x3, 1,1, 1,1)\lreverseMap = {}",
-		pos="646,5206",
-		tooltip="[./models/sposenet.lua]:77_",
-		width=6.7297];
-	n51 -> n44	 [pos="e,559.91,5129 605.2,5169 593.4,5158.6 580.3,5147 567.69,5135.9"];
-	n52	 [height=1.041,
-		label="Node52\nmodule = nn.SpatialConvolution(128 -> 256, 3x3, 1,1, 1,1)\lreverseMap = {}",
-		pos="785,4718",
-		tooltip="[./models/sposenet.lua]:74_",
-		width=6.7297];
-	n52 -> n45	 [pos="e,784.33,4643.8 784.67,4680.4 784.59,4671.9 784.51,4662.8 784.43,4654"];
-	n53 -> n46	 [pos="e,771.06,4063.5 758.99,4100.4 761.84,4091.7 764.92,4082.2 767.9,4073.1"];
-	n54	 [height=1.041,
-		label="Node54\nmodule = nn.ReLU\lreverseMap = {}",
-		pos="665,3222",
-		tooltip="[./models/sposenet.lua]:91_",
-		width=2.4261];
-	n54 -> n47	 [pos="e,665,3147.8 665,3184.4 665,3175.9 665,3166.8 665,3158"];
-	n55	 [height=1.041,
-		label="Node55\nmodule = nn.ReLU\lreverseMap = {}",
-		pos="789,2286",
-		tooltip="[./models/sposenet.lua]:91_",
-		width=2.4261];
-	n55 -> n48	 [pos="e,789,2211.8 789,2248.4 789,2239.9 789,2230.8 789,2222"];
-	n56	 [height=1.041,
-		label="Node56\nmodule = nn.SpatialConvolution(256 -> 226, 13x13, 1,1, 6,6)\lreverseMap = {}",
-		pos="542,1238",
-		tooltip="[./models/sposenet.lua]:92_",
-		width=6.9824];
-	n56 -> n49	 [pos="e,540.67,1163.8 541.33,1200.4 541.18,1191.9 541.02,1182.8 540.85,1174"];
-	n57	 [height=1.041,
-		label="Node57\nmodule = nn.Identity\lreverseMap = {}",
-		pos="373,5786",
-		tooltip="[./models/sposenet.lua]:61_",
-		width=2.6117];
-	n57 -> n50	 [pos="e,373,5712.5 373,5748.3 373,5740.2 373,5731.4 373,5722.7"];
-	n58	 [height=1.041,
-		label="Node58\nmodule = nn.MulConstant\lreverseMap = {}",
-		pos="146,5786",
-		tooltip="[./models/sposenet.lua]:62_",
-		width=3.1743];
-	n58 -> n50	 [pos="e,298.79,5704.2 205.05,5753.8 230.89,5740.1 261.67,5723.9 289.77,5709"];
-	n59	 [height=1.041,
-		label="Node59\nmodule = nn.ReLU\lreverseMap = {}",
-		pos="646,5318",
-		tooltip="[./models/sposenet.lua]:76_",
-		width=2.4261];
-	n59 -> n51	 [pos="e,646,5243.8 646,5280.4 646,5271.9 646,5262.8 646,5254"];
-	n60	 [height=1.041,
-		label="Node60\nmodule = nn.ReLU\lreverseMap = {}",
-		pos="790,4840",
-		tooltip="[./models/sposenet.lua]:73_",
-		width=2.4261];
-	n60 -> n52	 [pos="e,786.54,4755.8 788.47,4802.3 788,4790.9 787.47,4778.2 786.97,4766.2"];
-	n61 -> n54	 [pos="e,665,3259.8 665,3296.4 665,3287.9 665,3278.8 665,3270"];
-	n62 -> n55	 [pos="e,789,2323.8 789,2360.4 789,2351.9 789,2342.8 789,2334"];
-	n63	 [height=1.041,
-		label="Node63\nmodule = nn.ReLU\lreverseMap = {}",
-		pos="543,1350",
-		tooltip="[./models/sposenet.lua]:91_",
-		width=2.4261];
-	n63 -> n56	 [pos="e,542.33,1275.8 542.67,1312.4 542.59,1303.9 542.51,1294.8 542.43,1286"];
-	n64	 [height=1.3356,
-		label="Node64\nmodule = nn.CAddTable\lreverseMap = {}\lmapindex = {Node68,Node69}",
-		pos="373,5908",
-		tooltip="[./models/sposenet.lua]:83_",
-		width=3.7034];
-	n64 -> n57	 [pos="e,373,5823.7 373,5859.6 373,5851.1 373,5842.3 373,5833.8"];
-	n64 -> n58	 [pos="e,205.19,5818.3 298.99,5867.9 271.67,5853.4 240.87,5837.1 214.1,5823"];
-	n76	 [height=1.041,
-		label="Node76\nmodule = nn.SpatialBatchNormalization\lreverseMap = {}",
-		pos="654,5786",
-		tooltip="[./models/sposenet.lua]:72_",
-		width=4.6805];
-	n64 -> n76	 [pos="e,577.61,5819.6 457.69,5870.8 492.7,5855.9 533.23,5838.6 568.34,5823.6"];
-	n65	 [height=1.041,
-		label="Node65\nmodule = nn.SpatialBatchNormalization\lreverseMap = {}",
-		pos="647,5430",
-		tooltip="[./models/sposenet.lua]:75_",
-		width=4.6805];
-	n65 -> n59	 [pos="e,646.33,5355.8 646.67,5392.4 646.59,5383.9 646.51,5374.8 646.43,5366"];
-	n66 -> n60	 [pos="e,790.31,4877.8 790.69,4924.3 790.6,4912.9 790.49,4900.2 790.39,4888.2"];
-	n67 -> n63	 [pos="e,543,1387.8 543,1424.4 543,1415.9 543,1406.8 543,1398"];
-	n68	 [height=1.041,
-		label="Node68\nmodule = nn.Identity\lreverseMap = {}",
-		pos="258,6478",
-		tooltip="[./models/sposenet.lua]:80_",
-		width=2.6117];
-	n68 -> n64	 [pos="e,302.07,5948.7 254.02,6440.5 249.58,6396.6 243,6320.5 243,6255 243,6255 243,6255 243,6141 243,6074.2 228.38,6049.7 262,5992 270.13,\
-5978.1 281.62,5965.7 294.15,5955.1"];
-	n69	 [height=1.041,
-		label="Node69\nmodule = nn.SpatialConvolution(64 -> 64, 3x3, 1,1, 1,1)\lreverseMap = {}",
-		pos="504,6030",
-		tooltip="[./models/sposenet.lua]:77_",
-		width=6.4533];
-	n69 -> n64	 [pos="e,421.08,5953 464.7,5993 453.34,5982.6 440.72,5971 428.57,5959.9"];
-	n70	 [height=1.041,
-		label="Node70\nmodule = nn.SpatialConvolution(64 -> 128, 3x3, 1,1, 1,1)\lreverseMap = {}",
-		pos="648,5542",
-		tooltip="[./models/sposenet.lua]:74_",
-		width=6.5915];
-	n70 -> n65	 [pos="e,647.33,5467.8 647.67,5504.4 647.59,5495.9 647.51,5486.8 647.43,5478"];
-	n71	 [height=1.041,
-		label="Node71\nmodule = nn.ReLU\lreverseMap = {}",
-		pos="357,6702",
-		tooltip="[./models/sposenet.lua]:124_",
-		width=2.4261];
-	n71 -> n68	 [pos="e,256.52,6515.7 312.89,6669.2 299.96,6657.7 287.12,6643.6 279,6628 262.6,6596.4 257.71,6556.3 256.72,6525.7"];
-	n82	 [height=1.041,
-		label="Node82\nmodule = nn.SpatialBatchNormalization\lreverseMap = {}",
-		pos="457,6590",
-		tooltip="[./models/sposenet.lua]:72_",
-		width=4.6805];
-	n71 -> n82	 [pos="e,424.2,6627.1 388.09,6666.8 397.32,6656.6 407.55,6645.4 417.25,6634.7"];
+	n17 -> n24	 [pos="e,652.6,3971.6 823.72,4360.7 795.76,4348.2 767.5,4331.1 747,4308 664.3,4215 652.74,4059.6 652.55,3982"];
 	n72	 [height=1.041,
-		label="Node72\nmodule = nn.ReLU\lreverseMap = {}",
-		pos="504,6142",
-		tooltip="[./models/sposenet.lua]:76_",
-		width=2.4261];
-	n72 -> n69	 [pos="e,504,6067.8 504,6104.4 504,6095.9 504,6086.8 504,6078"];
+		label="Node72\nmodule = nn.SpatialBatchNormalization\lreverseMap = {}",
+		pos="925,4270",
+		tooltip="[./models/sposenet.lua]:51_",
+		width=4.6805];
+	n17 -> n72	 [pos="e,925,4307.7 925,4343.6 925,4335.1 925,4326.3 925,4317.8"];
+	n18	 [height=1.3356,
+		label="Node18\nmodule = nn.CAddTable\lreverseMap = {}\lmapindex = {Node24,Node25}",
+		pos="665,3456",
+		tooltip="[./models/sposenet.lua]:70_",
+		width=3.7034];
+	n18 -> n13	 [pos="e,355.79,3364.3 562.85,3425 502.77,3407.4 426.81,3385.1 365.5,3367.1"];
+	n26	 [height=1.041,
+		label="Node26\nmodule = nn.Identity\lreverseMap = {}",
+		pos="901,3222",
+		tooltip="[./models/sposenet.lua]:67_",
+		width=2.6117];
+	n18 -> n26	 [pos="e,894.49,3259.6 764.9,3423.8 792.67,3411.3 820.96,3394.4 842,3372 868.66,3343.7 883.8,3301.8 892.05,3269.7"];
 	n73	 [height=1.041,
-		label="Node73\nmodule = nn.ReLU\lreverseMap = {}",
-		pos="653,5664",
-		tooltip="[./models/sposenet.lua]:73_",
-		width=2.4261];
-	n73 -> n70	 [pos="e,649.54,5579.8 651.47,5626.3 651,5614.9 650.47,5602.2 649.97,5590.2"];
+		label="Node73\nmodule = nn.SpatialBatchNormalization\lreverseMap = {}",
+		pos="665,3334",
+		tooltip="[./models/sposenet.lua]:51_",
+		width=4.6805];
+	n18 -> n73	 [pos="e,665,3371.7 665,3407.6 665,3399.1 665,3390.3 665,3381.8"];
+	n19	 [height=1.3356,
+		label="Node19\nmodule = nn.CAddTable\lreverseMap = {}\lmapindex = {Node26,Node27}",
+		pos="677,2520",
+		tooltip="[./models/sposenet.lua]:70_",
+		width=3.7034];
+	n19 -> n14	 [pos="e,948.59,2429.5 774.07,2487 825.02,2470.2 887.42,2449.6 939.08,2432.6"];
+	n28	 [height=1.041,
+		label="Node28\nmodule = nn.Identity\lreverseMap = {}",
+		pos="437,2286",
+		tooltip="[./models/sposenet.lua]:67_",
+		width=2.6117];
+	n19 -> n28	 [pos="e,444.3,2323.6 577.25,2487.9 549.17,2475.4 520.47,2458.4 499,2436 471.88,2407.7 455.89,2365.9 446.96,2333.7"];
 	n74	 [height=1.041,
 		label="Node74\nmodule = nn.SpatialBatchNormalization\lreverseMap = {}",
-		pos="357,6814",
-		tooltip="[./models/sposenet.lua]:123_",
+		pos="677,2398",
+		tooltip="[./models/sposenet.lua]:51_",
 		width=4.6805];
-	n74 -> n71	 [pos="e,357,6739.8 357,6776.4 357,6767.9 357,6758.8 357,6750"];
-	n75	 [height=1.041,
-		label="Node75\nmodule = nn.SpatialBatchNormalization\lreverseMap = {}",
-		pos="504,6254",
-		tooltip="[./models/sposenet.lua]:75_",
-		width=4.6805];
-	n75 -> n72	 [pos="e,504,6179.8 504,6216.4 504,6207.9 504,6198.8 504,6190"];
-	n76 -> n73	 [pos="e,653.31,5701.8 653.69,5748.3 653.6,5736.9 653.49,5724.2 653.39,5712.2"];
-	n77	 [height=1.041,
-		label="Node77\nmodule = nn.SpatialConvolution(3 -> 64, 5x5, 1,1, 2,2)\lreverseMap = {}",
-		pos="357,6926",
-		tooltip="[./models/sposenet.lua]:122_",
-		width=6.3388];
-	n77 -> n74	 [pos="e,357,6851.8 357,6888.4 357,6879.9 357,6870.8 357,6862"];
-	n78	 [height=1.041,
-		label="Node78\nmodule = nn.SpatialConvolution(64 -> 64, 3x3, 1,1, 1,1)\lreverseMap = {}",
-		pos="504,6366",
-		tooltip="[./models/sposenet.lua]:74_",
-		width=6.4533];
-	n78 -> n75	 [pos="e,504,6291.8 504,6328.4 504,6319.9 504,6310.8 504,6302"];
-	n79	 [height=1.041,
-		label="Node79\nmodule = nn.Identity\lreverseMap = {}",
-		pos="357,7038",
-		tooltip="[./models/sposenet.lua]:121_",
+	n19 -> n74	 [pos="e,677,2435.7 677,2471.6 677,2463.1 677,2454.3 677,2445.8"];
+	n20	 [height=1.3356,
+		label="Node20\nmodule = nn.CAddTable\lreverseMap = {}\lmapindex = {Node28,Node29}",
+		pos="624,1584",
+		tooltip="[./models/sposenet.lua]:70_",
+		width=3.7034];
+	n20 -> n15	 [pos="e,919.64,1387.1 713.78,1548.2 742.81,1535.1 774.36,1518.8 801,1500 843.59,1470 884.75,1427.1 912.8,1395"];
+	n36	 [height=1.041,
+		label="Node36\nmodule = nn.Identity\lreverseMap = {}",
+		pos="343,1126",
+		tooltip="[./models/sposenet.lua]:67_",
 		width=2.6117];
-	n79 -> n77	 [pos="e,357,6963.8 357,7000.4 357,6991.9 357,6982.8 357,6974"];
-	n80	 [height=1.041,
-		label="Node80\nmodule = nn.ReLU\lreverseMap = {}",
-		pos="488,6478",
-		tooltip="[./models/sposenet.lua]:73_",
+	n20 -> n36	 [pos="e,342.63,1163.8 523.23,1552.2 495.29,1539.7 466.91,1522.7 446,1500 361.1,1407.9 345.23,1252 342.88,1174.2"];
+	n79	 [height=1.041,
+		label="Node79\nmodule = nn.SpatialBatchNormalization\lreverseMap = {}",
+		pos="624,1462",
+		tooltip="[./models/sposenet.lua]:51_",
+		width=4.6805];
+	n20 -> n79	 [pos="e,624,1499.7 624,1535.6 624,1527.1 624,1518.3 624,1509.8"];
+	n21	 [height=1.041,
+		label="Node21\nmodule = nn.SpatialBatchNormalization\lreverseMap = {}",
+		pos="682,526",
+		tooltip="[./models/sposenet.lua]:97_",
+		width=4.6805];
+	n21 -> n16	 [pos="e,725.32,450.54 703.13,488.68 708.6,479.29 714.54,469.07 720.21,459.32"];
+	n22	 [height=1.041,
+		label="Node22\nmodule = nn.Identity\lreverseMap = {}",
+		pos="808,4962",
+		tooltip="[./models/sposenet.lua]:41_",
+		width=2.6117];
+	n22 -> n17	 [pos="e,850.91,4432.2 803.22,4924.5 797.89,4880.6 790,4804.5 790,4739 790,4739 790,4739 790,4625 790,4558.2 774.78,4533.3 809,4476 817.52,\
+4461.7 829.53,4449.3 842.63,4438.6"];
+	n23	 [height=1.041,
+		label="Node23\nmodule = nn.SpatialConvolution(256 -> 256, 3x3, 1,1, 1,1)\lreverseMap = {}",
+		pos="1061,4514",
+		tooltip="[./models/sposenet.lua]:38_",
+		width=6.7297];
+	n23 -> n17	 [pos="e,974.91,4437 1020.2,4477 1008.4,4466.6 995.3,4455 982.69,4443.9"];
+	n24 -> n18	 [pos="e,663.9,3504.4 654.84,3896.4 656.75,3814.1 661.38,3613.7 663.67,3514.5"];
+	n25 -> n18	 [pos="e,744.06,3495.1 857.27,3549.6 824.8,3533.9 786.91,3515.7 753.39,3499.6"];
+	n26 -> n19	 [pos="e,758.59,2558.2 910.38,3184.4 920.75,3140.6 936,3064.9 936,2999 936,2999 936,2999 936,2773 936,2676.4 842.29,2604.8 767.6,2563.1"];
+	n27 -> n19	 [pos="e,672.62,2568.5 669.37,2603.7 670.12,2595.5 670.91,2587 671.68,2578.6"];
+	n28 -> n20	 [pos="e,552.49,1624.8 425.31,2248.5 421.93,2236.9 418.48,2224 416,2212 402.51,2146.6 397,2129.8 397,2063 397,2063 397,2063 397,1837 397,\
+1746.7 478.47,1674.1 543.79,1630.5"];
+	n29 -> n20	 [pos="e,643.03,1631.7 658.02,1668.4 654.4,1659.6 650.58,1650.2 646.86,1641.1"];
+	n30	 [height=1.3356,
+		label="Node30\nmodule = nn.CAddTable\lreverseMap = {}\lmapindex = {Node36,Node37}",
+		pos="666,648",
+		tooltip="[./models/sposenet.lua]:70_",
+		width=3.7034];
+	n30 -> n21	 [pos="e,677.13,563.56 672.28,599.92 673.44,591.23 674.64,582.17 675.8,573.5"];
+	n31	 [height=1.3356,
+		label="Node31\nmodule = nn.CAddTable\lreverseMap = {}\lmapindex = {Node38,Node39}",
+		pos="907,5196",
+		tooltip="[./models/sposenet.lua]:44_",
+		width=3.7034];
+	n31 -> n22	 [pos="e,807.09,4999.7 856.39,5151 845.77,5139.4 835.76,5126.1 829,5112 813.74,5080.2 808.74,5040.5 807.42,5010"];
+	n63	 [height=1.041,
+		label="Node63\nmodule = nn.SpatialBatchNormalization\lreverseMap = {}",
+		pos="1007,5074",
+		tooltip="[./models/sposenet.lua]:33_",
+		width=4.6805];
+	n31 -> n63	 [pos="e,976.93,5111.1 944.81,5149.6 953.19,5139.6 962.05,5128.9 970.38,5118.9"];
+	n32	 [height=1.041,
+		label="Node32\nmodule = nn.ReLU\lreverseMap = {}",
+		pos="1061,4626",
+		tooltip="[./models/sposenet.lua]:37_",
 		width=2.4261];
-	n80 -> n78	 [pos="e,498.7,6403.5 493.33,6440.4 494.58,6431.7 495.94,6422.4 497.25,6413.4"];
+	n32 -> n23	 [pos="e,1061,4551.8 1061,4588.4 1061,4579.9 1061,4570.8 1061,4562"];
+	n33	 [height=1.041,
+		label="Node33\nmodule = nn.SpatialConvolution(226 -> 226, 9x9, 1,1, 4,4)\lreverseMap = {}",
+		pos="935,3710",
+		tooltip="[./models/sposenet.lua]:56_",
+		width=6.7297];
+	n33 -> n25	 [pos="e,935,3636.5 935,3672.3 935,3664.2 935,3655.4 935,3646.7"];
+	n34	 [height=1.041,
+		label="Node34\nmodule = nn.SpatialConvolution(226 -> 226, 9x9, 1,1, 4,4)\lreverseMap = {}",
+		pos="665,2774",
+		tooltip="[./models/sposenet.lua]:56_",
+		width=6.7297];
+	n34 -> n27	 [pos="e,665,2700.5 665,2736.3 665,2728.2 665,2719.4 665,2710.7"];
+	n35	 [height=1.041,
+		label="Node35\nmodule = nn.SpatialConvolution(226 -> 226, 11x11, 1,1, 5,5)\lreverseMap = {}",
+		pos="677,1838",
+		tooltip="[./models/sposenet.lua]:56_",
+		width=6.9824];
+	n35 -> n29	 [pos="e,677,1764.5 677,1800.3 677,1792.2 677,1783.4 677,1774.7"];
+	n36 -> n30	 [pos="e,557.16,676.1 318.48,1089.7 285.35,1037.1 235.1,936.82 278,864 335.76,765.95 456.12,709.46 547.56,679.22"];
+	n37 -> n30	 [pos="e,666,696.48 666,731.7 666,723.54 666,714.99 666,706.6"];
+	n38	 [height=1.3356,
+		label="Node38\nmodule = nn.JoinTable\lreverseMap = {}\lmapindex = {Node45,Node46}",
+		pos="770,5776",
+		tooltip="[./models/sposenet.lua]:41_",
+		width=3.7034];
+	n38 -> n31	 [pos="e,832.91,5236.2 770.64,5727.9 771.23,5681 772,5607 772,5543 772,5543 772,5543 772,5429 772,5362.2 756.78,5337.3 791,5280 799.52,\
+5265.7 811.53,5253.3 824.63,5242.6"];
+	n39	 [height=1.041,
+		label="Node39\nmodule = nn.SpatialConvolution(256 -> 256, 3x3, 1,1, 1,1)\lreverseMap = {}",
+		pos="1043,5318",
+		tooltip="[./models/sposenet.lua]:38_",
+		width=6.7297];
+	n39 -> n31	 [pos="e,956.91,5241 1002.2,5281 990.4,5270.6 977.3,5259 964.69,5247.9"];
+	n40	 [height=1.041,
+		label="Node40\nmodule = nn.SpatialBatchNormalization\lreverseMap = {}",
+		pos="1061,4738",
+		tooltip="[./models/sposenet.lua]:36_",
+		width=4.6805];
+	n40 -> n32	 [pos="e,1061,4663.8 1061,4700.4 1061,4691.9 1061,4682.8 1061,4674"];
+	n41	 [height=1.041,
+		label="Node41\nmodule = nn.ReLU\lreverseMap = {}",
+		pos="935,3822",
+		tooltip="[./models/sposenet.lua]:55_",
+		width=2.4261];
+	n41 -> n33	 [pos="e,935,3747.8 935,3784.4 935,3775.9 935,3766.8 935,3758"];
+	n42	 [height=1.041,
+		label="Node42\nmodule = nn.ReLU\lreverseMap = {}",
+		pos="665,2886",
+		tooltip="[./models/sposenet.lua]:55_",
+		width=2.4261];
+	n42 -> n34	 [pos="e,665,2811.8 665,2848.4 665,2839.9 665,2830.8 665,2822"];
+	n43	 [height=1.041,
+		label="Node43\nmodule = nn.ReLU\lreverseMap = {}",
+		pos="677,1950",
+		tooltip="[./models/sposenet.lua]:55_",
+		width=2.4261];
+	n43 -> n35	 [pos="e,677,1875.8 677,1912.4 677,1903.9 677,1894.8 677,1886"];
+	n44	 [height=1.041,
+		label="Node44\nmodule = nn.SpatialConvolution(226 -> 226, 13x13, 1,1, 6,6)\lreverseMap = {}",
+		pos="539,902",
+		tooltip="[./models/sposenet.lua]:56_",
+		width=6.9824];
+	n44 -> n37	 [pos="e,619.16,825.25 577.45,864.67 588.23,854.48 600.16,843.22 611.67,832.33"];
+	n45	 [height=1.041,
+		label="Node45\nmodule = nn.Identity\lreverseMap = {}",
+		pos="770,5898",
+		tooltip="[./models/sposenet.lua]:22_",
+		width=2.6117];
+	n45 -> n38	 [pos="e,770,5824.5 770,5860.3 770,5852.2 770,5843.4 770,5834.7"];
+	n46	 [height=1.041,
+		label="Node46\nmodule = nn.MulConstant\lreverseMap = {}",
+		pos="543,5898",
+		tooltip="[./models/sposenet.lua]:23_",
+		width=3.1743];
+	n46 -> n38	 [pos="e,695.79,5816.2 602.05,5865.8 627.89,5852.1 658.67,5835.9 686.77,5821"];
+	n47	 [height=1.041,
+		label="Node47\nmodule = nn.ReLU\lreverseMap = {}",
+		pos="1043,5430",
+		tooltip="[./models/sposenet.lua]:37_",
+		width=2.4261];
+	n47 -> n39	 [pos="e,1043,5355.8 1043,5392.4 1043,5383.9 1043,5374.8 1043,5366"];
+	n48	 [height=1.041,
+		label="Node48\nmodule = nn.SpatialConvolution(256 -> 256, 3x3, 1,1, 1,1)\lreverseMap = {}",
+		pos="1061,4850",
+		tooltip="[./models/sposenet.lua]:35_",
+		width=6.7297];
+	n48 -> n40	 [pos="e,1061,4775.8 1061,4812.4 1061,4803.9 1061,4794.8 1061,4786"];
+	n49	 [height=1.041,
+		label="Node49\nmodule = nn.SpatialBatchNormalization\lreverseMap = {}",
+		pos="935,3934",
+		tooltip="[./models/sposenet.lua]:54_",
+		width=4.6805];
+	n49 -> n41	 [pos="e,935,3859.8 935,3896.4 935,3887.9 935,3878.8 935,3870"];
+	n50	 [height=1.041,
+		label="Node50\nmodule = nn.SpatialBatchNormalization\lreverseMap = {}",
+		pos="665,2998",
+		tooltip="[./models/sposenet.lua]:54_",
+		width=4.6805];
+	n50 -> n42	 [pos="e,665,2923.8 665,2960.4 665,2951.9 665,2942.8 665,2934"];
+	n51	 [height=1.041,
+		label="Node51\nmodule = nn.SpatialBatchNormalization\lreverseMap = {}",
+		pos="677,2062",
+		tooltip="[./models/sposenet.lua]:54_",
+		width=4.6805];
+	n51 -> n43	 [pos="e,677,1987.8 677,2024.4 677,2015.9 677,2006.8 677,1998"];
+	n52	 [height=1.041,
+		label="Node52\nmodule = nn.ReLU\lreverseMap = {}",
+		pos="581,1014",
+		tooltip="[./models/sposenet.lua]:55_",
+		width=2.4261];
+	n52 -> n44	 [pos="e,552.93,939.48 567.25,976.98 563.84,968.05 560.14,958.36 556.57,949.03"];
+	n53	 [height=1.3356,
+		label="Node53\nmodule = nn.CAddTable\lreverseMap = {}\lmapindex = {Node60,Node61}",
+		pos="770,6020",
+		tooltip="[./models/sposenet.lua]:44_",
+		width=3.7034];
+	n53 -> n45	 [pos="e,770,5935.7 770,5971.6 770,5963.1 770,5954.3 770,5945.8"];
+	n53 -> n46	 [pos="e,602.19,5930.3 695.99,5979.9 668.67,5965.4 637.87,5949.1 611.1,5935"];
+	n78	 [height=1.041,
+		label="Node78\nmodule = nn.SpatialBatchNormalization\lreverseMap = {}",
+		pos="1051,5898",
+		tooltip="[./models/sposenet.lua]:33_",
+		width=4.6805];
+	n53 -> n78	 [pos="e,974.61,5931.6 854.69,5982.8 889.7,5967.9 930.23,5950.6 965.34,5935.6"];
+	n54	 [height=1.041,
+		label="Node54\nmodule = nn.SpatialBatchNormalization\lreverseMap = {}",
+		pos="1044,5542",
+		tooltip="[./models/sposenet.lua]:36_",
+		width=4.6805];
+	n54 -> n47	 [pos="e,1043.3,5467.8 1043.7,5504.4 1043.6,5495.9 1043.5,5486.8 1043.4,5478"];
+	n55	 [height=1.041,
+		label="Node55\nmodule = nn.ReLU\lreverseMap = {}",
+		pos="1043,4962",
+		tooltip="[./models/sposenet.lua]:34_",
+		width=2.4261];
+	n55 -> n48	 [pos="e,1055,4887.5 1049,4924.4 1050.4,4915.7 1051.9,4906.4 1053.4,4897.4"];
+	n56	 [height=1.041,
+		label="Node56\nmodule = nn.SpatialConvolution(256 -> 226, 9x9, 1,1, 4,4)\lreverseMap = {}",
+		pos="925,4046",
+		tooltip="[./models/sposenet.lua]:53_",
+		width=6.7297];
+	n56 -> n49	 [pos="e,931.65,3971.8 928.33,4008.4 929.1,3999.9 929.92,3990.8 930.73,3982"];
+	n57	 [height=1.041,
+		label="Node57\nmodule = nn.SpatialConvolution(256 -> 226, 9x9, 1,1, 4,4)\lreverseMap = {}",
+		pos="665,3110",
+		tooltip="[./models/sposenet.lua]:53_",
+		width=6.7297];
+	n57 -> n50	 [pos="e,665,3035.8 665,3072.4 665,3063.9 665,3054.8 665,3046"];
+	n58	 [height=1.041,
+		label="Node58\nmodule = nn.SpatialConvolution(256 -> 226, 11x11, 1,1, 5,5)\lreverseMap = {}",
+		pos="677,2174",
+		tooltip="[./models/sposenet.lua]:53_",
+		width=6.9824];
+	n58 -> n51	 [pos="e,677,2099.8 677,2136.4 677,2127.9 677,2118.8 677,2110"];
+	n59	 [height=1.041,
+		label="Node59\nmodule = nn.SpatialBatchNormalization\lreverseMap = {}",
+		pos="624,1126",
+		tooltip="[./models/sposenet.lua]:54_",
+		width=4.6805];
+	n59 -> n52	 [pos="e,595.11,1051.1 609.68,1088.4 606.2,1079.5 602.43,1069.8 598.81,1060.6"];
+	n60	 [height=1.3356,
+		label="Node60\nmodule = nn.JoinTable\lreverseMap = {}\lmapindex = {Node68,Node69}",
+		pos="633,6600",
+		tooltip="[./models/sposenet.lua]:41_",
+		width=3.7034];
+	n60 -> n53	 [pos="e,695.91,6060.2 633.64,6551.9 634.23,6505 635,6431 635,6367 635,6367 635,6367 635,6253 635,6186.2 619.78,6161.3 654,6104 662.52,\
+6089.7 674.53,6077.3 687.63,6066.6"];
+	n61	 [height=1.041,
+		label="Node61\nmodule = nn.SpatialConvolution(128 -> 128, 3x3, 1,1, 1,1)\lreverseMap = {}",
+		pos="906,6142",
+		tooltip="[./models/sposenet.lua]:38_",
+		width=6.7297];
+	n61 -> n53	 [pos="e,819.91,6065 865.2,6105 853.4,6094.6 840.3,6083 827.69,6071.9"];
+	n62	 [height=1.041,
+		label="Node62\nmodule = nn.SpatialConvolution(128 -> 256, 3x3, 1,1, 1,1)\lreverseMap = {}",
+		pos="1045,5654",
+		tooltip="[./models/sposenet.lua]:35_",
+		width=6.7297];
+	n62 -> n54	 [pos="e,1044.3,5579.8 1044.7,5616.4 1044.6,5607.9 1044.5,5598.8 1044.4,5590"];
+	n63 -> n55	 [pos="e,1031.1,4999.5 1019,5036.4 1021.8,5027.7 1024.9,5018.2 1027.9,5009.1"];
+	n64	 [height=1.041,
+		label="Node64\nmodule = nn.ReLU\lreverseMap = {}",
+		pos="925,4158",
+		tooltip="[./models/sposenet.lua]:52_",
+		width=2.4261];
+	n64 -> n56	 [pos="e,925,4083.8 925,4120.4 925,4111.9 925,4102.8 925,4094"];
+	n65	 [height=1.041,
+		label="Node65\nmodule = nn.ReLU\lreverseMap = {}",
+		pos="665,3222",
+		tooltip="[./models/sposenet.lua]:52_",
+		width=2.4261];
+	n65 -> n57	 [pos="e,665,3147.8 665,3184.4 665,3175.9 665,3166.8 665,3158"];
+	n66	 [height=1.041,
+		label="Node66\nmodule = nn.ReLU\lreverseMap = {}",
+		pos="677,2286",
+		tooltip="[./models/sposenet.lua]:52_",
+		width=2.4261];
+	n66 -> n58	 [pos="e,677,2211.8 677,2248.4 677,2239.9 677,2230.8 677,2222"];
+	n67	 [height=1.041,
+		label="Node67\nmodule = nn.SpatialConvolution(256 -> 226, 13x13, 1,1, 6,6)\lreverseMap = {}",
+		pos="624,1238",
+		tooltip="[./models/sposenet.lua]:53_",
+		width=6.9824];
+	n67 -> n59	 [pos="e,624,1163.8 624,1200.4 624,1191.9 624,1182.8 624,1174"];
+	n68	 [height=1.041,
+		label="Node68\nmodule = nn.Identity\lreverseMap = {}",
+		pos="633,6722",
+		tooltip="[./models/sposenet.lua]:22_",
+		width=2.6117];
+	n68 -> n60	 [pos="e,633,6648.5 633,6684.3 633,6676.2 633,6667.4 633,6658.7"];
+	n69	 [height=1.041,
+		label="Node69\nmodule = nn.MulConstant\lreverseMap = {}",
+		pos="406,6722",
+		tooltip="[./models/sposenet.lua]:23_",
+		width=3.1743];
+	n69 -> n60	 [pos="e,558.79,6640.2 465.05,6689.8 490.89,6676.1 521.67,6659.9 549.77,6645"];
+	n70	 [height=1.041,
+		label="Node70\nmodule = nn.ReLU\lreverseMap = {}",
+		pos="906,6254",
+		tooltip="[./models/sposenet.lua]:37_",
+		width=2.4261];
+	n70 -> n61	 [pos="e,906,6179.8 906,6216.4 906,6207.9 906,6198.8 906,6190"];
+	n71	 [height=1.041,
+		label="Node71\nmodule = nn.ReLU\lreverseMap = {}",
+		pos="1050,5776",
+		tooltip="[./models/sposenet.lua]:34_",
+		width=2.4261];
+	n71 -> n62	 [pos="e,1046.5,5691.8 1048.5,5738.3 1048,5726.9 1047.5,5714.2 1047,5702.2"];
+	n72 -> n64	 [pos="e,925,4195.8 925,4232.4 925,4223.9 925,4214.8 925,4206"];
+	n73 -> n65	 [pos="e,665,3259.8 665,3296.4 665,3287.9 665,3278.8 665,3270"];
+	n74 -> n66	 [pos="e,677,2323.8 677,2360.4 677,2351.9 677,2342.8 677,2334"];
+	n75	 [height=1.041,
+		label="Node75\nmodule = nn.ReLU\lreverseMap = {}",
+		pos="624,1350",
+		tooltip="[./models/sposenet.lua]:52_",
+		width=2.4261];
+	n75 -> n67	 [pos="e,624,1275.8 624,1312.4 624,1303.9 624,1294.8 624,1286"];
+	n76	 [height=1.3356,
+		label="Node76\nmodule = nn.CAddTable\lreverseMap = {}\lmapindex = {Node80,Node81}",
+		pos="633,6844",
+		tooltip="[./models/sposenet.lua]:44_",
+		width=3.7034];
+	n76 -> n68	 [pos="e,633,6759.7 633,6795.6 633,6787.1 633,6778.3 633,6769.8"];
+	n76 -> n69	 [pos="e,465.19,6754.3 558.99,6803.9 531.67,6789.4 500.87,6773.1 474.1,6759"];
+	n88	 [height=1.041,
+		label="Node88\nmodule = nn.SpatialBatchNormalization\lreverseMap = {}",
+		pos="914,6722",
+		tooltip="[./models/sposenet.lua]:33_",
+		width=4.6805];
+	n76 -> n88	 [pos="e,837.61,6755.6 717.69,6806.8 752.7,6791.9 793.23,6774.6 828.34,6759.6"];
+	n77	 [height=1.041,
+		label="Node77\nmodule = nn.SpatialBatchNormalization\lreverseMap = {}",
+		pos="907,6366",
+		tooltip="[./models/sposenet.lua]:36_",
+		width=4.6805];
+	n77 -> n70	 [pos="e,906.33,6291.8 906.67,6328.4 906.59,6319.9 906.51,6310.8 906.43,6302"];
+	n78 -> n71	 [pos="e,1050.3,5813.8 1050.7,5860.3 1050.6,5848.9 1050.5,5836.2 1050.4,5824.2"];
+	n79 -> n75	 [pos="e,624,1387.8 624,1424.4 624,1415.9 624,1406.8 624,1398"];
+	n80	 [height=1.041,
+		label="Node80\nmodule = nn.Identity\lreverseMap = {}",
+		pos="518,7414",
+		tooltip="[./models/sposenet.lua]:41_",
+		width=2.6117];
+	n80 -> n76	 [pos="e,562.07,6884.7 514.02,7376.5 509.58,7332.6 503,7256.5 503,7191 503,7191 503,7191 503,7077 503,7010.2 488.38,6985.7 522,6928 530.13,\
+6914.1 541.62,6901.7 554.15,6891.1"];
 	n81	 [height=1.041,
-		label="Node81\ninput = {}\lreverseMap = {}",
-		pos="357,7150",
+		label="Node81\nmodule = nn.SpatialConvolution(64 -> 64, 3x3, 1,1, 1,1)\lreverseMap = {}",
+		pos="764,6966",
+		tooltip="[./models/sposenet.lua]:38_",
+		width=6.4533];
+	n81 -> n76	 [pos="e,681.08,6889 724.7,6929 713.34,6918.6 700.72,6907 688.57,6895.9"];
+	n82	 [height=1.041,
+		label="Node82\nmodule = nn.SpatialConvolution(64 -> 128, 3x3, 1,1, 1,1)\lreverseMap = {}",
+		pos="908,6478",
+		tooltip="[./models/sposenet.lua]:35_",
+		width=6.5915];
+	n82 -> n77	 [pos="e,907.33,6403.8 907.67,6440.4 907.59,6431.9 907.51,6422.8 907.43,6414"];
+	n83	 [height=1.041,
+		label="Node83\nmodule = nn.ReLU\lreverseMap = {}",
+		pos="617,7638",
+		tooltip="[./models/sposenet.lua]:85_",
+		width=2.4261];
+	n83 -> n80	 [pos="e,516.52,7451.7 572.89,7605.2 559.96,7593.7 547.12,7579.6 539,7564 522.6,7532.4 517.71,7492.3 516.72,7461.7"];
+	n94	 [height=1.041,
+		label="Node94\nmodule = nn.SpatialBatchNormalization\lreverseMap = {}",
+		pos="717,7526",
+		tooltip="[./models/sposenet.lua]:33_",
+		width=4.6805];
+	n83 -> n94	 [pos="e,684.2,7563.1 648.09,7602.8 657.32,7592.6 667.55,7581.4 677.25,7570.7"];
+	n84	 [height=1.041,
+		label="Node84\nmodule = nn.ReLU\lreverseMap = {}",
+		pos="764,7078",
+		tooltip="[./models/sposenet.lua]:37_",
+		width=2.4261];
+	n84 -> n81	 [pos="e,764,7003.8 764,7040.4 764,7031.9 764,7022.8 764,7014"];
+	n85	 [height=1.041,
+		label="Node85\nmodule = nn.ReLU\lreverseMap = {}",
+		pos="913,6600",
+		tooltip="[./models/sposenet.lua]:34_",
+		width=2.4261];
+	n85 -> n82	 [pos="e,909.54,6515.8 911.47,6562.3 911,6550.9 910.47,6538.2 909.97,6526.2"];
+	n86	 [height=1.041,
+		label="Node86\nmodule = nn.SpatialBatchNormalization\lreverseMap = {}",
+		pos="617,7750",
+		tooltip="[./models/sposenet.lua]:84_",
+		width=4.6805];
+	n86 -> n83	 [pos="e,617,7675.8 617,7712.4 617,7703.9 617,7694.8 617,7686"];
+	n87	 [height=1.041,
+		label="Node87\nmodule = nn.SpatialBatchNormalization\lreverseMap = {}",
+		pos="764,7190",
+		tooltip="[./models/sposenet.lua]:36_",
+		width=4.6805];
+	n87 -> n84	 [pos="e,764,7115.8 764,7152.4 764,7143.9 764,7134.8 764,7126"];
+	n88 -> n85	 [pos="e,913.31,6637.8 913.69,6684.3 913.6,6672.9 913.49,6660.2 913.39,6648.2"];
+	n89	 [height=1.041,
+		label="Node89\nmodule = nn.SpatialConvolution(3 -> 64, 5x5, 1,1, 2,2)\lreverseMap = {}",
+		pos="617,7862",
+		tooltip="[./models/sposenet.lua]:83_",
+		width=6.3388];
+	n89 -> n86	 [pos="e,617,7787.8 617,7824.4 617,7815.9 617,7806.8 617,7798"];
+	n90	 [height=1.041,
+		label="Node90\nmodule = nn.SpatialConvolution(64 -> 64, 3x3, 1,1, 1,1)\lreverseMap = {}",
+		pos="764,7302",
+		tooltip="[./models/sposenet.lua]:35_",
+		width=6.4533];
+	n90 -> n87	 [pos="e,764,7227.8 764,7264.4 764,7255.9 764,7246.8 764,7238"];
+	n91	 [height=1.041,
+		label="Node91\nmodule = nn.Identity\lreverseMap = {}",
+		pos="617,7974",
+		tooltip="[./models/sposenet.lua]:82_",
+		width=2.6117];
+	n91 -> n89	 [pos="e,617,7899.8 617,7936.4 617,7927.9 617,7918.8 617,7910"];
+	n92	 [height=1.041,
+		label="Node92\nmodule = nn.ReLU\lreverseMap = {}",
+		pos="748,7414",
+		tooltip="[./models/sposenet.lua]:34_",
+		width=2.4261];
+	n92 -> n90	 [pos="e,758.7,7339.5 753.33,7376.4 754.58,7367.7 755.94,7358.4 757.25,7349.4"];
+	n93	 [height=1.041,
+		label="Node93\ninput = {}\lreverseMap = {}",
+		pos="617,8086",
 		tooltip="[[C]]:-1_",
 		width=2.1497];
-	n81 -> n79	 [pos="e,357,7075.8 357,7112.4 357,7103.9 357,7094.8 357,7086"];
-	n82 -> n80	 [pos="e,477.72,6515.5 467.32,6552.4 469.78,6543.7 472.43,6534.2 474.99,6525.1"];
+	n93 -> n91	 [pos="e,617,8011.8 617,8048.4 617,8039.9 617,8030.8 617,8022"];
+	n94 -> n92	 [pos="e,737.72,7451.5 727.32,7488.4 729.78,7479.7 732.43,7470.2 734.99,7461.1"];
 }

@@ -46,15 +46,12 @@ local function createModel(opt)
         return output
     end
 
-    local function CFBlock(nChIn, nChOut, nChConf, sz, input)
+    local function CFBlock(nChIn, nChOut, nChConf, input)
         
         -- feature
         local bn1   = nn.SpatialBatchNormalization(nChIn)(input)
         local act1  = cudnn.ReLU(true)(bn1)
-        local conv1 = cudnn.SpatialConvolution(nChIn,nChOut-nChConf,sz,sz,1,1,(sz-1)/2,(sz-1)/2)(act1)
-        local bn2   = nn.SpatialBatchNormalization(nChOut-nChConf)(conv1)
-        local act2  = cudnn.ReLU(true)(bn2)
-        local conv2 = cudnn.SpatialConvolution(nChOut-nChConf,nChOut-nChConf,sz,sz,1,1,(sz-1)/2,(sz-1)/2)(act2)
+        local conv1 = cudnn.SpatialConvolution(nChIn,nChOut-nChConf,1,1,1,1,0,0)(act1)
 
         -- confidence
         local bn_conf   = nn.SpatialBatchNormalization(nChIn)(input)
@@ -62,15 +59,9 @@ local function createModel(opt)
         local conv_conf = cudnn.SpatialConvolution(nChIn,nChConf,1,1,1,1,0,0)(act_conf)
 
         -- feature + confidence
-        local fc = nn.JoinTable(2)({conv2, conv_conf})
+        local fc = nn.JoinTable(2)({conv1, conv_conf})
 
-        -- identity shortcut
-        local identity = shortcut(nChIn, nChOut, input)
-
-        -- final output
-        local output = nn.CAddTable()({identity, fc})
-
-        return output, conv_conf
+        return fc, conv_conf
     end
 
 
@@ -86,29 +77,35 @@ local function createModel(opt)
         local act1  = cudnn.ReLU(true)(bn1)
 
         local res1  = ResBlock(64, 64, 3, act1)
-        local res2  = ResBlock(64, 128, 3, res1)
-        local res3  = ResBlock(128, 256, 3, res2)
-        local res4  = ResBlock(256, 256, 3, res3)
+        local res2  = ResBlock(64, 64, 3, res1)
+        local res3  = ResBlock(64, 128, 3, res2)
+        local res4  = ResBlock(128, 128, 3, res3)
+        local res5  = ResBlock(128, 256, 3, res4)
+        local res6  = ResBlock(256, 256, 3, res5)
 
-        local cf1, c1  = CFBlock(256,256,30,9,res4)
-        --local cf2, c2  = CFBlock(256,256,30,9,cf1)
-        local cf2, c2  = CFBlock(256,256,30,11,cf1)
-        local cf3, c3  = CFBlock(256,256,30,13,cf2)
+        -- CPM's second stage
+        local cf1, c1  = CFBlock(256,256,30,res6)
 
-        local bn_end   = nn.SpatialBatchNormalization(256)(cf3)
-        local act_end  = cudnn.ReLU(true)(bn_end)
-        local conv_end = cudnn.SpatialConvolution(256,30,1,1)(act_end)
+        local bn_end1   = nn.SpatialBatchNormalization(256)(cf1)
+        local act_end1  = cudnn.ReLU(true)(bn_end1)
+        local conv_end1 = cudnn.SpatialConvolution(256,256,9,9,1,1,4,4)(act_end1)
+        local bn_end2   = nn.SpatialBatchNormalization(256)(conv_end1)
+        local act_end2  = cudnn.ReLU(true)(bn_end2)
+        local conv_end2 = cudnn.SpatialConvolution(256,256,11,11,1,1,5,5)(act_end2)
+        local bn_end3   = nn.SpatialBatchNormalization(256)(conv_end2)
+        local act_end3  = cudnn.ReLU(true)(bn_end3)
+        local conv_end3 = cudnn.SpatialConvolution(256,30,1,1)(act_end3)
 
         --local sum = nn.CAddTable()({c1,c2,c3, conv_end})
         --model = nn.gModule({input}, {c1,c2,c3, sum})
 
         -- another model. no sum of confidence maps at the end
         -- only have multi outputs to have multiple losses
-        model = nn.gModule({input}, {c1,c2,c3, conv_end})
+        model = nn.gModule({input}, {c1, conv_end3})
 
 
         -- draw and save model
-        graph.dot(model.fg, 'forward graph', './tmp/fg')
+        graph.dot(model.fg, 'forward graph', './tmp/fg_CPM')
    else
       error('invalid dataset: ' .. opt.dataset)
    end
@@ -141,7 +138,6 @@ local function createModel(opt)
        print(1)
       v.bias:zero()
    end
-  
    
     model:cuda()
 

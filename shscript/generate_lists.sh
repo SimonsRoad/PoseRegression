@@ -16,7 +16,7 @@ find $path_img_pos -name "*.jpg" ! -type d > $outFile_img_pos
 # jsdc_pos.txt
 outFile_jsdc_pos=$path_list'/jsdc_pos.txt'
 cp $outFile_img_pos $outFile_jsdc_pos
-sed -i -e 's/pos/jsdc/g' $outFile_jsdc_pos
+sed -i -e 's/pos/jsdc_1/g' $outFile_jsdc_pos
 sed -i -e 's/im/jsdc/g' $outFile_jsdc_pos
 sed -i -e 's/jpg/mat/g' $outFile_jsdc_pos
 
@@ -31,8 +31,8 @@ outFile_jsdc_neg=$path_list'/jsdc_neg.txt'
 find $path_jsdc_neg -name "*.mat" ! -type d > $outFile_jsdc_neg
 
 # create as one! {img, jsdc}
-outFile_img=$path_list'/img.txt'
-outFile_jsdc=$path_list'/jsdc.txt'
+outFile_img=$path_list'/img_1.txt'
+outFile_jsdc=$path_list'/jsdc_1.txt'
 cat $outFile_img_neg $outFile_img_pos > $outFile_img
 cat $outFile_jsdc_neg $outFile_jsdc_pos > $outFile_jsdc
 

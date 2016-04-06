@@ -13,6 +13,7 @@
 require 'nn'
 require 'cunn'
 require 'cudnn'
+require 'nngraph'
 
 local M = {}
 
@@ -92,11 +93,11 @@ function M.setup(opt)
 
     -- multi out
     local l1 = nn.MSECriterion():cuda()
-    local l2 = nn.MSECriterion():cuda()
-    local l3 = nn.MSECriterion():cuda()
+    --local l2 = nn.MSECriterion():cuda()
+    --local l3 = nn.MSECriterion():cuda()
     --local l4 = nn.MSECriterion():cuda()
     local lFinal = nn.MSECriterion():cuda()
-    local criterion = nn.ParallelCriterion(true):add(l1):add(l2):add(l3):add(lFinal):cuda()
+    local criterion = nn.ParallelCriterion(true):add(l1):add(lFinal):cuda()
 
     return model, criterion
    

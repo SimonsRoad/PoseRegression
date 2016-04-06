@@ -8,26 +8,26 @@ dataset = [];
 
 
 % load image
-fImage = fullfile(pathtotxt, 'img.txt');
+fImage = fullfile(pathtotxt, 'img_8192.txt');
 fid = fopen(fImage);
 tline = fgetl(fid);
 cnt = 0;
 while ischar(tline)
     cnt = cnt + 1;
-    if cnt > 5100, break; end;
+    if cnt > 6000, break; end;
     dataset(cnt).img = tline;
     tline = fgetl(fid);
 end
 fclose(fid);
 
 % load label
-fLabel = fullfile(pathtotxt, 'jsdc.txt');
+fLabel = fullfile(pathtotxt, 'jsdc_8192.txt');
 fid = fopen(fLabel);
 tline = fgetl(fid);
 cnt = 0;
 while ischar(tline)
     cnt = cnt + 1;
-    if cnt > 5100, break; end;
+    if cnt > 6000, break; end;
     tmp = load(tline);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
     dataset(cnt).jsdc = tmp.jsdc;
     tline = fgetl(fid);                                                                                                                                                                                                                                                                                                                                                                                                                             
@@ -36,8 +36,8 @@ fclose(fid);
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
                                                                                                 
 % visualize 
-randidx = randi([1, numel(dataset)], 20);
-for i = 1:numel(randidx)
+randidx = randperm(numel(dataset), 20);
+for i = randidx
     img = imread(dataset(i).img);
     jsdc = permute(dataset(i).jsdc, [2,3,1]);
     visualize_jsdc(img, jsdc);    

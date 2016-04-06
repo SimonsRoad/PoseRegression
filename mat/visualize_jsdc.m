@@ -22,7 +22,7 @@ for part = 1:27         % visualize j27
     % superimposing heat maps and image
     smap_aug = jsdc(:,:,part);
     smap_aug(smap_aug<0) = 0;
-    smap_aug = smap_aug / max(smap_aug(:));
+%     smap_aug = smap_aug / max(smap_aug(:));
     
     mapIm = mat2im(smap_aug, jet(100), [0 1]);
     
@@ -33,14 +33,14 @@ for part = 1:27         % visualize j27
     title(part_str{part});
     
     % mark ground-truth
-    if part <15
-        tmp = jsdc_gt(:,:,part);
-        [~,idx] = max(tmp(:));
-        [y,x] = ind2sub(size(tmp), idx);
-        plot(x,y,'g*'); hold off;
-    else
-        hold off;
-    end
+%     if part <15
+%         tmp = jsdc_gt(:,:,part);
+%         [~,idx] = max(tmp(:));
+%         [y,x] = ind2sub(size(tmp), idx);
+%         plot(x,y,'g*'); hold off;
+%     else
+%         hold off;
+%     end
 end
 for part = 28:30        % visualize sdc
     subplot(4,8,part); imshow(jsdc(:,:,part));

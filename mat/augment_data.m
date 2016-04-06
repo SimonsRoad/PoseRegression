@@ -15,7 +15,7 @@ path_dep  = fullfile(path_data, 'dep');
 % create save directories
 path_data_aug       = [path_data, '_aug'];
 path_pos_aug        = fullfile(path_data_aug, 'pos');
-path_jsdc_aug       = fullfile(path_data_aug, 'jsdc_8192');
+path_jsdc_aug       = fullfile(path_data_aug, 'jsdc_1');
 if ~exist(path_data_aug,    'dir'), mkdir(path_data_aug); end;
 if ~exist(path_pos_aug,     'dir'), mkdir(path_pos_aug); end;
 if ~exist(path_jsdc_aug,    'dir'), mkdir(path_jsdc_aug); end;
@@ -125,9 +125,9 @@ for i = 1:numel(data)
 %             dep_new = dep_new/max(dep_new(:));
 %             cen_new = cen_new/max(cen_new(:));
             % normalize2 
-            seg_new = seg_new/sum(seg_new(:))*8192;
-            dep_new = dep_new/sum(dep_new(:))*8192;
-            cen_new = cen_new/sum(cen_new(:))*8192;
+            seg_new = seg_new/sum(seg_new(:));
+            dep_new = dep_new/sum(dep_new(:));
+            cen_new = cen_new/sum(cen_new(:));
 
             assert(size(pos_new,1) == bh_crop & size(pos_new,2) == bw_crop);
             
@@ -146,7 +146,7 @@ for i = 1:numel(data)
                 hmap(j27(j,2), j27(j,1), j) = 1;
                 hmap(:,:,j) = imgaussfilt(hmap(:,:,j), 3);       % gaussian
 %                 hmap(:,:,j) = hmap(:,:,j)/max(max(hmap(:,:,j)));  % normalize approach1
-                hmap(:,:,j) = hmap(:,:,j)/sum(sum(hmap(:,:,j)))*8192;  % normalize approach2
+                hmap(:,:,j) = hmap(:,:,j)/sum(sum(hmap(:,:,j)));  % normalize approach2
             end
             
             %% visualize and check

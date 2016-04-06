@@ -164,6 +164,9 @@ function evalBatch(inputsCPU, labelsCPU)
     labels:resize(labelsCPU:size()):copy(labelsCPU)
 
     outputs = model:forward(inputs)
+    assert(torch.type(outputs)=='table') -- multiple outputs as table
+    outputs = outputs[#outputs]
+
 
     -- separation
     gt_j27_hmap = labels[{ {}, {1,opt.nJoints}, {}, {} }]

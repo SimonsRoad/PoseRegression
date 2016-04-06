@@ -1,6 +1,7 @@
 --[[
 --script_poseregression_fcn_new.lua
 --Namhoon Lee, The Robotics Institute, Carnegie Mellon University
+--namhoonl@andrew.cmu.edu
 --]]
 
 require 'torch'
@@ -19,7 +20,6 @@ torch.manualSeed(2)
 -- Create model
 model, criterion = models.setup(opt)
 
-
 paths.dofile('data.lua')
 paths.dofile('train_fcn.lua')
 paths.dofile('test_fcn.lua')
@@ -28,15 +28,9 @@ paths.dofile('eval_jsdc.lua')
 -- Training
 epoch = opt.epochNumber
 for i=1,opt.nEpochs do
-
-	-- train and test
 	train()
 	test()
-
-	-- evaluation
-	if epoch % 1 == 0 then
-        eval_jsdc()         -- evaluate on testset
-	end
+    eval_jsdc()         -- evaluate on testset
 	epoch = epoch + 1
 end
 

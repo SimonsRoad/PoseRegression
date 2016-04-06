@@ -14,6 +14,8 @@
 require 'torch'
 require 'paths'
 require 'nn'
+require 'cunn'
+require 'cudnn'
 require 'optim'
 
 local matio     = require 'matio'
@@ -29,11 +31,12 @@ opt.nDonkeys = 1
 
 -- load model
 --local mNum  = 11
-for mNum = 1, 4 do
+for mNum = 1, 7 do
 
     local mName = string.format('clear_model_%d.t7', mNum)
     --local pathToModel = '../save/PR_fcn/option/t_SunMar2721:48:402016'
-    local pathToModel = '../save/PR_fcn/option/t_TueMar2922:11:592016'
+    --local pathToModel = '../save/PR_fcn/option/t_TueMar2922:11:592016'
+    local pathToModel = '../save/PR_fcn/option/t_ThuMar3112:33:322016'
     opt.retrain = paths.concat(pathToModel, mName)  
 
     local model, criterion = models.setup(opt)
@@ -42,9 +45,10 @@ for mNum = 1, 4 do
 
     -- TEST DATA: 1) sTrain, 2) sTest, 3) rTest
     --
-    testsettype = 'sTrain'
+    testsettype = 'sTest'
 
     savedir         = paths.concat(pathToModel, 'results/' .. testsettype)
+    os.execute('mkdir -p ' .. savedir)
     savefile_img    = savedir..string.format('/img_model%d.mat', mNum)
     savefile_pred   = savedir..string.format('/jsdc_pred_model%d.mat', mNum)
     savefile_gt     = savedir..string.format('/jsdc_gt_model%d.mat', mNum)

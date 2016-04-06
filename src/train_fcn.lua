@@ -83,11 +83,7 @@ function train()
         if torch.type(model) == 'nn.DataParallelTable' then
             torch.save(paths.concat(opt.save, 'model_'..epoch..'.t7'), model:get(1))
         else
-            adf=adf+1
-            local tmpmodel = model:float():clone()
-            tmpmodel:clearState()
-            torch.save(paths.concat(opt.save, 'model_'..epoch..'.t7'), tmpmodel)
-            --torch.save(paths.concat(opt.save, 'model_'..epoch..'.t7'), model)
+            torch.save(paths.concat(opt.save, 'model_'..epoch..'.t7'), model)
         end
         torch.save(paths.concat(opt.save, 'optimState_'..epoch..'.t7'), optimState)
 	end

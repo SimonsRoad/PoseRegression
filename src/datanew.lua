@@ -1,6 +1,6 @@
 --[[
 -- datanew.lua
---
+-- Namhoon Lee, RI, CMU (namhoonl@andrew.cmu.edu)
 --]]
 
 torch.setdefaulttensortype('torch.FloatTensor')
@@ -16,9 +16,7 @@ local matio = require 'matio'
 
 
 local imgtensor = torch.Tensor(opt.batchSize, 3, opt.H, opt.W) 
-local jsdc_tensor = torch.Tensor(opt.batchSize, 30, opt.H, opt.W) 
-local pos = torch.Tensor(opt.batchSize, 3, opt.H, opt.W) 
-local jsdc = torch.Tensor(opt.batchSize, 30, opt.H, opt.W) 
+local jsdc_tensor = torch.Tensor(opt.batchSize, opt.nChOut, opt.H_jsdc, opt.W_jsdc) 
 
 local dataset = torch.class('dataLoader')
 local initcheck = argcheck{
@@ -85,7 +83,7 @@ end
 
 function dataset:load_jsdc(indices)
     -- load from .mat files 
-    local jsdc = torch.Tensor(indices:size(1), 30, opt.H, opt.W)
+    local jsdc = torch.Tensor(indices:size(1), opt.nChOut, opt.H, opt.W)
     for i=1, indices:size(1) do
         local jsdc_path = ffi.string(torch.data(self.labelPath[indices[i]]), self.labelPathLength[indices[i]])
         jsdc[i] = matio.load(jsdc_path, 'jsdc')

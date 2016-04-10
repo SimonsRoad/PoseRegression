@@ -23,7 +23,8 @@ if opt.optimState ~= 'none' then
 end
 
 
-trainLogger = optim.Logger(paths.concat(opt.save, 'train.log'))
+trainLogger_epoch = optim.Logger(paths.concat(opt.save, 'train_epoch.log'))
+trainLogger_batch = optim.Logger(paths.concat(opt.save, 'train_batch.log'))
 local loss_epoch
 local batchNumber 
 
@@ -71,10 +72,8 @@ function train()
 
 	loss_epoch = loss_epoch / opt.epochSize
 
-	trainLogger:add{
-		['avg loss (train set)'] = loss_epoch
-	}
-	print(string.format('Ep. [%d/%d] (Train) Time(s): %.2f  ' .. 'avg loss (per batch): %.8f ', epoch, opt.nEpochs, tm:time().real, loss_epoch))
+	trainLogger_epoch:add{ ['avg loss (train set)'] = loss_epoch }
+	print(string.format('Ep. [%d/%d] (Train) Time(s): %.2f  ' .. 'avg loss (per batch): %.10f ', epoch, opt.nEpochs, tm:time().real, loss_epoch))
 
 
 	collectgarbage()
@@ -134,7 +133,8 @@ function trainBatch(inputsCPU, labelsCPU)
     batchNumber = batchNumber + 1
 	loss_epoch = loss_epoch + err
 
-    print(string.format('Ep. [%d/%d][%d/%d] Time(s): %.2f  ' .. 'batch err: %.7f | dataLoadTime: %.3f | mem: %.2f', epoch, opt.nEpochs, batchNumber, opt.epochSize, timer:time().real, err, dataLoadingTime, collectgarbage('count')))
+	trainLogger_batch:add{ ['avg loss (train batch)'] = err }
+    print(string.format('Ep. [%d/%d][%d/%d] Time(s): %.2f  ' .. 'batch err: %.10f | dataLoadTime: %.3f | mem: %.2f', epoch, opt.nEpochs, batchNumber, opt.epochSize, timer:time().real, err, dataLoadingTime, collectgarbage('count')))
     dataTimer:reset()
 
     collectgarbage()

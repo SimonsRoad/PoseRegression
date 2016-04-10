@@ -8,7 +8,7 @@ dataset = [];
 
 
 % load image
-fImage = fullfile(pathtotxt, 'img_8192.txt');
+fImage = fullfile(pathtotxt, 'img_pos.txt');
 fid = fopen(fImage);
 tline = fgetl(fid);
 cnt = 0;
@@ -21,7 +21,7 @@ end
 fclose(fid);
 
 % load label
-fLabel = fullfile(pathtotxt, 'jsdc_8192.txt');
+fLabel = fullfile(pathtotxt, 'jsdc_pos.txt');
 fid = fopen(fLabel);
 tline = fgetl(fid);
 cnt = 0;

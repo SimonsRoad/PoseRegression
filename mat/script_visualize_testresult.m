@@ -2,13 +2,14 @@
 
 clc; clear; close all;
 
-testtype   = 'rTest';
+testtype   = 'sTrain';
 % pathtodata = ['../save/PR_fcn/option/t_SunMar2721:48:402016/results/', testtype];
-pathtodata = ['../save/PR_fcn/option/t_TueMar2922:11:592016/results/', testtype];
+pathtodata = ['../save/PR_fcn/option/t_FriApr809:10:502016/results/', testtype];
+% pathtodata = ['../save/PR_fcn/option/t_ThuMar3112:33:322016/results/', testtype];
 
-mNum    = 3;
-nData   = 22;
-nJoints = 14;   % this can be 27 for synthetic data. For real it's 14.
+mNum    = 2;
+nData   = 10;
+nJoints = 27;   % this can be 27 for synthetic data. For real it's 14.
 
 dataset_gt   = [];
 dataset_pred = [];
@@ -39,7 +40,7 @@ if 0
 end
 
 %% load pred label (jsdc, .mat file)
-fname_jsdc_pred = sprintf('jsdc_pred_model%d.mat',mNum);
+fname_jsdc_pred = sprintf('jsdc_pred_model%d_1.mat',mNum);
 load(fullfile(pathtodata,fname_jsdc_pred));
 x = permute(x, [3,4,2,1]);
 assert(size(x,4) == nData);
@@ -56,7 +57,7 @@ fprintf('PCK: %.2f \n', pck);
 
 % visualize
 for i = 1:nData
-    visualize_jsdc(dataset_gt(i).img, dataset_pred(i).jsdc, dataset_gt(i).jsdc);
+    visualize_jsdc(dataset_gt(i).img, dataset_pred(i).jsdc, dataset_gt(i).jsdc, nJoints);
     title(pck_eval(dataset_pred(i), dataset_gt(i), 0.5, 'a', 'h'));
 end
 

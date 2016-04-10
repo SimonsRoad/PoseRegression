@@ -4,7 +4,7 @@
 -- The base code is inspired by ResNet.
 --]]
 
-local nn = require 'nn'
+require 'nn'
 require 'cunn'
 require 'cudnn'
 require 'nngraph'
@@ -31,10 +31,10 @@ local function createModel(opt)
     local function ResBlock(nChIn, nChOut, sz, input)
         
         -- feature
-        local bn1   = nn.SpatialBatchNormalization(nChIn)(input)
+        local bn1   = cudnn.SpatialBatchNormalization(nChIn)(input)
         local act1  = cudnn.ReLU(true)(bn1)
         local conv1 = cudnn.SpatialConvolution(nChIn,nChOut,sz,sz,1,1,(sz-1)/2,(sz-1)/2)(act1)
-        local bn2   = nn.SpatialBatchNormalization(nChOut)(conv1)
+        local bn2   = cudnn.SpatialBatchNormalization(nChOut)(conv1)
         local act2  = cudnn.ReLU(true)(bn2)
         local conv2 = cudnn.SpatialConvolution(nChOut,nChOut,sz,sz,1,1,(sz-1)/2,(sz-1)/2)(act2)
 
@@ -49,18 +49,18 @@ local function createModel(opt)
     local function CFBlock(nChIn, nChOut, nChConf, nChFC, sz, input)
         
         -- feature
-        local bn1   = nn.SpatialBatchNormalization(nChIn)(input)
+        local bn1   = cudnn.SpatialBatchNormalization(nChIn)(input)
         local act1  = cudnn.ReLU(true)(bn1)
         local conv1 = cudnn.SpatialConvolution(nChIn,nChOut,sz,sz,1,1,(sz-1)/2,(sz-1)/2)(act1)
-        local bn2   = nn.SpatialBatchNormalization(nChOut)(conv1)
+        local bn2   = cudnn.SpatialBatchNormalization(nChOut)(conv1)
         local act2  = cudnn.ReLU(true)(bn2)
         local conv2 = cudnn.SpatialConvolution(nChOut,nChOut,sz,sz,1,1,(sz-1)/2,(sz-1)/2)(act2)
 
         -- confidence
-        local bn_conf1   = nn.SpatialBatchNormalization(nChIn)(input)
+        local bn_conf1   = cudnn.SpatialBatchNormalization(nChIn)(input)
         local act_conf1  = cudnn.ReLU(true)(bn_conf1)
         local conv_conf1 = cudnn.SpatialConvolution(nChIn,nChFC,1,1,1,1,0,0)(act_conf1)
-        local bn_conf2   = nn.SpatialBatchNormalization(nChFC)(conv_conf1)
+        local bn_conf2   = cudnn.SpatialBatchNormalization(nChFC)(conv_conf1)
         local act_conf2  = cudnn.ReLU(true)(bn_conf2)
         local conv_conf2 = cudnn.SpatialConvolution(nChFC,nChConf,1,1,1,1,0,0)(act_conf2)
 
@@ -84,36 +84,36 @@ local function createModel(opt)
         -- sposeNet Towncenter model
        
         local input = nn.Identity()()
-        local conv1 = cudnn.SpatialConvolution(3,16,5,5,1,1,2,2)(input)
-        local bn1   = nn.SpatialBatchNormalization(16)(conv1)
+        local conv1 = cudnn.SpatialConvolution(3,64,5,5,1,1,2,2)(input)
+        local bn1   = cudnn.SpatialBatchNormalization(16)(conv1)
         local act1  = cudnn.ReLU(true)(bn1)
 
-        local res1  = ResBlock(16, 16, 3, act1)
-        local res2  = ResBlock(16, 16, 3, res1)
-        local res3  = ResBlock(16, 16, 3, res2)
-        local res4  = ResBlock(16, 16, 3, res3)
+        local res1  = ResBlock(64, 64, 3, act1)
+        local res2  = ResBlock(64, 64, 3, res1)
+        local res3  = ResBlock(64, 128, 3, res2)
+        local res4  = ResBlock(128, 128, 3, res3)
 
-        local cf1, c1  = CFBlock(16,16,30,256,17,res4)
-        local cf2, c2  = CFBlock(46,46,30,256,17,cf1)
-        local cf3, c3  = CFBlock(76,76,30,256,17,cf2)
+        local cf1, c1  = CFBlock(128,128,30,256,17,res4)
+        local cf2, c2  = CFBlock(158,158,30,256,17,cf1)
+        local cf3, c3  = CFBlock(188,188,30,256,17,cf2)
 
-        local bn_end1   = nn.SpatialBatchNormalization(106)(cf3)
+        local bn_end1   = cudnn.SpatialBatchNormalization(218)(cf3)
         local act_end1  = cudnn.ReLU(true)(bn_end1)
-        local conv_end1 = cudnn.SpatialConvolution(106,256,1,1)(act_end1)
-        local bn_end2   = nn.SpatialBatchNormalization(256)(conv_end1)
+        local conv_end1 = cudnn.SpatialConvolution(218,256,1,1)(act_end1)
+        local bn_end2   = cudnn.SpatialBatchNormalization(256)(conv_end1)
         local act_end2  = cudnn.ReLU(true)(bn_end2)
         local conv_end2 = cudnn.SpatialConvolution(256,30,1,1)(act_end2)
 
         local cat_last  = nn.JoinTable(2)({c1,c2,c3, conv_end2})
 
-        local bn_cat1   = nn.SpatialBatchNormalization(30*4)(cat_last)
+        local bn_cat1   = cudnn.SpatialBatchNormalization(30*4)(cat_last)
         local act_cat1  = cudnn.ReLU(true)(bn_cat1)
         local conv_cat1 = cudnn.SpatialConvolution(30*4,256,1,1)(act_cat1)
-        local bn_cat2   = nn.SpatialBatchNormalization(256)(conv_cat1)
+        local bn_cat2   = cudnn.SpatialBatchNormalization(256)(conv_cat1)
         local act_cat2  = cudnn.ReLU(true)(bn_cat2)
         local conv_cat2 = cudnn.SpatialConvolution(256,30,1,1)(act_cat2)
 
-        model = nn.gModule({input}, {c1,c2,c3,conv_end2, conv_cat2})
+        model = nn.gModule({input}, {conv_end2, conv_cat2})
 
 
         -- draw and save model
@@ -141,11 +141,11 @@ local function createModel(opt)
       end
    end
    
-   ConvInit('cudnn.SpatialConvolution')
-   ConvInit('nn.SpatialConvolution')
-   BNInit('fbnn.SpatialBatchNormalization')
-   BNInit('cudnn.SpatialBatchNormalization')
-   BNInit('nn.SpatialBatchNormalization')
+   --ConvInit('cudnn.SpatialConvolution')
+   --ConvInit('nn.SpatialConvolution')
+   --BNInit('fbnn.SpatialBatchNormalization')
+   --BNInit('cudnn.SpatialBatchNormalization')
+   --BNInit('nn.SpatialBatchNormalization')
    for k,v in pairs(model:findModules('nn.Linear')) do
        print(1)
       v.bias:zero()

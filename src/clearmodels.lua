@@ -6,10 +6,12 @@
 require 'nn'
 require 'cunn'
 require 'cudnn'
+require 'nngraph'
 
-pathtomodels = '../save/PR_fcn/option/t_SunMar2721:48:402016'
+pathtomodels = '../save/PR_fcn/option/t_FriApr809:10:502016'
 
-for epoch = 4,10 do
+for epoch = 1,2 do
+    print('epoch ' .. epoch)
 	local model_raw = torch.load(paths.concat(pathtomodels, 'model_'..epoch..'.t7'))
 	local model_clr = model_raw:clearState()
 
@@ -17,8 +19,13 @@ for epoch = 4,10 do
 	local a = torch.rand(3,3,128,64):cuda()
 	local out_raw = model_raw:cuda():forward(a)
 	local out_clr = model_clr:cuda():forward(a)
-	print(torch.norm(out_raw)); print(torch.norm(out_clr));
-	assert(torch.norm(out_raw) == torch.norm(out_clr))
+    if torch.type(out_raw) == 'table' then
+        print(torch.norm(out_raw[#out_raw])); print(torch.norm(out_clr[#out_clr]));
+        assert(torch.norm(out_raw[#out_raw]) == torch.norm(out_clr[#out_clr]))
+    else
+	    print(torch.norm(out_raw)); print(torch.norm(out_clr));
+	    assert(torch.norm(out_raw) == torch.norm(out_clr))
+    end
 
 	-- save
 	torch.save(paths.concat(pathtomodels, 'clear_model_'..epoch..'.t7'), model_clr)

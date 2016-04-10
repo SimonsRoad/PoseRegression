@@ -1,4 +1,4 @@
-function visualize_jsdc(img, jsdc, jsdc_gt)
+function visualize_jsdc(img, jsdc, jsdc_gt, nJoints)
 
 part_str = {'htop', 'hbot', ...
     'lsho', 'lelb', 'lwr', 'lhip', 'lkne', 'lank', ...
@@ -22,28 +22,29 @@ for part = 1:27         % visualize j27
     % superimposing heat maps and image
     smap_aug = jsdc(:,:,part);
     smap_aug(smap_aug<0) = 0;
-%     smap_aug = smap_aug / max(smap_aug(:));
+    smap_aug = smap_aug / max(smap_aug(:));
     
     mapIm = mat2im(smap_aug, jet(100), [0 1]);
     
-    imToShow{part} = mapIm*0.5 + (single(img))*0.5;
+    imToShow{part} = mapIm*0.5 + (im2single(img))*0.5;
     subplot(4,8,part); hold on;
     imshow(imToShow{part}); 
-    plot(x,y,'r*'); 
+    plot(x,y,'gx', 'LineWidth', 2); 
     title(part_str{part});
+%     hold off;
     
     % mark ground-truth
-%     if part <15
-%         tmp = jsdc_gt(:,:,part);
-%         [~,idx] = max(tmp(:));
-%         [y,x] = ind2sub(size(tmp), idx);
-%         plot(x,y,'g*'); hold off;
-%     else
-%         hold off;
-%     end
+    if part <nJoints+1
+        tmp = jsdc_gt(:,:,part);
+        [~,idx] = max(tmp(:));
+        [y,x] = ind2sub(size(tmp), idx);
+        plot(x,y,'wx', 'LineWidth', 2); hold off;
+    else
+        hold off;
+    end
 end
 for part = 28:30        % visualize sdc
-    subplot(4,8,part); imshow(jsdc(:,:,part));
+    subplot(4,8,part); imagesc(jsdc(:,:,part)); axis image;
     title(part_str{part});
 end
 for part = 31

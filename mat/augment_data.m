@@ -15,10 +15,12 @@ path_dep  = fullfile(path_data, 'dep');
 % create save directories
 path_data_aug       = [path_data, '_aug'];
 path_pos_aug        = fullfile(path_data_aug, 'pos');
-path_jsdc_aug       = fullfile(path_data_aug, 'jsdc_1');
+path_jsdc_aug       = fullfile(path_data_aug, 'jsdc_quarter');
+path_hmap_aug       = fullfile(path_data_aug, 'hmap_quarter');
 if ~exist(path_data_aug,    'dir'), mkdir(path_data_aug); end;
 if ~exist(path_pos_aug,     'dir'), mkdir(path_pos_aug); end;
 if ~exist(path_jsdc_aug,    'dir'), mkdir(path_jsdc_aug); end;
+if ~exist(path_hmap_aug,    'dir'), mkdir(path_hmap_aug); end;
 
 % images
 imgtype = '*.jpg';
@@ -53,22 +55,22 @@ for i = 1:numel(data)
     bw_crop  = 64;
     bh_crop  = bw_crop * 2;
     
-    pos = imread(data(i).pos);
-    seg = imread(data(i).seg);
-    dep = imread(data(i).dep);
-    cen = fspecial('gaussian', [bh_outer, bw_outer], 5);    
+%     pos = imread(data(i).pos);
+%     seg = imread(data(i).seg);
+%     dep = imread(data(i).dep);
+%     cen = fspecial('gaussian', [bh_outer, bw_outer], 5);    
     
     
     %% transformations! seg. dep, cen, j27
     % 1. convert from 3 channels to 1 channel
     % 2. convert from double to single precision
     % 3. create joint heatmap
-    seg = im2single(rgb2gray(seg));
-    dep = im2single(rgb2gray(dep));
-    cen = single(cen);
+%     seg = im2single(rgb2gray(seg));
+%     dep = im2single(rgb2gray(dep));
+%     cen = single(cen);
 
-    w_ori = size(pos,2);
-    h_ori = size(pos,1);
+%     w_ori = size(pos,2);
+%     h_ori = size(pos,1);
     
     label_x_min = min(data(i).j27(:,1));
     label_x_max = max(data(i).j27(:,1));
@@ -106,30 +108,35 @@ for i = 1:numel(data)
     end
     
     % resize
-    pos = imresize(pos, [bh_outer, bw_outer]);
-    seg = imresize(seg, [bh_outer, bw_outer]);
-    dep = imresize(dep, [bh_outer, bw_outer]);
+%     pos = imresize(pos, [bh_outer, bw_outer]);
+%     seg = imresize(seg, [bh_outer, bw_outer]);
+%     dep = imresize(dep, [bh_outer, bw_outer]);
     
     for dx = round(lt_crop_x_min):2:round(lt_crop_x_max)
         for dy = round(lt_crop_y_min):2:round(lt_crop_y_max)
             
             %% augmentations..
-            % crop images (pos, seg, dep)
-            pos_new = pos(dy+1:dy+bh_crop, dx+1:dx+bw_crop, :);
-            seg_new = seg(dy+1:dy+bh_crop, dx+1:dx+bw_crop, :);
-            dep_new = dep(dy+1:dy+bh_crop, dx+1:dx+bw_crop, :);
-            cen_new = cen(dy+1:dy+bh_crop, dx+1:dx+bw_crop);
-            
-            % normalize1 
+%             % crop images (pos, seg, dep)
+%             pos_new = pos(dy+1:dy+bh_crop, dx+1:dx+bw_crop, :);
+%             seg_new = seg(dy+1:dy+bh_crop, dx+1:dx+bw_crop, :);
+%             dep_new = dep(dy+1:dy+bh_crop, dx+1:dx+bw_crop, :);
+%             cen_new = cen(dy+1:dy+bh_crop, dx+1:dx+bw_crop);
+%             
+%             % downsize by 4
+%             seg_new = imresize(seg_new, 0.25);
+%             dep_new = imresize(dep_new, 0.25);
+%             cen_new = imresize(cen_new, 0.25);
+%             
+%             % normalize1 
 %             seg_new = seg_new/max(seg_new(:));
 %             dep_new = dep_new/max(dep_new(:));
 %             cen_new = cen_new/max(cen_new(:));
-            % normalize2 
-            seg_new = seg_new/sum(seg_new(:));
-            dep_new = dep_new/sum(dep_new(:));
-            cen_new = cen_new/sum(cen_new(:));
-
-            assert(size(pos_new,1) == bh_crop & size(pos_new,2) == bw_crop);
+%             % normalize2 
+% %             seg_new = seg_new/sum(seg_new(:));
+% %             dep_new = dep_new/sum(dep_new(:));
+% %             cen_new = cen_new/sum(cen_new(:));
+% 
+%             assert(size(pos_new,1) == bh_crop & size(pos_new,2) == bw_crop);
             
             % label transform
             joints = data(i).j27;
@@ -142,12 +149,23 @@ for i = 1:numel(data)
             % j27 heatmap
             j27 = round(joints);
             hmap = single(zeros(128,64,size(j27,1)));
+            hmap_downsize = single(zeros(32,16,size(j27,1)+1));
             for j = 1:size(j27,1)
                 hmap(j27(j,2), j27(j,1), j) = 1;
                 hmap(:,:,j) = imgaussfilt(hmap(:,:,j), 3);       % gaussian
-%                 hmap(:,:,j) = hmap(:,:,j)/max(max(hmap(:,:,j)));  % normalize approach1
-                hmap(:,:,j) = hmap(:,:,j)/sum(sum(hmap(:,:,j)));  % normalize approach2
+% %                 hmap(:,:,j) = hmap(:,:,j)/max(max(hmap(:,:,j)));  % normalize approach1
+%                 hmap(:,:,j) = hmap(:,:,j)/sum(sum(hmap(:,:,j)));  % normalize approach2                
+                
+                % downsize by 4
+                hmap_downsize(:,:,j) = imresize(hmap(:,:,j), 0.25);
+                hmap_downsize(:,:,j) = hmap_downsize(:,:,j)/max(max(hmap_downsize(:,:,j)));  % normalize approach1
+%                 hmap_downsize(:,:,j) = hmap_downsize(:,:,j)/sum(sum(hmap_downsize(:,:,j)));  % normalize approach2
+
             end
+            % add background channel
+            background = ones(size(hmap_downsize,1),size(hmap_downsize,2)) - max(hmap_downsize,[],3);
+            hmap_downsize(:,:,28) = background;
+            hmap_downsize = permute(hmap_downsize,[3, 1, 2]);
             
             %% visualize and check
             if 0
@@ -155,12 +173,13 @@ for i = 1:numel(data)
             end
     
             %% create concatenated label: JSDC
-            jsdc = single([]); 
-            jsdc(:,:,1:27) = hmap;
-            jsdc(:,:,28)   = seg_new;
-            jsdc(:,:,29)   = dep_new;
-            jsdc(:,:,30)   = cen_new;
-            jsdc = permute(jsdc,[3, 1, 2]);         % following Torch standard
+%             jsdc = single([]); 
+% %             jsdc(:,:,1:27) = hmap;
+%             jsdc(:,:,1:27) = hmap_downsize;
+%             jsdc(:,:,28)   = seg_new;
+%             jsdc(:,:,29)   = dep_new;
+%             jsdc(:,:,30)   = cen_new;
+%             jsdc = permute(jsdc,[3, 1, 2]);         % following Torch standard
 
             
             %% save
@@ -169,8 +188,12 @@ for i = 1:numel(data)
 %             imwrite(pos_new, fname_pos);
             
             % label: jsdc
-            fname_jsdc = fullfile(path_jsdc_aug, sprintf('jsdc%05d_dx%03d_dy%03d.mat',i,dx,dy));
-            save(fname_jsdc, 'jsdc');
+%             fname_jsdc = fullfile(path_jsdc_aug, sprintf('jsdc%05d_dx%03d_dy%03d.mat',i,dx,dy));
+%             save(fname_jsdc, 'jsdc');
+            
+            % label: hmap
+            fname_hmap = fullfile(path_hmap_aug, sprintf('hmap%05d_dx%03d_dy%03d.mat',i,dx,dy));
+            save(fname_hmap, 'hmap_downsize');
         end
     end
     

@@ -10,7 +10,8 @@
 --
 --
 
-testLogger = optim.Logger(paths.concat(opt.save, 'test.log'))
+testLogger_epoch = optim.Logger(paths.concat(opt.save, 'test_epoch.log'))
+testLogger_batch = optim.Logger(paths.concat(opt.save, 'test_batch.log'))
 local loss_epoch
 
 
@@ -55,10 +56,10 @@ function test()
    	cutorch.synchronize()
 
    	loss_epoch = loss_epoch / (opt.nTestData/opt.batchSize) -- because loss is calculated per batch
-   	testLogger:add{
+   	testLogger_epoch:add{
 		['avg loss (test set)'] = loss_epoch
    	}
-   	print(string.format('Ep. [%d/%d]  (Test) Time(s): %.2f  ' .. 'avg loss (per batch): %.8f ', epoch, opt.nEpochs, tm:time().real, loss_epoch))
+   	print(string.format('Ep. [%d/%d]  (Test) Time(s): %.2f  ' .. 'avg loss (per batch): %.10f ', epoch, opt.nEpochs, tm:time().real, loss_epoch))
 
     collectgarbage()
 
@@ -84,6 +85,9 @@ function testBatch(inputsCPU, labelsCPU)
 
    	loss_epoch = loss_epoch + err
 
+   	testLogger_batch:add{
+		['avg loss (test batch)'] = err
+   	}
     collectgarbage()
 
 end

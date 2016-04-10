@@ -17,6 +17,7 @@ require 'nn'
 require 'cunn'
 require 'cudnn'
 require 'optim'
+require 'nngraph'
 
 local matio     = require 'matio'
 local models    = require 'models/init'
@@ -45,24 +46,28 @@ for mNum = 1, 7 do
 
     -- TEST DATA: 1) sTrain, 2) sTest, 3) rTest
     --
-    testsettype = 'sTest'
+    testsettype = 'rTest'
 
     savedir         = paths.concat(pathToModel, 'results/' .. testsettype)
     os.execute('mkdir -p ' .. savedir)
     savefile_img    = savedir..string.format('/img_model%d.mat', mNum)
-    savefile_pred   = savedir..string.format('/jsdc_pred_model%d.mat', mNum)
+    savefile_pred1   = savedir..string.format('/jsdc_pred_model%d_1.mat', mNum)
+    savefile_pred2   = savedir..string.format('/jsdc_pred_model%d_2.mat', mNum)
+    savefile_pred3   = savedir..string.format('/jsdc_pred_model%d_3.mat', mNum)
+    savefile_pred4   = savedir..string.format('/jsdc_pred_model%d_4.mat', mNum)
+    savefile_pred5   = savedir..string.format('/jsdc_pred_model%d_5.mat', mNum)
     savefile_gt     = savedir..string.format('/jsdc_gt_model%d.mat', mNum)
 
     if testsettype == 'sTrain' then
-        testindices = torch.randperm(opt.nTrainData):index(1, torch.range(1,20):long())
+        testindices = torch.randperm(opt.nTrainData):index(1, torch.range(1,10):long())
         opt.txtimg  = '../data/rendout/tmp_y144_x256_aug/lists/img.txt'
         opt.txtjsdc = '../data/rendout/tmp_y144_x256_aug/lists/jsdc.txt'
     elseif testsettype == 'sTest' then
-        testindices = torch.randperm(opt.nTestData):index(1, torch.range(1,20):long()) + opt.nTrainData
+        testindices = torch.randperm(opt.nTestData):index(1, torch.range(1,10):long()) + opt.nTrainData
         opt.txtimg  = '../data/rendout/tmp_y144_x256_aug/lists/img.txt'
         opt.txtjsdc = '../data/rendout/tmp_y144_x256_aug/lists/jsdc.txt'
     elseif testsettype == 'rTest' then
-        testindices = torch.range(1,22)
+        testindices = torch.range(1,10)
         opt.txtimg  = '../../towncenter/data/frames_y144_x256_sel/lists/img.txt'
         opt.txtjsdc = '../../towncenter/data/frames_y144_x256_sel/lists/jsdc.txt'
         opt.nJoints = 14
@@ -90,7 +95,9 @@ for mNum = 1, 7 do
 
 
     -- Save results
-    matio.save(savefile_pred, output:float())
+    --matio.save(savefile_pred1, output[1]:float())
+    --matio.save(savefile_pred2, output[2]:float())
+    matio.save(savefile_pred1, output:float())
     matio.save(savefile_gt,   testjsdc) 
 
 

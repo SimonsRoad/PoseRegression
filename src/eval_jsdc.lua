@@ -9,7 +9,7 @@ local matio = require 'matio'
 function find_peak(hmap)
     -- 1. hmap expects {ndata x 27 x 128 x 64}
     -- 2. returns {ndata x 27 x 2} 
-    assert(hmap:size(2) == opt.nJoints and hmap:size(3) == 128 and hmap:size(4) == 64)
+    assert(hmap:size(2) == opt.nJoints and hmap:size(3) == opt.H_jsdc and hmap:size(4) == opt.W_jsdc)
 
     local nData = hmap:size(1)
     local j27 = torch.CudaTensor(nData, opt.nJoints, 2)
@@ -17,9 +17,9 @@ function find_peak(hmap)
     for i=1,nData do
         for j=1,opt.nJoints do
             -- find max and idx
-            local max, idx = torch.max(torch.reshape(hmap[i][j], 128*64), 1)
-            local k = math.floor(idx[1]/64)+1
-            local l = idx[1] % 64
+            local max, idx = torch.max(torch.reshape(hmap[i][j], opt.H_jsdc*opt.W_jsdc), 1)
+            local k = math.floor(idx[1]/opt.W_jsdc)+1
+            local l = idx[1] % opt.W_jsdc
             -- new label
             j27[{ {i}, {j}, {1}}] = k
             j27[{ {i}, {j}, {2}}] = l
@@ -125,6 +125,9 @@ function eval_jsdc ()
     sad_dep = sad_dep / (opt.nTestData/opt.batchSize)
     sad_cen = sad_cen / (opt.nTestData/opt.batchSize)
 
+    -- test on Real images 
+    pck_j14_real = testOnReal()
+
     evalLogger:add{ 
         ['pck_j27'] = pck_j27,
         ['sad_seg'] = sad_seg,
@@ -177,6 +180,8 @@ function evalBatch(inputsCPU, labelsCPU)
     pred_seg = outputs[{ {}, {28}, {}, {} }]
     pred_dep = outputs[{ {}, {29}, {}, {} }]
     pred_cen = outputs[{ {}, {30}, {}, {} }]
+    print(pred_cen)
+    adf=adf+1
 
     -- find peak for joints 
     gt_j27   = find_peak(gt_j27_hmap) 
@@ -193,3 +198,47 @@ function evalBatch(inputsCPU, labelsCPU)
     collectgarbage()
 
 end
+
+function testOnReal()
+
+    -- load rTest
+    local loaderReal = dataLoader{txtimg=opt.txtimgreal, txtjsdc=opt.txtjsdcreal}
+
+    -- compute PCK
+    local numReal = loaderReal:size()
+    assert(numReal == 22)
+    local pcksum = 0
+    for i=1,numReal do
+        local testindices = torch.Tensor({i})
+        local testimg  = loaderReal:load_img(testindices)
+        local testjsdc = loaderReal:load_jsdc(testindices)
+        for j=1,3 do
+            testimg[{ {}, {j}, {}, {} }]:add(-mean[j])
+            testimg[{ {}, {j}, {}, {} }]:div(std[j])
+        end
+        local output = model:forward(testimg:cuda())
+        if torch.type(output) == 'table' then
+            output = output[#output]
+        end
+
+        -- compute PCK
+        local gt_j14_hmap   = testjsdc[{ {}, {1,14}, {}, {} }]
+        local pred_j14_hmap = output[{ {}, {1,14}, {}, {} }] 
+        local gt_j14   = find_peak(gt_j14_hmap)
+        local pred_j14 = find_peak(pred_j14_hmap)
+        local pck = comp_PCK(gt_j14, pred_j14)
+        print(string.format('PCK [real] (image %d): %.2f', i, pck))
+        pcksum = pcksum + pck
+    end
+    print(string.format('PCK [real] total: %.2f', pcksum/numReal))
+
+    return pcksum/numReal
+
+end
+
+
+
+
+
+
+

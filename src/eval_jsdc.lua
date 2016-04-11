@@ -5,6 +5,7 @@
 --]]
 
 local matio = require 'matio'
+paths.dofile('datanew.lua')
 
 function find_peak(hmap)
     -- 1. hmap expects {ndata x 27 x 128 x 64}
@@ -126,7 +127,7 @@ function eval_jsdc ()
     sad_cen = sad_cen / (opt.nTestData/opt.batchSize)
 
     -- test on Real images 
-    pck_j14_real = testOnReal()
+    --pck_j14_real = testOnReal()
 
     evalLogger:add{ 
         ['pck_j27'] = pck_j27,
@@ -174,14 +175,12 @@ function evalBatch(inputsCPU, labelsCPU)
     -- separation
     gt_j27_hmap = labels[{ {}, {1,opt.nJoints}, {}, {} }]
     gt_seg = labels[{ {}, {28}, {}, {} }]
-    gt_dep = labels[{ {}, {29}, {}, {} }]
-    gt_cen = labels[{ {}, {30}, {}, {} }]
+    --gt_dep = labels[{ {}, {29}, {}, {} }]
+    --gt_cen = labels[{ {}, {30}, {}, {} }]
     pred_j27_hmap = outputs[{ {}, {1,opt.nJoints}, {}, {} }]
     pred_seg = outputs[{ {}, {28}, {}, {} }]
-    pred_dep = outputs[{ {}, {29}, {}, {} }]
-    pred_cen = outputs[{ {}, {30}, {}, {} }]
-    print(pred_cen)
-    adf=adf+1
+    --pred_dep = outputs[{ {}, {29}, {}, {} }]
+    --pred_cen = outputs[{ {}, {30}, {}, {} }]
 
     -- find peak for joints 
     gt_j27   = find_peak(gt_j27_hmap) 
@@ -190,8 +189,8 @@ function evalBatch(inputsCPU, labelsCPU)
     -- EVALUATION
     pck_j27 = pck_j27 + comp_PCK(gt_j27, pred_j27)      -- PCK for j27
     sad_seg = sad_seg + comp_SAD(gt_seg, pred_seg)      -- SAD for seg
-    sad_dep = sad_dep + comp_SAD(gt_dep, pred_dep)      -- SAD for dep
-    sad_cen = sad_cen + comp_SAD(gt_cen, pred_cen)      -- SAD for cen
+    --sad_dep = sad_dep + comp_SAD(gt_dep, pred_dep)      -- SAD for dep
+    --sad_cen = sad_cen + comp_SAD(gt_cen, pred_cen)      -- SAD for cen
 
     cutorch.synchronize()
 

@@ -83,10 +83,11 @@ end
 
 function dataset:load_jsdc(indices)
     -- load from .mat files 
-    local jsdc = torch.Tensor(indices:size(1), opt.nChOut, opt.H, opt.W)
+    local jsdc = torch.Tensor(indices:size(1), opt.nChOut, opt.H_jsdc, opt.W_jsdc)
     for i=1, indices:size(1) do
         local jsdc_path = ffi.string(torch.data(self.labelPath[indices[i]]), self.labelPathLength[indices[i]])
-        jsdc[i] = matio.load(jsdc_path, 'jsdc')
+        --jsdc[i] = matio.load(jsdc_path, 'jsdc')
+        jsdc[i] = matio.load(jsdc_path, 'hmap_downsize')
     end
     return jsdc
 end
@@ -119,7 +120,8 @@ function dataset:load_batch_new(indices)
     -- load from .mat files 
     for i=1, indices:size(1) do
         local jsdc_path = ffi.string(torch.data(self.labelPath[indices[i]]), self.labelPathLength[indices[i]])
-        jsdc_tensor[i] = matio.load(jsdc_path, 'jsdc')
+        --jsdc_tensor[i] = matio.load(jsdc_path, 'jsdc')
+        jsdc_tensor[i] = matio.load(jsdc_path, 'hmap_downsize')
     end
 
     -- normalize images (pos)

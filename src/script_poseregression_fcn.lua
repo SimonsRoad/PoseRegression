@@ -14,7 +14,7 @@ local opts          = require 'opts'
 opt = opts.parse(arg)
 print(opt)
 
-torch.manualSeed(2)
+--torch.manualSeed(2)
 
 
 -- Create model

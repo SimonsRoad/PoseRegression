@@ -8,7 +8,7 @@
 --
 require 'image'
 paths.dofile('datanew.lua')
-paths.dofile('util.lua')
+--paths.dofile('util.lua')
 
 -- This file contains the data-loading logic and details.
 -- It is run by each data-loader thread.

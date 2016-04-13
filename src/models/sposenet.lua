@@ -78,7 +78,6 @@ local function createModel(opt)
 
     if opt.dataset == 'towncenter' then
         print(' | sposeNet .. towncenter')
-        -- sposeNet Towncenter model
        
         local input = nn.Identity()()
         local conv1 = cudnn.SpatialConvolution(3,64,5,5,1,1,2,2)(input)
@@ -108,7 +107,7 @@ local function createModel(opt)
 
 
         -- draw and save model
-        graph.dot(model.fg, 'forward graph', './tmp/fg')
+        graph.dot(model.fg, 'forward graph', './graphs/sposeNet')
    else
       error('invalid dataset: ' .. opt.dataset)
    end

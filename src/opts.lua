@@ -27,7 +27,7 @@ function M.parse(arg)
     cmd:option('-dataset', 'towncenter',  'currently only available dataset')
     --cmd:option('-manualSeed',         2, 'Manually set RNG seed')
     cmd:option('-GPU',                1,  'Default preferred GPU')
-    cmd:option('-nGPU',               1,  'Number of GPUs to use by default')
+    cmd:option('-nGPU',               3,  'Number of GPUs to use by default')
     cmd:option('-backend',      'cudnn',  'Options: cudnn | ccn2 | cunn')
     cmd:option('-cudnn',      'fastest',  'Options: fastest | default | deterministic')
 
@@ -35,7 +35,7 @@ function M.parse(arg)
 	cmd:option('-t',		   'PR_fcn',  'The name of task')
 
     ------------- Data options ------------------------
-    cmd:option('-nDonkeys',           3,  '# of donkeys to initialize (data loading threads)')
+    cmd:option('-nDonkeys',           9,  '# of donkeys to initialize (data loading threads)')
     cmd:option('-txtimg',      '../data/rendout/tmp_y144_x256_aug/lists/img.txt',  'img list')
     cmd:option('-txtjsdc',     '../data/rendout/tmp_y144_x256_aug/lists/jsdc.txt', 'jsdc list')
 --    cmd:option('-txtimgreal',  '../../towncenter/data/frames_y144_x256_sel/lists/img.txt',  'realimg list')
@@ -50,21 +50,21 @@ function M.parse(arg)
     cmd:option('-nChOut',            30,  'number of joints')
 
     ------------- Training options --------------------
-    cmd:option('-nEpochs',          50,   'Number of total epochs to run')
-    cmd:option('-epochSize',      3125,   'Number of batches per epoch')
-    cmd:option('-epochNumber',       1,   'Manual epoch number (useful on restarts)')
-    cmd:option('-batchSize',        32,   'mini-batch size (1 = pure stochastic)')
-    cmd:option('-resume',       'none',   'Path to directory containing checkpoint')
+    cmd:option('-nEpochs',           50,   'Number of total epochs to run')
+    cmd:option('-epochSize',       2778,   'Number of batches per epoch')
+    cmd:option('-epochNumber',        1,   'Manual epoch number (useful on restarts)')
+    cmd:option('-batchSize',         36,   'mini-batch size (1 = pure stochastic)')
+    cmd:option('-resume',        'none',   'Path to directory containing checkpoint')
 
     ---------- Optimization options ----------------------
-    cmd:option('-LR',    	      0.01,   'learning rate ')
-    cmd:option('-momentum',        0.9,   'momentum')
-    cmd:option('-weightDecay',    5e-4,   'weight decay')
+    cmd:option('-LR',    	        0.1,   'learning rate ')
+    cmd:option('-momentum',         0.9,   'momentum')
+    cmd:option('-weightDecay',     5e-4,   'weight decay')
 
     ---------- Model options ----------------------------------
-    cmd:option('-netType',       'testmodel6',   'Options: resnet, sposenet, cpm, testmodel')
-    cmd:option('-retrain',      'none',   'provide path to model to retrain with')
-    cmd:option('-optimState',   'none',   'provide path to an optimState to reload from')
+    cmd:option('-netType', 'testmodel2',   'Options: resnet, sposenet, cpm, testmodel')
+    cmd:option('-retrain',       'none',   'provide path to model to retrain with')
+    cmd:option('-optimState',    'none',   'provide path to an optimState to reload from')
     ---------- Model options ----------------------------------
     cmd:option('-shareGradInput', 'false', 'Share gradInput tensors to reduce memory usage')
     cmd:text()

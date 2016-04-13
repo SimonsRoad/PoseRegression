@@ -120,7 +120,7 @@ local function createModel(opt)
 
 
         -- draw and save model
-        graph.dot(model.fg, 'forward graph', './tmp/testmodel2')
+        graph.dot(model.fg, 'forward graph', './graphs/testmodel3')
    else
       error('invalid dataset: ' .. opt.dataset)
    end

@@ -72,7 +72,9 @@ function train()
 
 	loss_epoch = loss_epoch / opt.epochSize
 
-	trainLogger_epoch:add{ ['avg loss (train set)'] = loss_epoch }
+	trainLogger_epoch:add{ 
+        ['avg loss (train set)'] = loss_epoch 
+    }
 	print(string.format('Ep. [%d/%d] (Train) Time(s): %.2f  ' .. 'avg loss (per batch): %.10f ', epoch, opt.nEpochs, tm:time().real, loss_epoch))
 
 
@@ -133,7 +135,9 @@ function trainBatch(inputsCPU, labelsCPU)
     batchNumber = batchNumber + 1
 	loss_epoch = loss_epoch + err
 
-	trainLogger_batch:add{ ['avg loss (train batch)'] = err }
+	trainLogger_batch:add{ 
+        ['avg loss (train batch)'] = err 
+    }
     print(string.format('Ep. [%d/%d][%d/%d] Time(s): %.2f  ' .. 'batch err: %.10f | dataLoadTime: %.3f | mem: %.2f', epoch, opt.nEpochs, batchNumber, opt.epochSize, timer:time().real, err, dataLoadingTime, collectgarbage('count')))
     dataTimer:reset()
 

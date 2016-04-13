@@ -87,13 +87,6 @@ function dataset:load_jsdc(indices)
     for i=1, indices:size(1) do
         local jsdc_path = ffi.string(torch.data(self.labelPath[indices[i]]), self.labelPathLength[indices[i]])
         jsdc[i] = matio.load(jsdc_path, 'jsdc')
-        --jsdc[i] = matio.load(jsdc_path, 'hmap_downsize')
-
-        -- normalize seg and dep maps to have a sum of 1
-        local sum_seg = torch.sum(jsdc[i][28])
-        local sum_dep = torch.sum(jsdc[i][29])
-        jsdc[i][{ {28}, {}, {} }]:div(sum_seg)
-        jsdc[i][{ {29}, {}, {} }]:div(sum_seg)
     end
     return jsdc
 end
@@ -127,7 +120,12 @@ function dataset:load_batch_new(indices)
     for i=1, indices:size(1) do
         local jsdc_path = ffi.string(torch.data(self.labelPath[indices[i]]), self.labelPathLength[indices[i]])
         jsdc_tensor[i] = matio.load(jsdc_path, 'jsdc')
-        --jsdc_tensor[i] = matio.load(jsdc_path, 'hmap_downsize')
+
+        -- normalize seg and dep maps to have a sum of 1
+        local sum_seg = torch.sum(jsdc_tensor[i][28])
+        local sum_dep = torch.sum(jsdc_tensor[i][29])
+        jsdc_tensor[i][{ {28}, {}, {} }]:div(sum_seg)
+        jsdc_tensor[i][{ {29}, {}, {} }]:div(sum_dep)
     end
 
     -- normalize images (pos)

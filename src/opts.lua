@@ -6,6 +6,10 @@
 --  LICENSE file in the root directory of this source tree. An additional grant
 --  of patent rights can be found in the PATENTS file in the same directory.
 --
+--
+-----------------------------------------------------
+-- Modified by Namhoon Lee, RI, CMU (namhoonl@andrew.cmu.edu)
+--
 local M = { }
 
 function M.parse(arg)
@@ -31,34 +35,34 @@ function M.parse(arg)
 	cmd:option('-t',		   'PR_fcn',  'The name of task')
 
     ------------- Data options ------------------------
-    cmd:option('-nDonkeys',           2,  '# of donkeys to initialize (data loading threads)')
-    cmd:option('-txtimg',      '../data/rendout/tmp_y144_x256_aug/lists/img_hmap_quarter.txt',  'img list')
-    cmd:option('-txtjsdc',     '../data/rendout/tmp_y144_x256_aug/lists/hmap_quarter.txt', 'jsdc list')
-    cmd:option('-txtimgreal',  '../../towncenter/data/frames_y144_x256_sel/lists/img.txt',  'realimg list')
-    cmd:option('-txtjsdcreal', '../../towncenter/data/frames_y144_x256_sel/lists/jsdc.txt', 'realjsdc list')
-    cmd:option('-nTrainData',    300000,  'number of train data')
+    cmd:option('-nDonkeys',           3,  '# of donkeys to initialize (data loading threads)')
+    cmd:option('-txtimg',      '../data/rendout/tmp_y144_x256_aug/lists/img.txt',  'img list')
+    cmd:option('-txtjsdc',     '../data/rendout/tmp_y144_x256_aug/lists/jsdc.txt', 'jsdc list')
+--    cmd:option('-txtimgreal',  '../../towncenter/data/frames_y144_x256_sel/lists/img.txt',  'realimg list')
+--    cmd:option('-txtjsdcreal', '../../towncenter/data/frames_y144_x256_sel/lists/jsdc.txt', 'realjsdc list')
+    cmd:option('-nTrainData',    100000,  'number of train data')
     cmd:option('-nTestData',       1000,  'number of test data')
     cmd:option('-W',                 64,  'image width')
     cmd:option('-H',                128,  'image height')
-    cmd:option('-W_jsdc',            16,  'jsdc width')
-    cmd:option('-H_jsdc',            32,  'jsdc height')
+    cmd:option('-W_jsdc',            64,  'jsdc width')
+    cmd:option('-H_jsdc',           128,  'jsdc height')
     cmd:option('-nJoints',           27,  'number of joints')
-    cmd:option('-nChOut',            28,  'number of joints')
+    cmd:option('-nChOut',            30,  'number of joints')
 
     ------------- Training options --------------------
     cmd:option('-nEpochs',          50,   'Number of total epochs to run')
-    cmd:option('-epochSize',      4688,   'Number of batches per epoch')
+    cmd:option('-epochSize',      3125,   'Number of batches per epoch')
     cmd:option('-epochNumber',       1,   'Manual epoch number (useful on restarts)')
-    cmd:option('-batchSize',        64,   'mini-batch size (1 = pure stochastic)')
+    cmd:option('-batchSize',        32,   'mini-batch size (1 = pure stochastic)')
     cmd:option('-resume',       'none',   'Path to directory containing checkpoint')
 
     ---------- Optimization options ----------------------
-    cmd:option('-LR',    	      0.00001,   'learning rate ')
+    cmd:option('-LR',    	      0.01,   'learning rate ')
     cmd:option('-momentum',        0.9,   'momentum')
     cmd:option('-weightDecay',    5e-4,   'weight decay')
 
     ---------- Model options ----------------------------------
-    cmd:option('-netType',       'cpm',   'Options: resnet, sposenet, cpm, testmodel')
+    cmd:option('-netType',       'testmodel6',   'Options: resnet, sposenet, cpm, testmodel')
     cmd:option('-retrain',      'none',   'provide path to model to retrain with')
     cmd:option('-optimState',   'none',   'provide path to an optimState to reload from')
     ---------- Model options ----------------------------------

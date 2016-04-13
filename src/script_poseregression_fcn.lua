@@ -1,5 +1,5 @@
 --[[
---script_poseregression_fcn_new.lua
+--script_poseregression_fcn.lua
 --Namhoon Lee, The Robotics Institute, Carnegie Mellon University
 --namhoonl@andrew.cmu.edu
 --]]

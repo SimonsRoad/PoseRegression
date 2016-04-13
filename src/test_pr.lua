@@ -32,12 +32,12 @@ opt.nDonkeys = 1
 
 -- load model
 --local mNum  = 11
-for mNum = 1, 7 do
+for mNum = 1, 1 do
 
     local mName = string.format('clear_model_%d.t7', mNum)
     --local pathToModel = '../save/PR_fcn/option/t_SunMar2721:48:402016'
     --local pathToModel = '../save/PR_fcn/option/t_TueMar2922:11:592016'
-    local pathToModel = '../save/PR_fcn/option/t_ThuMar3112:33:322016'
+    local pathToModel = '../save/PR_fcn/option,LR=0.01/t_WedApr1320:28:332016'
     opt.retrain = paths.concat(pathToModel, mName)  
 
     local model, criterion = models.setup(opt)
@@ -67,7 +67,7 @@ for mNum = 1, 7 do
         opt.txtimg  = '../data/rendout/tmp_y144_x256_aug/lists/img.txt'
         opt.txtjsdc = '../data/rendout/tmp_y144_x256_aug/lists/jsdc.txt'
     elseif testsettype == 'rTest' then
-        testindices = torch.range(1,10)
+        testindices = torch.range(1,22)
         opt.txtimg  = '../../towncenter/data/frames_y144_x256_sel/lists/img.txt'
         opt.txtjsdc = '../../towncenter/data/frames_y144_x256_sel/lists/jsdc.txt'
         opt.nJoints = 14

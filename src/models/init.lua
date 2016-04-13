@@ -88,17 +88,16 @@ function M.setup(opt)
 
 
     -- single out
-    --local criterion = nn.MSECriterion():cuda()
-    --return model, criterion
+    local criterion = nn.MSECriterion():cuda()
 
     -- multi out
-    local l1 = nn.MSECriterion():cuda()
+    --local l1 = nn.MSECriterion():cuda()
     --local l2 = nn.MSECriterion():cuda()
     --local l3 = nn.MSECriterion():cuda()
     --local l4 = nn.MSECriterion():cuda()
-    local lFinal = nn.MSECriterion():cuda()
+    --local lFinal = nn.MSECriterion():cuda()
     --local criterion = nn.ParallelCriterion(true):add(l1):add(l2):add(l3):add(l4):add(lFinal):cuda()
-    local criterion = nn.ParallelCriterion(true):add(l1):add(lFinal):cuda()
+    --local criterion = nn.ParallelCriterion(true):add(l1):add(lFinal):cuda()
 
     return model, criterion
    

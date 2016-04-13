@@ -2,14 +2,17 @@
 
 clc; clear; close all;
 
-testtype   = 'sTrain';
+testtype   = 'rTest';
 % pathtodata = ['../save/PR_fcn/option/t_SunMar2721:48:402016/results/', testtype];
-pathtodata = ['../save/PR_fcn/option/t_FriApr809:10:502016/results/', testtype];
+% pathtodata = ['../save/PR_fcn/option/t_FriApr809:10:502016/results/', testtype];
 % pathtodata = ['../save/PR_fcn/option/t_ThuMar3112:33:322016/results/', testtype];
+% pathtodata = ['../save/PR_fcn/option/t_WedApr1308:12:392016/results/', testtype];
+pathtodata = ['../save/PR_fcn/option,LR=0.01/t_WedApr1320:28:332016/results/', testtype];
+
 
 mNum    = 2;
-nData   = 10;
-nJoints = 27;   % this can be 27 for synthetic data. For real it's 14.
+nData   = 22;
+nJoints = 14;   % this can be 27 for synthetic data. For real it's 14.
 
 dataset_gt   = [];
 dataset_pred = [];

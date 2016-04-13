@@ -56,11 +56,13 @@ figure(2);
 for part = 1:27         % visualize j27
     % superimposing heat maps and image
     smap_aug = jsdc(:,:,part);
-    subplot(4,8,part); mesh(smap_aug);
+%     subplot(4,8,part); mesh(smap_aug);
+    subplot(4,8,part); imagesc(smap_aug); axis image;
     title(part_str{part});
 end
 for part = 28:30        % visualize sdc
-    subplot(4,8,part); mesh(jsdc(:,:,part));
+%     subplot(4,8,part); mesh(jsdc(:,:,part));
+    subplot(4,8,part); imagesc(jsdc(:,:,part)); axis image;
     title(part_str{part});
 end
 

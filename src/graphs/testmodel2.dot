@@ -1,0 +1,612 @@
+digraph G {
+	graph [bb="0,0,1400,8156"];
+	node [label="\N",
+		shape=oval
+	];
+	n1	 [height=1.041,
+		label="Node1\nmodule = cudnn.SpatialConvolution(256 -> 30, 1x1)\lreverseMap = {}",
+		pos="284,150",
+		tooltip="[./models/testmodel2.lua]:113_",
+		width=6.0052];
+	n2	 [height=1.041,
+		label="Node2\ninput = {}\lreverseMap = {}",
+		pos="284,38",
+		tooltip="[[C]]:-1_",
+		width=2.1497];
+	n1 -> n2	 [pos="e,284,75.844 284,112.37 284,103.93 284,94.829 284,86.011"];
+	n3	 [height=1.041,
+		label="Node3\nmodule = cudnn.ReLU\lreverseMap = {}",
+		pos="284,262",
+		tooltip="[./models/testmodel2.lua]:112_",
+		width=2.8072];
+	n3 -> n1	 [pos="e,284,187.84 284,224.37 284,215.93 284,206.83 284,198.01"];
+	n4	 [height=1.041,
+		label="Node4\nmodule = cudnn.SpatialBatchNormalization\lreverseMap = {}",
+		pos="284,374",
+		tooltip="[./models/testmodel2.lua]:111_",
+		width=5.0616];
+	n4 -> n3	 [pos="e,284,299.84 284,336.37 284,327.93 284,318.83 284,310.01"];
+	n5	 [height=1.041,
+		label="Node5\nmodule = cudnn.SpatialConvolution(120 -> 256, 1x1)\lreverseMap = {}",
+		pos="284,486",
+		tooltip="[./models/testmodel2.lua]:110_",
+		width=6.1434];
+	n5 -> n4	 [pos="e,284,411.84 284,448.37 284,439.93 284,430.83 284,422.01"];
+	n6	 [height=1.041,
+		label="Node6\nmodule = cudnn.ReLU\lreverseMap = {}",
+		pos="284,598",
+		tooltip="[./models/testmodel2.lua]:109_",
+		width=2.8072];
+	n6 -> n5	 [pos="e,284,523.84 284,560.37 284,551.93 284,542.83 284,534.01"];
+	n7	 [height=1.041,
+		label="Node7\nmodule = cudnn.SpatialBatchNormalization\lreverseMap = {}",
+		pos="284,710",
+		tooltip="[./models/testmodel2.lua]:108_",
+		width=5.0616];
+	n7 -> n6	 [pos="e,284,635.84 284,672.37 284,663.93 284,654.83 284,646.01"];
+	n8	 [height=1.3356,
+		label="Node8\nmodule = nn.JoinTable\lreverseMap = {}\lmapindex = {Node9,Node10,Node11,Node12}",
+		pos="284,832",
+		tooltip="[./models/testmodel2.lua]:106_",
+		width=5.3952];
+	n8 -> n7	 [pos="e,284,747.72 284,783.57 284,775.1 284,766.27 284,757.81"];
+	n9	 [height=1.041,
+		label="Node9\nmodule = cudnn.SpatialConvolution(256 -> 30, 1x1)\lreverseMap = {}",
+		pos="221,3640",
+		tooltip="[./models/testmodel2.lua]:65_",
+		width=6.0052];
+	n9 -> n8	 [pos="e,252.37,879.6 213.42,3602.5 203.95,3553.6 189,3464.2 189,3387 189,3387 189,3387 189,1065 189,1000.9 220.4,933.85 247.1,888.39"];
+	n34	 [height=1.3356,
+		label="Node34\nmodule = nn.JoinTable\lreverseMap = {}\lmapindex = {Node39,Node9}",
+		pos="654,3508",
+		tooltip="[./models/testmodel2.lua]:74_",
+		width=3.5652];
+	n9 -> n34	 [pos="e,554.98,3538.7 326.65,3607.3 392.98,3587.4 478.33,3561.7 545.25,3541.7"];
+	n10	 [height=1.041,
+		label="Node10\nmodule = cudnn.SpatialConvolution(256 -> 30, 1x1)\lreverseMap = {}",
+		pos="434,2704",
+		tooltip="[./models/testmodel2.lua]:65_",
+		width=6.0052];
+	n10 -> n8	 [pos="e,277.83,880.45 389.6,2667.1 339.53,2622.3 265,2540.6 265,2451 265,2451 265,2451 265,1065 265,1005.3 271.32,937.3 276.67,890.42"];
+	n35	 [height=1.3356,
+		label="Node35\nmodule = nn.JoinTable\lreverseMap = {}\lmapindex = {Node40,Node10}",
+		pos="763,2572",
+		tooltip="[./models/testmodel2.lua]:74_",
+		width=3.7034];
+	n10 -> n35	 [pos="e,674.47,2608 519.15,2669.4 563.77,2651.7 618.63,2630 665.01,2611.7"];
+	n11	 [height=1.041,
+		label="Node11\nmodule = cudnn.SpatialConvolution(256 -> 30, 1x1)\lreverseMap = {}",
+		pos="510,1768",
+		tooltip="[./models/testmodel2.lua]:65_",
+		width=6.0052];
+	n11 -> n8	 [pos="e,290.17,880.45 453.16,1731.7 391.88,1688.7 303,1610 303,1515 303,1515 303,1515 303,1065 303,1005.3 296.68,937.3 291.33,890.42"];
+	n36	 [height=1.3356,
+		label="Node36\nmodule = nn.JoinTable\lreverseMap = {}\lmapindex = {Node41,Node11}",
+		pos="552,1636",
+		tooltip="[./models/testmodel2.lua]:74_",
+		width=3.7034];
+	n11 -> n36	 [pos="e,536.82,1684 521.81,1730.4 525.49,1719.1 529.63,1706.2 533.64,1693.8"];
+	n12	 [height=1.041,
+		label="Node12\nmodule = cudnn.SpatialConvolution(256 -> 30, 1x1)\lreverseMap = {}",
+		pos="548,954",
+		tooltip="[./models/testmodel2.lua]:104_",
+		width=6.0052];
+	n12 -> n8	 [pos="e,375.34,874.52 472.7,918.77 445.33,906.33 413.95,892.07 384.74,878.79"];
+	n13	 [height=1.041,
+		label="Node13\nmodule = cudnn.ReLU\lreverseMap = {}",
+		pos="221,3874",
+		tooltip="[./models/testmodel2.lua]:64_",
+		width=2.8072];
+	n13 -> n9	 [pos="e,221,3677.7 221,3836.5 221,3796.3 221,3731.7 221,3687.8"];
+	n14	 [height=1.041,
+		label="Node14\nmodule = cudnn.ReLU\lreverseMap = {}",
+		pos="435,2938",
+		tooltip="[./models/testmodel2.lua]:64_",
+		width=2.8072];
+	n14 -> n10	 [pos="e,434.16,2741.7 434.84,2900.5 434.67,2860.3 434.39,2795.7 434.2,2751.8"];
+	n15	 [height=1.041,
+		label="Node15\nmodule = cudnn.ReLU\lreverseMap = {}",
+		pos="511,2002",
+		tooltip="[./models/testmodel2.lua]:64_",
+		width=2.8072];
+	n15 -> n11	 [pos="e,510.16,1805.7 510.84,1964.5 510.67,1924.3 510.39,1859.7 510.2,1815.8"];
+	n16	 [height=1.041,
+		label="Node16\nmodule = cudnn.ReLU\lreverseMap = {}",
+		pos="549,1066",
+		tooltip="[./models/testmodel2.lua]:103_",
+		width=2.8072];
+	n16 -> n12	 [pos="e,548.33,991.84 548.67,1028.4 548.59,1019.9 548.51,1010.8 548.43,1002"];
+	n17	 [height=1.041,
+		label="Node17\nmodule = cudnn.SpatialBatchNormalization\lreverseMap = {}",
+		pos="221,3986",
+		tooltip="[./models/testmodel2.lua]:63_",
+		width=5.0616];
+	n17 -> n13	 [pos="e,221,3911.8 221,3948.4 221,3939.9 221,3930.8 221,3922"];
+	n18	 [height=1.041,
+		label="Node18\nmodule = cudnn.SpatialBatchNormalization\lreverseMap = {}",
+		pos="436,3050",
+		tooltip="[./models/testmodel2.lua]:63_",
+		width=5.0616];
+	n18 -> n14	 [pos="e,435.33,2975.8 435.67,3012.4 435.59,3003.9 435.51,2994.8 435.43,2986"];
+	n19	 [height=1.041,
+		label="Node19\nmodule = cudnn.SpatialBatchNormalization\lreverseMap = {}",
+		pos="512,2114",
+		tooltip="[./models/testmodel2.lua]:63_",
+		width=5.0616];
+	n19 -> n15	 [pos="e,511.33,2039.8 511.67,2076.4 511.59,2067.9 511.51,2058.8 511.43,2050"];
+	n20	 [height=1.041,
+		label="Node20\nmodule = cudnn.SpatialBatchNormalization\lreverseMap = {}",
+		pos="551,1178",
+		tooltip="[./models/testmodel2.lua]:102_",
+		width=5.0616];
+	n20 -> n16	 [pos="e,549.67,1103.8 550.33,1140.4 550.18,1131.9 550.02,1122.8 549.85,1114"];
+	n21	 [height=1.041,
+		label="Node21\nmodule = cudnn.SpatialConvolution(128 -> 256, 1x1)\lreverseMap = {}",
+		pos="221,4098",
+		tooltip="[./models/testmodel2.lua]:62_",
+		width=6.1434];
+	n21 -> n17	 [pos="e,221,4023.8 221,4060.4 221,4051.9 221,4042.8 221,4034"];
+	n22	 [height=1.041,
+		label="Node22\nmodule = cudnn.SpatialConvolution(158 -> 256, 1x1)\lreverseMap = {}",
+		pos="438,3162",
+		tooltip="[./models/testmodel2.lua]:62_",
+		width=6.1434];
+	n22 -> n18	 [pos="e,436.67,3087.8 437.33,3124.4 437.18,3115.9 437.02,3106.8 436.85,3098"];
+	n23	 [height=1.041,
+		label="Node23\nmodule = cudnn.SpatialConvolution(188 -> 256, 1x1)\lreverseMap = {}",
+		pos="514,2226",
+		tooltip="[./models/testmodel2.lua]:62_",
+		width=6.1434];
+	n23 -> n19	 [pos="e,512.67,2151.8 513.33,2188.4 513.18,2179.9 513.02,2170.8 512.85,2162"];
+	n24	 [height=1.041,
+		label="Node24\nmodule = cudnn.SpatialConvolution(218 -> 256, 1x1)\lreverseMap = {}",
+		pos="552,1290",
+		tooltip="[./models/testmodel2.lua]:101_",
+		width=6.1434];
+	n24 -> n20	 [pos="e,551.33,1215.8 551.67,1252.4 551.59,1243.9 551.51,1234.8 551.43,1226"];
+	n25	 [height=1.041,
+		label="Node25\nmodule = cudnn.ReLU\lreverseMap = {}",
+		pos="221,4210",
+		tooltip="[./models/testmodel2.lua]:61_",
+		width=2.8072];
+	n25 -> n21	 [pos="e,221,4135.8 221,4172.4 221,4163.9 221,4154.8 221,4146"];
+	n26	 [height=1.041,
+		label="Node26\nmodule = cudnn.ReLU\lreverseMap = {}",
+		pos="448,3274",
+		tooltip="[./models/testmodel2.lua]:61_",
+		width=2.8072];
+	n26 -> n22	 [pos="e,441.35,3199.8 444.67,3236.4 443.9,3227.9 443.08,3218.8 442.27,3210"];
+	n27	 [height=1.041,
+		label="Node27\nmodule = cudnn.ReLU\lreverseMap = {}",
+		pos="524,2338",
+		tooltip="[./models/testmodel2.lua]:61_",
+		width=2.8072];
+	n27 -> n23	 [pos="e,517.35,2263.8 520.67,2300.4 519.9,2291.9 519.08,2282.8 518.27,2274"];
+	n28	 [height=1.041,
+		label="Node28\nmodule = cudnn.ReLU\lreverseMap = {}",
+		pos="552,1402",
+		tooltip="[./models/testmodel2.lua]:100_",
+		width=2.8072];
+	n28 -> n24	 [pos="e,552,1327.8 552,1364.4 552,1355.9 552,1346.8 552,1338"];
+	n29	 [height=1.041,
+		label="Node29\nmodule = cudnn.SpatialBatchNormalization\lreverseMap = {}",
+		pos="221,4322",
+		tooltip="[./models/testmodel2.lua]:60_",
+		width=5.0616];
+	n29 -> n25	 [pos="e,221,4247.8 221,4284.4 221,4275.9 221,4266.8 221,4258"];
+	n30	 [height=1.041,
+		label="Node30\nmodule = cudnn.SpatialBatchNormalization\lreverseMap = {}",
+		pos="458,3386",
+		tooltip="[./models/testmodel2.lua]:60_",
+		width=5.0616];
+	n30 -> n26	 [pos="e,451.32,3311.5 454.67,3348.4 453.89,3339.7 453.04,3330.4 452.22,3321.4"];
+	n31	 [height=1.041,
+		label="Node31\nmodule = cudnn.SpatialBatchNormalization\lreverseMap = {}",
+		pos="534,2450",
+		tooltip="[./models/testmodel2.lua]:60_",
+		width=5.0616];
+	n31 -> n27	 [pos="e,527.32,2375.5 530.67,2412.4 529.89,2403.7 529.04,2394.4 528.22,2385.4"];
+	n32	 [height=1.041,
+		label="Node32\nmodule = cudnn.SpatialBatchNormalization\lreverseMap = {}",
+		pos="552,1514",
+		tooltip="[./models/testmodel2.lua]:99_",
+		width=5.0616];
+	n32 -> n28	 [pos="e,552,1439.8 552,1476.4 552,1467.9 552,1458.8 552,1450"];
+	n33	 [height=1.3356,
+		label="Node33\nmodule = nn.CAddTable\lreverseMap = {}\lmapindex = {Node37,Node38}",
+		pos="515,4444",
+		tooltip="[./models/testmodel2.lua]:45_",
+		width=3.7034];
+	n33 -> n29	 [pos="e,301.26,4355.8 427.98,4407.5 390.99,4392.4 347.88,4374.8 310.6,4359.6"];
+	n44	 [height=1.041,
+		label="Node44\nmodule = nn.Identity\lreverseMap = {}",
+		pos="515,4322",
+		tooltip="[./models/testmodel2.lua]:68_",
+		width=2.6117];
+	n33 -> n44	 [pos="e,515,4359.7 515,4395.6 515,4387.1 515,4378.3 515,4369.8"];
+	n79	 [height=1.041,
+		label="Node79\nmodule = cudnn.SpatialBatchNormalization\lreverseMap = {}",
+		pos="809,4322",
+		tooltip="[./models/testmodel2.lua]:52_",
+		width=5.0616];
+	n33 -> n79	 [pos="e,728.74,4355.8 602.02,4407.5 639.01,4392.4 682.12,4374.8 719.4,4359.6"];
+	n34 -> n30	 [pos="e,514.78,3421.8 588.19,3466.7 567.37,3454 544.36,3439.9 523.55,3427.1"];
+	n46	 [height=1.041,
+		label="Node46\nmodule = nn.Identity\lreverseMap = {}",
+		pos="681,2826",
+		tooltip="[./models/testmodel2.lua]:68_",
+		width=2.6117];
+	n34 -> n46	 [pos="e,682.59,2863.5 664.71,3459.7 674.35,3413.1 687,3339.5 687,3275 687,3275 687,3275 687,3049 687,2988.4 684.74,2918.5 682.99,2873.5"];
+	n80	 [height=1.041,
+		label="Node80\nmodule = cudnn.SpatialBatchNormalization\lreverseMap = {}",
+		pos="939,3386",
+		tooltip="[./models/testmodel2.lua]:52_",
+		width=5.0616];
+	n34 -> n80	 [pos="e,860.71,3420 738.35,3471.5 773.91,3456.5 815.3,3439.1 851.22,3424"];
+	n35 -> n31	 [pos="e,599.11,2485.1 688.65,2532 662.83,2518.5 633.9,2503.3 608.1,2489.8"];
+	n48	 [height=1.041,
+		label="Node48\nmodule = nn.Identity\lreverseMap = {}",
+		pos="757,1890",
+		tooltip="[./models/testmodel2.lua]:68_",
+		width=2.6117];
+	n35 -> n48	 [pos="e,758.59,1927.5 763,2523.9 763,2477 763,2403 763,2339 763,2339 763,2339 763,2113 763,2052.4 760.74,1982.5 758.99,1937.5"];
+	n81	 [height=1.041,
+		label="Node81\nmodule = cudnn.SpatialBatchNormalization\lreverseMap = {}",
+		pos="1015,2450",
+		tooltip="[./models/testmodel2.lua]:52_",
+		width=5.0616];
+	n35 -> n81	 [pos="e,944.11,2484.8 842.39,2533.2 871.94,2519.1 905.47,2503.2 935.06,2489.1"];
+	n36 -> n32	 [pos="e,552,1551.7 552,1587.6 552,1579.1 552,1570.3 552,1561.8"];
+	n37	 [height=1.041,
+		label="Node37\nmodule = nn.Identity\lreverseMap = {}",
+		pos="391,5014",
+		tooltip="[./models/testmodel2.lua]:42_",
+		width=2.6117];
+	n37 -> n33	 [pos="e,436.81,4483.2 386.22,4976.5 380.89,4932.6 373,4856.5 373,4791 373,4791 373,4791 373,4677 373,4610.2 356.99,4584.8 392,4528 401.2,\
+4513.1 414.22,4500.2 428.37,4489.3"];
+	n38	 [height=1.041,
+		label="Node38\nmodule = cudnn.SpatialConvolution(128 -> 128, 3x3, 1,1, 1,1)\lreverseMap = {}",
+		pos="657,4566",
+		tooltip="[./models/testmodel2.lua]:39_",
+		width=7.0968];
+	n38 -> n33	 [pos="e,566.35,4488.4 614.4,4529 601.76,4518.3 587.69,4506.4 574.21,4495"];
+	n39	 [height=1.3356,
+		label="Node39\nmodule = nn.CAddTable\lreverseMap = {}\lmapindex = {Node44,Node45}",
+		pos="654,3640",
+		tooltip="[./models/testmodel2.lua]:71_",
+		width=3.7034];
+	n39 -> n34	 [pos="e,654,3556.5 654,3591.7 654,3583.5 654,3575 654,3566.6"];
+	n40	 [height=1.3356,
+		label="Node40\nmodule = nn.CAddTable\lreverseMap = {}\lmapindex = {Node46,Node47}",
+		pos="802,2704",
+		tooltip="[./models/testmodel2.lua]:71_",
+		width=3.7034];
+	n40 -> n35	 [pos="e,777.06,2619.9 787.92,2656.1 785.35,2647.5 782.65,2638.5 780.01,2629.7"];
+	n41	 [height=1.3356,
+		label="Node41\nmodule = nn.CAddTable\lreverseMap = {}\lmapindex = {Node48,Node49}",
+		pos="878,1768",
+		tooltip="[./models/testmodel2.lua]:71_",
+		width=3.7034];
+	n41 -> n36	 [pos="e,640.29,1672.2 789.78,1731.8 746.47,1714.6 694.17,1693.7 649.66,1675.9"];
+	n42	 [height=1.3356,
+		label="Node42\nmodule = nn.CAddTable\lreverseMap = {}\lmapindex = {Node50,Node51}",
+		pos="497,5248",
+		tooltip="[./models/testmodel2.lua]:45_",
+		width=3.7034];
+	n42 -> n37	 [pos="e,389.7,5051.6 442.28,5204.1 430.55,5192.3 419.45,5178.7 412,5164 396.01,5132.4 391.06,5092.5 389.95,5062"];
+	n72	 [height=1.041,
+		label="Node72\nmodule = cudnn.SpatialBatchNormalization\lreverseMap = {}",
+		pos="603,5126",
+		tooltip="[./models/testmodel2.lua]:34_",
+		width=5.0616];
+	n42 -> n72	 [pos="e,571.28,5162.9 536.77,5202 545.85,5191.7 555.49,5180.8 564.52,5170.6"];
+	n43	 [height=1.041,
+		label="Node43\nmodule = cudnn.ReLU\lreverseMap = {}",
+		pos="657,4678",
+		tooltip="[./models/testmodel2.lua]:38_",
+		width=2.8072];
+	n43 -> n38	 [pos="e,657,4603.8 657,4640.4 657,4631.9 657,4622.8 657,4614"];
+	n44 -> n39	 [pos="e,577.69,3679.5 515,4284.5 515,4240.5 515,4164.3 515,4099 515,4099 515,4099 515,3873 515,3806.2 499.32,3781 534,3724 542.97,3709.3 \
+555.66,3696.5 569.46,3685.7"];
+	n45	 [height=1.041,
+		label="Node45\nmodule = cudnn.SpatialConvolution(128 -> 128, 17x17, 1,1, 8,8)\lreverseMap = {}",
+		pos="809,3762",
+		tooltip="[./models/testmodel2.lua]:57_",
+		width=7.3732];
+	n45 -> n39	 [pos="e,709.49,3684 762.49,3725 748.43,3714.1 732.72,3701.9 717.73,3690.3"];
+	n46 -> n40	 [pos="e,757.15,2749.5 715.35,2790.9 726.11,2780.3 738.24,2768.2 749.94,2756.6"];
+	n47	 [height=1.041,
+		label="Node47\nmodule = cudnn.SpatialConvolution(158 -> 158, 17x17, 1,1, 8,8)\lreverseMap = {}",
+		pos="1059,2826",
+		tooltip="[./models/testmodel2.lua]:57_",
+		width=7.3732];
+	n47 -> n40	 [pos="e,882.5,2742.6 983.97,2790 955.11,2776.5 921.86,2761 891.74,2746.9"];
+	n48 -> n41	 [pos="e,833.15,1813.5 791.35,1854.9 802.11,1844.3 814.24,1832.2 825.94,1820.6"];
+	n49	 [height=1.041,
+		label="Node49\nmodule = cudnn.SpatialConvolution(188 -> 188, 17x17, 1,1, 8,8)\lreverseMap = {}",
+		pos="1135,1890",
+		tooltip="[./models/testmodel2.lua]:57_",
+		width=7.3732];
+	n49 -> n41	 [pos="e,958.5,1806.6 1060,1854 1031.1,1840.5 997.86,1825 967.74,1810.9"];
+	n50	 [height=1.3356,
+		label="Node50\nmodule = nn.JoinTable\lreverseMap = {}\lmapindex = {Node56,Node57}",
+		pos="347,5828",
+		tooltip="[./models/testmodel2.lua]:42_",
+		width=3.7034];
+	n50 -> n42	 [pos="e,418.81,5287.2 349.58,5779.9 351.91,5733.1 355,5659.1 355,5595 355,5595 355,5595 355,5481 355,5414.2 338.99,5388.8 374,5332 383.2,\
+5317.1 396.22,5304.2 410.37,5293.3"];
+	n51	 [height=1.041,
+		label="Node51\nmodule = cudnn.SpatialConvolution(128 -> 128, 3x3, 1,1, 1,1)\lreverseMap = {}",
+		pos="639,5370",
+		tooltip="[./models/testmodel2.lua]:39_",
+		width=7.0968];
+	n51 -> n42	 [pos="e,548.35,5292.4 596.4,5333 583.76,5322.3 569.69,5310.4 556.21,5299"];
+	n52	 [height=1.041,
+		label="Node52\nmodule = cudnn.SpatialBatchNormalization\lreverseMap = {}",
+		pos="657,4790",
+		tooltip="[./models/testmodel2.lua]:37_",
+		width=5.0616];
+	n52 -> n43	 [pos="e,657,4715.8 657,4752.4 657,4743.9 657,4734.8 657,4726"];
+	n53	 [height=1.041,
+		label="Node53\nmodule = cudnn.ReLU\lreverseMap = {}",
+		pos="809,3874",
+		tooltip="[./models/testmodel2.lua]:56_",
+		width=2.8072];
+	n53 -> n45	 [pos="e,809,3799.8 809,3836.4 809,3827.9 809,3818.8 809,3810"];
+	n54	 [height=1.041,
+		label="Node54\nmodule = cudnn.ReLU\lreverseMap = {}",
+		pos="1049,2938",
+		tooltip="[./models/testmodel2.lua]:56_",
+		width=2.8072];
+	n54 -> n47	 [pos="e,1055.7,2863.8 1052.3,2900.4 1053.1,2891.9 1053.9,2882.8 1054.7,2874"];
+	n55	 [height=1.041,
+		label="Node55\nmodule = cudnn.ReLU\lreverseMap = {}",
+		pos="1114,2002",
+		tooltip="[./models/testmodel2.lua]:56_",
+		width=2.8072];
+	n55 -> n49	 [pos="e,1128,1927.5 1121,1964.4 1122.6,1955.7 1124.4,1946.4 1126.1,1937.4"];
+	n56	 [height=1.041,
+		label="Node56\nmodule = nn.Identity\lreverseMap = {}",
+		pos="120,5950",
+		tooltip="[./models/testmodel2.lua]:23_",
+		width=2.6117];
+	n56 -> n50	 [pos="e,272.76,5868.2 175.53,5919.6 202.06,5905.6 234.36,5888.5 263.74,5873"];
+	n57	 [height=1.041,
+		label="Node57\nmodule = nn.MulConstant\lreverseMap = {}",
+		pos="347,5950",
+		tooltip="[./models/testmodel2.lua]:24_",
+		width=3.1743];
+	n57 -> n50	 [pos="e,347,5876.5 347,5912.3 347,5904.2 347,5895.4 347,5886.7"];
+	n58	 [height=1.041,
+		label="Node58\nmodule = cudnn.ReLU\lreverseMap = {}",
+		pos="640,5482",
+		tooltip="[./models/testmodel2.lua]:38_",
+		width=2.8072];
+	n58 -> n51	 [pos="e,639.33,5407.8 639.67,5444.4 639.59,5435.9 639.51,5426.8 639.43,5418"];
+	n59	 [height=1.041,
+		label="Node59\nmodule = cudnn.SpatialConvolution(128 -> 128, 3x3, 1,1, 1,1)\lreverseMap = {}",
+		pos="657,4902",
+		tooltip="[./models/testmodel2.lua]:36_",
+		width=7.0968];
+	n59 -> n52	 [pos="e,657,4827.8 657,4864.4 657,4855.9 657,4846.8 657,4838"];
+	n60	 [height=1.041,
+		label="Node60\nmodule = cudnn.SpatialBatchNormalization\lreverseMap = {}",
+		pos="809,3986",
+		tooltip="[./models/testmodel2.lua]:55_",
+		width=5.0616];
+	n60 -> n53	 [pos="e,809,3911.8 809,3948.4 809,3939.9 809,3930.8 809,3922"];
+	n61	 [height=1.041,
+		label="Node61\nmodule = cudnn.SpatialBatchNormalization\lreverseMap = {}",
+		pos="1044,3050",
+		tooltip="[./models/testmodel2.lua]:55_",
+		width=5.0616];
+	n61 -> n54	 [pos="e,1047.3,2975.8 1045.7,3012.4 1046,3003.9 1046.5,2994.8 1046.9,2986"];
+	n62	 [height=1.041,
+		label="Node62\nmodule = cudnn.SpatialBatchNormalization\lreverseMap = {}",
+		pos="1109,2114",
+		tooltip="[./models/testmodel2.lua]:55_",
+		width=5.0616];
+	n62 -> n55	 [pos="e,1112.3,2039.8 1110.7,2076.4 1111,2067.9 1111.5,2058.8 1111.9,2050"];
+	n63	 [height=1.3356,
+		label="Node63\nmodule = nn.CAddTable\lreverseMap = {}\lmapindex = {Node69,Node70}",
+		pos="347,6072",
+		tooltip="[./models/testmodel2.lua]:45_",
+		width=3.7034];
+	n63 -> n56	 [pos="e,175.56,5980.4 272.99,6031.9 244.51,6016.8 212.24,5999.8 184.7,5985.2"];
+	n63 -> n57	 [pos="e,347,5987.7 347,6023.6 347,6015.1 347,6006.3 347,5997.8"];
+	n85	 [height=1.041,
+		label="Node85\nmodule = cudnn.SpatialBatchNormalization\lreverseMap = {}",
+		pos="662,5950",
+		tooltip="[./models/testmodel2.lua]:34_",
+		width=5.0616];
+	n63 -> n85	 [pos="e,577.4,5983.2 437.27,6036.6 478.17,6021 526.51,6002.6 567.87,5986.9"];
+	n64	 [height=1.041,
+		label="Node64\nmodule = cudnn.SpatialBatchNormalization\lreverseMap = {}",
+		pos="642,5594",
+		tooltip="[./models/testmodel2.lua]:37_",
+		width=5.0616];
+	n64 -> n58	 [pos="e,640.67,5519.8 641.33,5556.4 641.18,5547.9 641.02,5538.8 640.85,5530"];
+	n65	 [height=1.041,
+		label="Node65\nmodule = cudnn.ReLU\lreverseMap = {}",
+		pos="639,5014",
+		tooltip="[./models/testmodel2.lua]:35_",
+		width=2.8072];
+	n65 -> n59	 [pos="e,651.03,4939.5 644.99,4976.4 646.41,4967.7 647.93,4958.4 649.4,4949.4"];
+	n66	 [height=1.041,
+		label="Node66\nmodule = cudnn.SpatialConvolution(128 -> 128, 17x17, 1,1, 8,8)\lreverseMap = {}",
+		pos="809,4098",
+		tooltip="[./models/testmodel2.lua]:54_",
+		width=7.3732];
+	n66 -> n60	 [pos="e,809,4023.8 809,4060.4 809,4051.9 809,4042.8 809,4034"];
+	n67	 [height=1.041,
+		label="Node67\nmodule = cudnn.SpatialConvolution(158 -> 158, 17x17, 1,1, 8,8)\lreverseMap = {}",
+		pos="1023,3162",
+		tooltip="[./models/testmodel2.lua]:54_",
+		width=7.3732];
+	n67 -> n61	 [pos="e,1037,3087.5 1030,3124.4 1031.6,3115.7 1033.4,3106.4 1035.1,3097.4"];
+	n68	 [height=1.041,
+		label="Node68\nmodule = cudnn.SpatialConvolution(188 -> 188, 17x17, 1,1, 8,8)\lreverseMap = {}",
+		pos="1099,2226",
+		tooltip="[./models/testmodel2.lua]:54_",
+		width=7.3732];
+	n68 -> n62	 [pos="e,1105.7,2151.8 1102.3,2188.4 1103.1,2179.9 1103.9,2170.8 1104.7,2162"];
+	n69	 [height=1.041,
+		label="Node69\nmodule = nn.Identity\lreverseMap = {}",
+		pos="225,6642",
+		tooltip="[./models/testmodel2.lua]:42_",
+		width=2.6117];
+	n69 -> n63	 [pos="e,271.95,6111.7 221.02,6604.5 216.58,6560.6 210,6484.5 210,6419 210,6419 210,6419 210,6305 210,6238.2 194.54,6213.2 229,6156 237.81,\
+6141.4 250.28,6128.7 263.85,6117.9"];
+	n70	 [height=1.041,
+		label="Node70\nmodule = cudnn.SpatialConvolution(64 -> 64, 3x3, 1,1, 1,1)\lreverseMap = {}",
+		pos="485,6194",
+		tooltip="[./models/testmodel2.lua]:39_",
+		width=6.8442];
+	n70 -> n63	 [pos="e,397.15,6116.6 443.6,6157 431.38,6146.4 417.79,6134.6 404.75,6123.2"];
+	n71	 [height=1.041,
+		label="Node71\nmodule = cudnn.SpatialConvolution(64 -> 128, 3x3, 1,1, 1,1)\lreverseMap = {}",
+		pos="646,5706",
+		tooltip="[./models/testmodel2.lua]:36_",
+		width=6.9824];
+	n71 -> n64	 [pos="e,643.34,5631.8 644.67,5668.4 644.36,5659.9 644.03,5650.8 643.71,5642"];
+	n72 -> n65	 [pos="e,627.06,5051.5 614.99,5088.4 617.84,5079.7 620.92,5070.2 623.9,5061.1"];
+	n73	 [height=1.041,
+		label="Node73\nmodule = cudnn.ReLU\lreverseMap = {}",
+		pos="809,4210",
+		tooltip="[./models/testmodel2.lua]:53_",
+		width=2.8072];
+	n73 -> n66	 [pos="e,809,4135.8 809,4172.4 809,4163.9 809,4154.8 809,4146"];
+	n74	 [height=1.041,
+		label="Node74\nmodule = cudnn.ReLU\lreverseMap = {}",
+		pos="960,3274",
+		tooltip="[./models/testmodel2.lua]:53_",
+		width=2.8072];
+	n74 -> n67	 [pos="e,1002,3199.7 980.45,3237.3 985.74,3228.1 991.49,3218 997.01,3208.4"];
+	n75	 [height=1.041,
+		label="Node75\nmodule = cudnn.ReLU\lreverseMap = {}",
+		pos="1036,2338",
+		tooltip="[./models/testmodel2.lua]:53_",
+		width=2.8072];
+	n75 -> n68	 [pos="e,1078,2263.7 1056.5,2301.3 1061.7,2292.1 1067.5,2282 1073,2272.4"];
+	n76	 [height=1.3356,
+		label="Node76\nmodule = nn.CAddTable\lreverseMap = {}\lmapindex = {Node82,Node83}",
+		pos="331,6876",
+		tooltip="[./models/testmodel2.lua]:45_",
+		width=3.7034];
+	n76 -> n69	 [pos="e,223.7,6679.6 276.28,6832.1 264.55,6820.3 253.45,6806.7 246,6792 230.01,6760.4 225.06,6720.5 223.95,6690"];
+	n94	 [height=1.041,
+		label="Node94\nmodule = cudnn.SpatialBatchNormalization\lreverseMap = {}",
+		pos="437,6754",
+		tooltip="[./models/testmodel2.lua]:34_",
+		width=5.0616];
+	n76 -> n94	 [pos="e,405.28,6790.9 370.77,6830 379.85,6819.7 389.49,6808.8 398.52,6798.6"];
+	n77	 [height=1.041,
+		label="Node77\nmodule = cudnn.ReLU\lreverseMap = {}",
+		pos="485,6306",
+		tooltip="[./models/testmodel2.lua]:38_",
+		width=2.8072];
+	n77 -> n70	 [pos="e,485,6231.8 485,6268.4 485,6259.9 485,6250.8 485,6242"];
+	n78	 [height=1.041,
+		label="Node78\nmodule = cudnn.ReLU\lreverseMap = {}",
+		pos="661,5828",
+		tooltip="[./models/testmodel2.lua]:35_",
+		width=2.8072];
+	n78 -> n71	 [pos="e,650.61,5743.8 656.42,5790.3 654.98,5778.8 653.37,5765.9 651.85,5753.8"];
+	n79 -> n73	 [pos="e,809,4247.8 809,4284.4 809,4275.9 809,4266.8 809,4258"];
+	n80 -> n74	 [pos="e,953.04,3311.5 945.99,3348.4 947.64,3339.7 949.42,3330.4 951.13,3321.4"];
+	n81 -> n75	 [pos="e,1029,2375.5 1022,2412.4 1023.6,2403.7 1025.4,2394.4 1027.1,2385.4"];
+	n82	 [height=1.041,
+		label="Node82\nmodule = nn.Identity\lreverseMap = {}",
+		pos="209,7446",
+		tooltip="[./models/testmodel2.lua]:42_",
+		width=2.6117];
+	n82 -> n76	 [pos="e,255.95,6915.7 205.02,7408.5 200.58,7364.6 194,7288.5 194,7223 194,7223 194,7223 194,7109 194,7042.2 178.54,7017.2 213,6960 221.81,\
+6945.4 234.28,6932.7 247.85,6921.9"];
+	n83	 [height=1.041,
+		label="Node83\nmodule = cudnn.SpatialConvolution(64 -> 64, 3x3, 1,1, 1,1)\lreverseMap = {}",
+		pos="469,6998",
+		tooltip="[./models/testmodel2.lua]:39_",
+		width=6.8442];
+	n83 -> n76	 [pos="e,381.15,6920.6 427.6,6961 415.38,6950.4 401.79,6938.6 388.75,6927.2"];
+	n84	 [height=1.041,
+		label="Node84\nmodule = cudnn.SpatialBatchNormalization\lreverseMap = {}",
+		pos="485,6418",
+		tooltip="[./models/testmodel2.lua]:37_",
+		width=5.0616];
+	n84 -> n77	 [pos="e,485,6343.8 485,6380.4 485,6371.9 485,6362.8 485,6354"];
+	n85 -> n78	 [pos="e,661.31,5865.8 661.69,5912.3 661.6,5900.9 661.49,5888.2 661.39,5876.2"];
+	n86	 [height=1.041,
+		label="Node86\nmodule = cudnn.ReLU\lreverseMap = {}",
+		pos="315,7670",
+		tooltip="[./models/testmodel2.lua]:88_",
+		width=2.8072];
+	n86 -> n82	 [pos="e,207.15,7483.5 266.06,7637.2 252.27,7625.8 238.68,7611.9 230,7596 212.88,7564.7 208.05,7524.4 207.27,7493.6"];
+	n98	 [height=1.041,
+		label="Node98\nmodule = cudnn.SpatialBatchNormalization\lreverseMap = {}",
+		pos="421,7558",
+		tooltip="[./models/testmodel2.lua]:34_",
+		width=5.0616];
+	n86 -> n98	 [pos="e,386.41,7594.9 348.25,7634.5 358.11,7624.3 369.05,7612.9 379.37,7602.2"];
+	n87	 [height=1.041,
+		label="Node87\nmodule = cudnn.ReLU\lreverseMap = {}",
+		pos="469,7110",
+		tooltip="[./models/testmodel2.lua]:38_",
+		width=2.8072];
+	n87 -> n83	 [pos="e,469,7035.8 469,7072.4 469,7063.9 469,7054.8 469,7046"];
+	n88	 [height=1.041,
+		label="Node88\nmodule = cudnn.SpatialConvolution(64 -> 64, 3x3, 1,1, 1,1)\lreverseMap = {}",
+		pos="485,6530",
+		tooltip="[./models/testmodel2.lua]:36_",
+		width=6.8442];
+	n88 -> n84	 [pos="e,485,6455.8 485,6492.4 485,6483.9 485,6474.8 485,6466"];
+	n89	 [height=1.041,
+		label="Node89\nmodule = cudnn.SpatialBatchNormalization\lreverseMap = {}",
+		pos="315,7782",
+		tooltip="[./models/testmodel2.lua]:87_",
+		width=5.0616];
+	n89 -> n86	 [pos="e,315,7707.8 315,7744.4 315,7735.9 315,7726.8 315,7718"];
+	n90	 [height=1.041,
+		label="Node90\nmodule = cudnn.SpatialBatchNormalization\lreverseMap = {}",
+		pos="469,7222",
+		tooltip="[./models/testmodel2.lua]:37_",
+		width=5.0616];
+	n90 -> n87	 [pos="e,469,7147.8 469,7184.4 469,7175.9 469,7166.8 469,7158"];
+	n91	 [height=1.041,
+		label="Node91\nmodule = cudnn.ReLU\lreverseMap = {}",
+		pos="469,6642",
+		tooltip="[./models/testmodel2.lua]:35_",
+		width=2.8072];
+	n91 -> n88	 [pos="e,479.7,6567.5 474.33,6604.4 475.58,6595.7 476.94,6586.4 478.25,6577.4"];
+	n92	 [height=1.041,
+		label="Node92\nmodule = cudnn.SpatialConvolution(3 -> 64, 5x5, 1,1, 2,2)\lreverseMap = {}",
+		pos="315,7894",
+		tooltip="[./models/testmodel2.lua]:86_",
+		width=6.706];
+	n92 -> n89	 [pos="e,315,7819.8 315,7856.4 315,7847.9 315,7838.8 315,7830"];
+	n93	 [height=1.041,
+		label="Node93\nmodule = cudnn.SpatialConvolution(64 -> 64, 3x3, 1,1, 1,1)\lreverseMap = {}",
+		pos="469,7334",
+		tooltip="[./models/testmodel2.lua]:36_",
+		width=6.8442];
+	n93 -> n90	 [pos="e,469,7259.8 469,7296.4 469,7287.9 469,7278.8 469,7270"];
+	n94 -> n91	 [pos="e,458.39,6679.5 447.66,6716.4 450.19,6707.7 452.93,6698.2 455.57,6689.1"];
+	n95	 [height=1.041,
+		label="Node95\nmodule = nn.Identity\lreverseMap = {}",
+		pos="315,8006",
+		tooltip="[./models/testmodel2.lua]:85_",
+		width=2.6117];
+	n95 -> n92	 [pos="e,315,7931.8 315,7968.4 315,7959.9 315,7950.8 315,7942"];
+	n96	 [height=1.041,
+		label="Node96\nmodule = cudnn.ReLU\lreverseMap = {}",
+		pos="453,7446",
+		tooltip="[./models/testmodel2.lua]:35_",
+		width=2.8072];
+	n96 -> n93	 [pos="e,463.7,7371.5 458.33,7408.4 459.58,7399.7 460.94,7390.4 462.25,7381.4"];
+	n97	 [height=1.041,
+		label="Node97\ninput = {}\lreverseMap = {}",
+		pos="315,8118",
+		tooltip="[[C]]:-1_",
+		width=2.1497];
+	n97 -> n95	 [pos="e,315,8043.8 315,8080.4 315,8071.9 315,8062.8 315,8054"];
+	n98 -> n96	 [pos="e,442.39,7483.5 431.66,7520.4 434.19,7511.7 436.93,7502.2 439.57,7493.1"];
+}

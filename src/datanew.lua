@@ -124,8 +124,8 @@ function dataset:load_batch_new(indices)
         -- normalize seg and dep maps to have a sum of 1
         local sum_seg = torch.sum(jsdc_tensor[i][28])
         local sum_dep = torch.sum(jsdc_tensor[i][29])
-        jsdc_tensor[i][{ {28}, {}, {} }]:div(sum_seg)
-        jsdc_tensor[i][{ {29}, {}, {} }]:div(sum_dep)
+        jsdc_tensor[i][{ {28}, {}, {} }]:div(sum_seg/24.0)
+        jsdc_tensor[i][{ {29}, {}, {} }]:div(sum_dep/24.0)
     end
 
     -- normalize images (pos)

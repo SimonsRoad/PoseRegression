@@ -17,7 +17,7 @@ paths.dofile('datanew.lua')
 -- Modified by Namhoon Lee, RI, CMU (namhoonl@andrew.cmu.edu)
 --
 
-loader = dataLoader{txtimg=opt.txtimg, txtjsdc=opt.txtjsdc}
+loader = dataLoader{txtimg=opt.txtimg, txtjsc=opt.txtjsc}
 
 
 -- channel-wise mean and std. Calculate or load them from disk later in the script.

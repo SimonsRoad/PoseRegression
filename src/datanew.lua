@@ -16,7 +16,7 @@ local matio = require 'matio'
 
 
 local imgtensor = torch.Tensor(opt.batchSize, 3, opt.H, opt.W) 
-local jsdc_tensor = torch.Tensor(opt.batchSize, opt.nChOut, opt.H_jsdc, opt.W_jsdc) 
+local jsctensor = torch.Tensor(opt.batchSize, opt.nChOut, opt.H_jsc, opt.W_jsc) 
 
 local dataset = torch.class('dataLoader')
 local initcheck = argcheck{
@@ -24,7 +24,7 @@ local initcheck = argcheck{
     {name="txtimg",
     type="string",
     help=""},
-    {name="txtjsdc",
+    {name="txtjsc",
     type="string",
     help=""}
 }
@@ -48,13 +48,13 @@ function dataset:__init(...)
    	end
    	file:close()
 
-	self.labelNumSamples = tonumber(sys.fexecute("cat " .. self.txtjsdc.. " |  wc -l"))
+	self.labelNumSamples = tonumber(sys.fexecute("cat " .. self.txtjsc.. " |  wc -l"))
     assert(self.imageNumSamples == self.labelNumSamples)
-	self.labelMaxFileLength = tonumber(sys.fexecute("cat " .. self.txtjsdc.. " |  awk '{print length($0)}' | datamash max 1"))
+	self.labelMaxFileLength = tonumber(sys.fexecute("cat " .. self.txtjsc.. " |  awk '{print length($0)}' | datamash max 1"))
    	self.labelPath = torch.CharTensor() -- path to each label in dataset
 	self.labelPath:resize(self.labelNumSamples, self.labelMaxFileLength)
    	local i_data = self.labelPath:data()
-   	local file = assert(io.open(self.txtjsdc, "r"))
+   	local file = assert(io.open(self.txtjsc, "r"))
    	self.labelPathLength = torch.LongTensor(self.labelNumSamples):fill(0)   
    	local count = 1
    	for line in file:lines() do
@@ -81,14 +81,14 @@ function dataset:load_img(indices)
     return img
 end
 
-function dataset:load_jsdc(indices)
+function dataset:load_jsc(indices)
     -- load from .mat files 
-    local jsdc = torch.Tensor(indices:size(1), opt.nChOut, opt.H_jsdc, opt.W_jsdc)
+    local jsc = torch.Tensor(indices:size(1), opt.nChOut, opt.H_jsc, opt.W_jsc)
     for i=1, indices:size(1) do
-        local jsdc_path = ffi.string(torch.data(self.labelPath[indices[i]]), self.labelPathLength[indices[i]])
-        jsdc[i] = matio.load(jsdc_path, 'jsdc')
+        local jscpath = ffi.string(torch.data(self.labelPath[indices[i]]), self.labelPathLength[indices[i]])
+        jsc[i] = matio.load(jscpath, 'jsc')
     end
-    return jsdc
+    return jsc
 end
 
 
@@ -96,7 +96,7 @@ end
 function dataset:load_batch(indices)
     -- load all
     pos[{}] = self:load_img(indices)
-    jsdc[{}] = self:load_jsdc(indices)
+    jsc[{}] = self:load_jsc(indices)
         
     -- normalize images (pos)
     for i=1,3 do
@@ -105,7 +105,7 @@ function dataset:load_batch(indices)
     end
 
     -- out
-    local out = {data = pos, label = jsdc}
+    local out = {data = pos, label = jsc}
     return out
 end
 --]]
@@ -118,14 +118,12 @@ function dataset:load_batch_new(indices)
     end
     -- load from .mat files 
     for i=1, indices:size(1) do
-        local jsdc_path = ffi.string(torch.data(self.labelPath[indices[i]]), self.labelPathLength[indices[i]])
-        jsdc_tensor[i] = matio.load(jsdc_path, 'jsdc')
+        local jscpath = ffi.string(torch.data(self.labelPath[indices[i]]), self.labelPathLength[indices[i]])
+        jsctensor[i] = matio.load(jscpath, 'jsc')
 
         -- normalize seg and dep maps to have a sum of 1
-        local sum_seg = torch.sum(jsdc_tensor[i][28])
-        local sum_dep = torch.sum(jsdc_tensor[i][29])
-        jsdc_tensor[i][{ {28}, {}, {} }]:div(sum_seg/24.0)
-        jsdc_tensor[i][{ {29}, {}, {} }]:div(sum_dep/24.0)
+        --local sum_seg = torch.sum(jsctensor[i][28])
+        --jsctensor[i][{ {28}, {}, {} }]:div(sum_seg/24.0)
     end
 
     -- normalize images (pos)
@@ -134,7 +132,7 @@ function dataset:load_batch_new(indices)
         imgtensor[{ {}, {i}, {}, {} }]:div(std[i])
     end
 
-    return imgtensor, jsdc_tensor
+    return imgtensor, jsctensor
 
 end
 

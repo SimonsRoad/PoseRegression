@@ -92,25 +92,25 @@ local function createModel(opt)
         local res3  = ResBlock(64, 128, 3, res2)
         local res4  = ResBlock(128, 128, 3, res3)
 
-        local cf1, c1  = CFBlock(128,128,30,256,17,res4)
-        local cf2, c2  = CFBlock(158,158,30,256,17,cf1)
-        local cf3, c3  = CFBlock(188,188,30,256,17,cf2)
+        local cf1, c1  = CFBlock(128,128,opt.nChOut,256,17,res4)
+        local cf2, c2  = CFBlock(158,158,opt.nChOut,256,17,cf1)
+        local cf3, c3  = CFBlock(188,188,opt.nChOut,256,17,cf2)
 
         local bn_end1   = cudnn.SpatialBatchNormalization(218)(cf3)
         local act_end1  = cudnn.ReLU(true)(bn_end1)
         local conv_end1 = cudnn.SpatialConvolution(218,256,1,1)(act_end1)
         local bn_end2   = cudnn.SpatialBatchNormalization(256)(conv_end1)
         local act_end2  = cudnn.ReLU(true)(bn_end2)
-        local conv_end2 = cudnn.SpatialConvolution(256,30,1,1)(act_end2)
+        local conv_end2 = cudnn.SpatialConvolution(256,opt.nChOut,1,1)(act_end2)
 
         local cat_last  = nn.JoinTable(2)({c1,c2,c3, conv_end2})
 
-        local bn_cat1   = cudnn.SpatialBatchNormalization(30*4)(cat_last)
+        local bn_cat1   = cudnn.SpatialBatchNormalization(opt.nChOut*4)(cat_last)
         local act_cat1  = cudnn.ReLU(true)(bn_cat1)
-        local conv_cat1 = cudnn.SpatialConvolution(30*4,256,1,1)(act_cat1)
+        local conv_cat1 = cudnn.SpatialConvolution(opt.nChOut*4,256,1,1)(act_cat1)
         local bn_cat2   = cudnn.SpatialBatchNormalization(256)(conv_cat1)
         local act_cat2  = cudnn.ReLU(true)(bn_cat2)
-        local conv_cat2 = cudnn.SpatialConvolution(256,30,1,1)(act_cat2)
+        local conv_cat2 = cudnn.SpatialConvolution(256,opt.nChOut,1,1)(act_cat2)
 
         --model = nn.gModule({input}, {conv_end2, conv_cat2})
 		-- only one loss!

@@ -20,17 +20,22 @@ print(opt)
 -- Create model
 model, criterion = models.setup(opt)
 
+testinput = torch.rand(1,3,102,71):cuda()
+testoutput= model:forward(testinput)
+print(testoutput:size())
+adf=adf+1
+
 paths.dofile('data.lua')
 paths.dofile('train_fcn.lua')
 paths.dofile('test_fcn.lua')
-paths.dofile('eval_jsdc.lua')
+paths.dofile('eval_jsc.lua')
 
 -- Training
 epoch = opt.epochNumber
 for i=1,opt.nEpochs do
 	train()
 	test()
-    eval_jsdc()         -- evaluate on testset
+    eval_jsc()         -- evaluate on testset
 	epoch = epoch + 1
 end
 

@@ -20,10 +20,10 @@ print(opt)
 -- Create model
 model, criterion = models.setup(opt)
 
-testinput = torch.rand(1,3,102,71):cuda()
-testoutput= model:forward(testinput)
-print(testoutput:size())
-adf=adf+1
+--testinput = torch.rand(1,3,102,71):cuda()
+--testoutput= model:forward(testinput)
+--print(testoutput:size())
+--adf=adf+1
 
 paths.dofile('data.lua')
 paths.dofile('train_fcn.lua')

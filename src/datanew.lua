@@ -14,7 +14,6 @@ require 'xlua'
 require 'image'
 local matio = require 'matio'
 
-
 local imgtensor = torch.Tensor(opt.batchSize, 3, opt.H, opt.W) 
 local jsctensor = torch.Tensor(opt.batchSize, opt.nChOut, opt.H_jsc, opt.W_jsc) 
 
@@ -28,6 +27,7 @@ local initcheck = argcheck{
     type="string",
     help=""}
 }
+
 
 function dataset:__init(...)
 	local args =  initcheck(...)
@@ -44,7 +44,7 @@ function dataset:__init(...)
     	self.imagePathLength[count] = line:len()
       	ffi.copy(i_data, line)
       	i_data = i_data + self.imageMaxFileLength
-      	count = count + 1
+        count = count + 1
    	end
    	file:close()
 
@@ -90,25 +90,6 @@ function dataset:load_jsc(indices)
     end
     return jsc
 end
-
-
---[[
-function dataset:load_batch(indices)
-    -- load all
-    pos[{}] = self:load_img(indices)
-    jsc[{}] = self:load_jsc(indices)
-        
-    -- normalize images (pos)
-    for i=1,3 do
-        pos[{ {}, {i}, {}, {} }]:add(-mean[i])
-        pos[{ {}, {i}, {}, {} }]:div(std[i])
-    end
-
-    -- out
-    local out = {data = pos, label = jsc}
-    return out
-end
---]]
 
 function dataset:load_batch_new(indices)
     -- images

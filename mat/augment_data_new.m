@@ -7,7 +7,7 @@ clear; clc; close all;
 
 %% load existing data
 % data directories
-path_data = '~/develop/PoseRegression/data/rendout/anc_y138_x167';
+path_data = '~/develop/PoseRegression/data/rendout/anc_y160_x260';
 path_pos  = fullfile(path_data, 'pos');
 path_seg  = fullfile(path_data, 'seg');
 path_jsc  = fullfile(path_data, 'jsc');

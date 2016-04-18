@@ -1,0 +1,39 @@
+-- ignore option cache	
+WARNING: unknown option/argument: save IGNORING for DIRECTORY NAME	
+-- ignore option optimState	
+-- ignore option retrain	
+{
+  cudnn : "fastest"
+  W_jsc : 55
+  cache : "../save/"
+  save : "/home/namhoon/develop/PoseRegression/save/PR_fcn/option/t_SunApr1720:17:072016"
+  nDonkeys : 3
+  LR : 0.1
+  batchSize : 16
+  txtimg : "../data/rendout/anc_y66_x303/lists/img_pos.txt"
+  netType : "testmodel2"
+  H_jsc : 79
+  t : "PR_fcn"
+  nChOut : 29
+  txtjsc : "../data/rendout/anc_y66_x303/lists/jsc_pos.txt"
+  nTestData : 500
+  optimState : "none"
+  weightDecay : 0.0005
+  nGPU : 1
+  epochSize : 3125
+  W : 55
+  resume : "none"
+  dataset : "towncenter"
+  H : 79
+  momentum : 0.9
+  nTrainData : 50000
+  shareGradInput : "false"
+  nEpochs : 50
+  nJoints : 27
+  GPU : 1
+  backend : "cudnn"
+  epochNumber : 1
+  retrain : "none"
+}
+=> Creating model from file: models/testmodel2.lua	
+ | testmodel2 .. towncenter	

@@ -64,31 +64,23 @@ local function createModel(opt)
         local act_conf2  = cudnn.ReLU(true)(bn_conf2)
         local conv_conf2 = cudnn.SpatialConvolution(nChFC,nChConf,1,1,1,1,0,0)(act_conf2)
 
-		-- feature + confidence
-		local fc = nn.JoinTable(2)({conv2, conv_conf2})
+        -- identity shortcut
+        local identity = shortcut(nChIn, nChOut, input)
 
-		-- 2 more conv layers on fc
-		local bn_fc1   = cudnn.SpatialBatchNormalization(nChOut+nChConf)(fc)
-		local act_fc1  = cudnn.ReLU(true)(bn_fc1)
-		local conv_fc1 = cudnn.SpatialConvolution(nChOut+nChConf,nChOut,sz,sz,1,1,(sz-1)/2,(sz-1)/2)(act_fc1)
-		local bn_fc2   = cudnn.SpatialBatchNormalization(nChOut)(conv_fc1)
-		local act_fc2  = cudnn.ReLU(true)(bn_fc2)
-		local conv_fc2 = cudnn.SpatialConvolution(nChOut,nChOut,sz,sz,1,1,(sz-1)/2,(sz-1)/2)(act_fc2)
+        -- identity addition
+        local id = nn.CAddTable()({identity, conv2})
 
-		-- identity shortcut
-		local identity = shortcut(nChIn, nChOut, input)
-		
-		-- final output
-		local output = nn.CAddTable()({identity, conv_fc2})
+        -- feature + confidence
+        local output = nn.JoinTable(2)({id, conv_conf2})
 
-		return output, conv_conf2
+        return output, conv_conf2
     end
 
 
     local model
 
     if opt.dataset == 'towncenter' then
-        print(' | testmodel5 .. towncenter')
+        print(' | testmodel2 .. towncenter')
        
         local input = nn.Identity()()
         local conv1 = cudnn.SpatialConvolution(3,64,5,5,1,1,2,2)(input)
@@ -99,26 +91,29 @@ local function createModel(opt)
         local res2  = ResBlock(64, 64, 3, res1)
         local res3  = ResBlock(64, 128, 3, res2)
         local res4  = ResBlock(128, 128, 3, res3)
+        local res5  = ResBlock(128, 128, 3, res4)
+        local res6  = ResBlock(128, 128, 3, res5)
 
-        local cf1, c1  = CFBlock(128,128,30,256,11,res4)
-        local cf2, c2  = CFBlock(128,128,30,256,11,cf1)
-        local cf3, c3  = CFBlock(128,128,30,256,11,cf2)
+        -- compared to model2, set smaller kernel size: 17 -> [9,11,13]
+        local cf1, c1  = CFBlock(128+opt.nChOut*0,128+opt.nChOut*0,opt.nChOut,256,9,res6)
+        local cf2, c2  = CFBlock(128+opt.nChOut*1,128+opt.nChOut*1,opt.nChOut,256,11,cf1)
+        local cf3, c3  = CFBlock(128+opt.nChOut*2,128+opt.nChOut*2,opt.nChOut,256,13,cf2)
 
-        local bn_end1   = cudnn.SpatialBatchNormalization(128)(cf3)
+        local bn_end1   = cudnn.SpatialBatchNormalization(128+opt.nChOut*3)(cf3)
         local act_end1  = cudnn.ReLU(true)(bn_end1)
-        local conv_end1 = cudnn.SpatialConvolution(128,128,1,1)(act_end1)
-        local bn_end2   = cudnn.SpatialBatchNormalization(128)(conv_end1)
+        local conv_end1 = cudnn.SpatialConvolution(128+opt.nChOut*3,256,1,1)(act_end1)
+        local bn_end2   = cudnn.SpatialBatchNormalization(256)(conv_end1)
         local act_end2  = cudnn.ReLU(true)(bn_end2)
-        local conv_end2 = cudnn.SpatialConvolution(128,30,1,1)(act_end2)
+        local conv_end2 = cudnn.SpatialConvolution(256,opt.nChOut,1,1)(act_end2)
 
         local cat_last  = nn.JoinTable(2)({c1,c2,c3, conv_end2})
 
-        local bn_cat1   = cudnn.SpatialBatchNormalization(30*4)(cat_last)
+        local bn_cat1   = cudnn.SpatialBatchNormalization(opt.nChOut*4)(cat_last)
         local act_cat1  = cudnn.ReLU(true)(bn_cat1)
-        local conv_cat1 = cudnn.SpatialConvolution(30*4,256,1,1)(act_cat1)
+        local conv_cat1 = cudnn.SpatialConvolution(opt.nChOut*4,256,1,1)(act_cat1)
         local bn_cat2   = cudnn.SpatialBatchNormalization(256)(conv_cat1)
         local act_cat2  = cudnn.ReLU(true)(bn_cat2)
-        local conv_cat2 = cudnn.SpatialConvolution(256,30,1,1)(act_cat2)
+        local conv_cat2 = cudnn.SpatialConvolution(256,opt.nChOut,1,1)(act_cat2)
 
         --model = nn.gModule({input}, {conv_end2, conv_cat2})
 		-- only one loss!
@@ -126,7 +121,7 @@ local function createModel(opt)
 
 
         -- draw and save model
-        graph.dot(model.fg, 'forward graph', './graphs/testmodel5')
+        graph.dot(model.fg, 'forward graph', './graphs/testmodel2')
    else
       error('invalid dataset: ' .. opt.dataset)
    end
@@ -150,11 +145,11 @@ local function createModel(opt)
       end
    end
    
-   ConvInit('cudnn.SpatialConvolution')
-   ConvInit('nn.SpatialConvolution')
-   BNInit('fbnn.SpatialBatchNormalization')
-   BNInit('cudnn.SpatialBatchNormalization')
-   BNInit('nn.SpatialBatchNormalization')
+   --ConvInit('cudnn.SpatialConvolution')
+   --ConvInit('nn.SpatialConvolution')
+   --BNInit('fbnn.SpatialBatchNormalization')
+   --BNInit('cudnn.SpatialBatchNormalization')
+   --BNInit('nn.SpatialBatchNormalization')
    for k,v in pairs(model:findModules('nn.Linear')) do
        print(1)
       v.bias:zero()

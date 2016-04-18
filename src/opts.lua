@@ -36,11 +36,9 @@ function M.parse(arg)
 
     ------------- Data options ------------------------
     cmd:option('-nDonkeys',           3,  '# of donkeys to initialize (data loading threads)')
-    cmd:option('-txtimg',      '../data/rendout/anc_y138_x167/lists/img_pos.txt',  'img list')
-    cmd:option('-txtjsc',      '../data/rendout/anc_y138_x167/lists/jsc_pos.txt',  'jsc list')
-    --cmd:option('-txtimg',      '../data/rendout/tmp_y144_x256_aug/lists/img_pos.txt',  'img list')
-    --cmd:option('-txtjsc',      '../data/rendout/tmp_y144_x256_aug/lists/jsc_pos.txt',  'jsc list')
-    cmd:option('-nTrainData',     50000,  'number of train data')
+    cmd:option('-txtimg',      '../data/rendout/anc_y66_x303/lists/img_pos.txt',  'img list')
+    cmd:option('-txtjsc',      '../data/rendout/anc_y66_x303/lists/jsc_pos.txt',  'jsc list')
+    cmd:option('-nTrainData',     49000,  'number of train data')
     cmd:option('-nTestData',        500,  'number of test data')
     cmd:option('-W',                 71,  'image width')
     cmd:option('-H',                102,  'image height')
@@ -51,9 +49,9 @@ function M.parse(arg)
 
     ------------- Training options --------------------
     cmd:option('-nEpochs',           50,   'Number of total epochs to run')
-    cmd:option('-epochSize',       5000,   'Number of batches per epoch')
+    cmd:option('-epochSize',       3125,   'Number of batches per epoch')
     cmd:option('-epochNumber',        1,   'Manual epoch number (useful on restarts)')
-    cmd:option('-batchSize',          1,   'mini-batch size (1 = pure stochastic)')
+    cmd:option('-batchSize',         16,   'mini-batch size (1 = pure stochastic)')
     cmd:option('-resume',        'none',   'Path to directory containing checkpoint')
 
     ---------- Optimization options ----------------------

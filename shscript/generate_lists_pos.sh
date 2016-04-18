@@ -1,11 +1,11 @@
 #!/bin/sh
 
 # paths
-path='/home/namhoon/develop/PoseRegression/data/rendout/anc_y138_x167'
+path='/home/namhoon/develop/PoseRegression/data/rendout/anc_y66_x303'
 path_img_pos=$path'/pos'
 
 path_list=$path'/lists'
-mkdir $path_list
+mkdir -p $path_list
 
 # pos.txt
 outFile_img_pos=$path_list'/img_pos.txt'

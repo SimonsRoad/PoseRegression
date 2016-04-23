@@ -76,6 +76,7 @@ function dataset:load_img(indices)
     local img = torch.Tensor(indices:size(1), 3, opt.H, opt.W)
     for i=1, indices:size(1) do
         local imgpath = ffi.string(torch.data(self.imagePath[indices[i]]), self.imagePathLength[indices[i]])
+        print(i, imgpath)
         img[i] = image.load(imgpath, 3, 'float')
     end
     return img

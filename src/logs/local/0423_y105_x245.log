@@ -1,43 +1,75 @@
 -- ignore option cache	
-WARNING: unknown option/argument: save IGNORING for DIRECTORY NAME	
 -- ignore option optimState	
 -- ignore option retrain	
+WARNING: unknown option/argument: save IGNORING for DIRECTORY NAME	
 {
   cudnn : "fastest"
-  W_jsc : 82
-  cache : "../save/"
-  save : "/home/namhoon/develop/PoseRegression/save/PR_fcn/option/t_SatApr2314:30:432016"
-  nDonkeys : 3
-  LR : 0.01
-  batchSize : 8
   txtimg : "../data/rendout/anc_y185_x57_tmp/lists/img_pos.txt"
-  netType : "testmodel2"
-  H_jsc : 118
-  t : "PR_fcn"
-  nChOut : 29
-  txtjsc : "../data/rendout/anc_y185_x57_tmp/lists/jsc_pos.txt"
-  nTestData : 500
-  optimState : "none"
-  weightDecay : 0.0005
-  nGPU : 1
+  cache : "../save/"
+  batchSize : 8
   epochSize : 6250
-  W : 82
-  resume : "none"
+  H_jsc : 118
+  txtjsc : "../data/rendout/anc_y185_x57_tmp/lists/jsc_pos.txt"
+  optimState : "none"
+  nGPU : 1
   dataset : "towncenter"
-  H : 118
-  momentum : 0.9
-  nTrainData : 50000
-  shareGradInput : "false"
-  nEpochs : 20
+  t : "PR_fcn"
+  resume : "none"
   nJoints : 27
   GPU : 1
-  backend : "cudnn"
-  epochNumber : 1
+  weightDecay : 0.0005
   retrain : "none"
+  W_jsc : 82
+  x : 185
+  nDonkeys : 0
+  nChOut : 29
+  save : "/home/namhoon/develop/PoseRegression/save/PR_fcn/option/t_SatApr2314:47:322016"
+  netType : "testmodel2"
+  nTestData : 500
+  epochNumber : 1
+  H : 118
+  nTrainData : 50000
+  momentum : 0.9
+  nEpochs : 20
+  shareGradInput : "false"
+  LR : 0.01
+  backend : "cudnn"
+  y : 57
+  W : 82
 }
 => Creating model from file: models/testmodel2.lua	
  | testmodel2 .. towncenter	
-Loaded mean and std from cache.
-Loaded mean and std from cache.
-Loaded mean and std from cache.
---TRAIN STARTS..	
+1	
+/home/namhoon/torch/install/bin/luajit: /home/namhoon/torch/install/share/lua/5.1/trepl/init.lua:384: /home/namhoon/torch/install/share/lua/5.1/trepl/init.lua:384: module 'sys.fpath' not found:No LuaRocks module found for sys.fpath
+	no field package.preload['sys.fpath']
+	no file '/home/namhoon/.luarocks/share/lua/5.1/sys/fpath.lua'
+	no file '/home/namhoon/.luarocks/share/lua/5.1/sys/fpath/init.lua'
+	no file '/home/namhoon/torch/install/share/lua/5.1/sys/fpath.lua'
+	no file '/home/namhoon/torch/install/share/lua/5.1/sys/fpath/init.lua'
+	no file './sys/fpath.lua'
+	no file '/home/namhoon/torch/install/share/luajit-2.1.0-beta1/sys/fpath.lua'
+	no file '/usr/local/share/lua/5.1/sys/fpath.lua'
+	no file '/usr/local/share/lua/5.1/sys/fpath/init.lua'
+	no file '/home/namhoon/.luarocks/lib/lua/5.1/sys/fpath.so'
+	no file '/home/namhoon/torch/install/lib/lua/5.1/sys/fpath.so'
+	no file '/home/namhoon/torch/install/lib/sys/fpath.so'
+	no file './sys/fpath.so'
+	no file '/usr/local/lib/lua/5.1/sys/fpath.so'
+	no file '/usr/local/lib/lua/5.1/loadall.so'
+	no file '/home/namhoon/.luarocks/lib/lua/5.1/sys.so'
+	no file '/home/namhoon/torch/install/lib/lua/5.1/sys.so'
+	no file '/home/namhoon/torch/install/lib/sys.so'
+	no file './sys.so'
+	no file '/usr/local/lib/lua/5.1/sys.so'
+	no file '/usr/local/lib/lua/5.1/loadall.so'
+stack traceback:
+	[C]: in function 'error'
+	/home/namhoon/torch/install/share/lua/5.1/trepl/init.lua:384: in function 'require'
+	/home/namhoon/develop/PoseRegression/src/donkey.lua:9: in main chunk
+	[C]: in function 'dofile'
+	/home/namhoon/develop/PoseRegression/src/data.lua:34: in main chunk
+	[C]: in function 'dofile'
+	script_poseregression_fcn.lua:24: in main chunk
+	[C]: in function 'dofile'
+	...hoon/torch/install/lib/luarocks/rocks/trepl/scm-1/bin/th:145: in main chunk
+	[C]: at 0x00406670

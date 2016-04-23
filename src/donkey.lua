@@ -21,7 +21,7 @@ loader = dataLoader{txtimg=opt.txtimg, txtjsc=opt.txtjsc}
 
 
 -- channel-wise mean and std. Calculate or load them from disk later in the script.
-local meanstdCache = paths.concat(opt.cache, 'meanstdCache.t7')
+local meanstdCache = paths.concat(opt.cache, string.format('meanstdCache/y%d_x%d.t7',opt.y,opt.x))
 
 if paths.filep(meanstdCache) then
     local meanstd = torch.load(meanstdCache)
@@ -29,6 +29,7 @@ if paths.filep(meanstdCache) then
     std  = meanstd.std
     print('Loaded mean and std from cache.')
 else
+    print('Computing meanstd..')
     local tm = torch.Timer()
     local indices = torch.randperm(opt.nTrainData)
     local pos = loader:load_img(indices[{{1,math.min(10000,opt.nTrainData)}}])
@@ -42,7 +43,6 @@ else
     cache.mean = mean
     cache.std  = std
     torch.save(meanstdCache, cache)
-    print('Time to estimate:', tm:time().real)
+    print('Saved meanstd into file.. Time: ', tm:time().real)
 end 
-
 

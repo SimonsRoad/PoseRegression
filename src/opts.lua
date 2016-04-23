@@ -36,26 +36,26 @@ function M.parse(arg)
 
     ------------- Data options ------------------------
     cmd:option('-nDonkeys',           3,  '# of donkeys to initialize (data loading threads)')
-    cmd:option('-txtimg',      '../data/rendout/anc_y160_x260/lists/img_pos.txt',  'img list')
-    cmd:option('-txtjsc',      '../data/rendout/anc_y160_x260/lists/jsc_pos.txt',  'jsc list')
+    cmd:option('-txtimg',      '../data/rendout/anc_y185_x57_tmp/lists/img_pos.txt',  'img list')
+    cmd:option('-txtjsc',      '../data/rendout/anc_y185_x57_tmp/lists/jsc_pos.txt',  'jsc list')
     cmd:option('-nTrainData',     50000,  'number of train data')
     cmd:option('-nTestData',        500,  'number of test data')
-    cmd:option('-W',                 76,  'image width')
-    cmd:option('-H',                109,  'image height')
-    cmd:option('-W_jsc',             76,  'jsc width')
-    cmd:option('-H_jsc',            109,  'jsc height')
+    cmd:option('-W',                 82,  'image width')
+    cmd:option('-H',                118,  'image height')
+    cmd:option('-W_jsc',             82,  'jsc width')
+    cmd:option('-H_jsc',            118,  'jsc height')
     cmd:option('-nJoints',           27,  'number of joints')
     cmd:option('-nChOut',            29,  'number of joints')
 
     ------------- Training options --------------------
     cmd:option('-nEpochs',           20,   'Number of total epochs to run')
-    cmd:option('-epochSize',       3125,   'Number of batches per epoch')
+    cmd:option('-epochSize',       6250,   'Number of batches per epoch')
     cmd:option('-epochNumber',        1,   'Manual epoch number (useful on restarts)')
-    cmd:option('-batchSize',         16,   'mini-batch size (1 = pure stochastic)')
+    cmd:option('-batchSize',          8,   'mini-batch size (1 = pure stochastic)')
     cmd:option('-resume',        'none',   'Path to directory containing checkpoint')
 
     ---------- Optimization options ----------------------
-    cmd:option('-LR',    	        0.1,   'learning rate ')
+    cmd:option('-LR',    	       0.01,   'learning rate ')
     cmd:option('-momentum',         0.9,   'momentum')
     cmd:option('-weightDecay',     5e-4,   'weight decay')
 

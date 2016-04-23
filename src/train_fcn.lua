@@ -102,7 +102,6 @@ local dataTimer = torch.Timer()
 
 local parameters, gradParameters = model:getParameters()
 
-
 -- 4. trainBatch -- used by train() to train a singel batch after the data is loaded.
 function trainBatch(inputsCPU, labelsCPU)
 	cutorch.synchronize()

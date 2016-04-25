@@ -7,9 +7,9 @@ clear; clc; close all;
 
 %% load existing data
 % data directories
-y = 185;
-x = 57;
-path_data = sprintf('~/develop/PoseRegression/data/rendout/anc_y%d_x%d', y, x);
+y = 138;
+x = 167;
+path_data = sprintf('~/develop/PoseRegression/data/rendout/anc_y%d_x%d_test', y, x);
 path_pos  = fullfile(path_data, 'pos');
 path_seg  = fullfile(path_data, 'seg');
 path_jsc  = fullfile(path_data, 'jsc');

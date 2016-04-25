@@ -21,9 +21,9 @@ torch.manualSeed(2)
 model, criterion = models.setup(opt)
 
 paths.dofile('data.lua')
-print(1)
-paths.dofile('train_fcn.lua')
 print(2)
+paths.dofile('train_fcn.lua')
+print(3)
 paths.dofile('test_fcn.lua')
 paths.dofile('eval_jsc.lua')
 

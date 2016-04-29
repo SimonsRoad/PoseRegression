@@ -1,0 +1,250 @@
+-- ignore option cache	
+-- ignore option optimState	
+-- ignore option retrain	
+WARNING: unknown option/argument: save IGNORING for DIRECTORY NAME	
+{
+  cudnn : "fastest"
+  txtimg : "../data/rendout/anc_y230_x438/lists/img_pos.txt"
+  cache : "../save/"
+  batchSize : 8
+  epochSize : 3125
+  H_jsc : 131
+  txtjsc : "../data/rendout/anc_y230_x438/lists/jsc_pos.txt"
+  optimState : "none"
+  nGPU : 1
+  dataset : "towncenter"
+  t : "PR_fcn"
+  resume : "none"
+  nJoints : 27
+  GPU : 1
+  weightDecay : 0.0005
+  retrain : "none"
+  W_jsc : 91
+  x : 438
+  nDonkeys : 3
+  nChOut : 29
+  save : "/home/namhoon/develop/PoseRegression/save/PR_fcn/option/t_MonApr2518:05:002016"
+  netType : "testmodel2"
+  nTestData : 500
+  epochNumber : 1
+  H : 131
+  nTrainData : 50000
+  momentum : 0.9
+  nEpochs : 10
+  shareGradInput : "false"
+  LR : 0.1
+  backend : "cudnn"
+  y : 230
+  W : 91
+}
+=> Creating model from file: models/testmodel2.lua	
+ | testmodel2 .. towncenter	
+Loaded mean and std from cache.
+Loaded mean and std from cache.
+Loaded mean and std from cache.
+2	
+3	
+--TRAIN STARTS..	
+Ep. [1/10][1/3125] Time(s): 20.62  batch err: 0.0536472164 | dataLoadTime: 3.014 | mem: 3378.76	
+Ep. [1/10][2/3125] Time(s): 3.18  batch err: 0.0478752479 | dataLoadTime: 0.006 | mem: 3435.73	
+Ep. [1/10][3/3125] Time(s): 3.31  batch err: 0.0404017307 | dataLoadTime: 0.006 | mem: 3451.89	
+Ep. [1/10][4/3125] Time(s): 3.22  batch err: 0.0331170186 | dataLoadTime: 0.006 | mem: 3459.33	
+Ep. [1/10][5/3125] Time(s): 3.50  batch err: 0.0284917392 | dataLoadTime: 0.005 | mem: 3458.59	
+Ep. [1/10][6/3125] Time(s): 3.51  batch err: 0.0260774922 | dataLoadTime: 0.005 | mem: 3460.85	
+Ep. [1/10][7/3125] Time(s): 3.52  batch err: 0.0256773066 | dataLoadTime: 0.005 | mem: 3464.25	
+Ep. [1/10][8/3125] Time(s): 3.56  batch err: 0.0258960631 | dataLoadTime: 0.005 | mem: 3465.87	
+Ep. [1/10][9/3125] Time(s): 3.54  batch err: 0.0257565733 | dataLoadTime: 0.005 | mem: 3467.07	
+Ep. [1/10][10/3125] Time(s): 3.51  batch err: 0.0249326136 | dataLoadTime: 0.005 | mem: 3468.61	
+Ep. [1/10][11/3125] Time(s): 3.50  batch err: 0.0234066788 | dataLoadTime: 0.005 | mem: 3471.37	
+Ep. [1/10][12/3125] Time(s): 3.51  batch err: 0.0204003174 | dataLoadTime: 0.005 | mem: 3472.98	
+Ep. [1/10][13/3125] Time(s): 3.52  batch err: 0.0176929478 | dataLoadTime: 0.005 | mem: 3474.21	
+Ep. [1/10][14/3125] Time(s): 3.51  batch err: 0.0156775285 | dataLoadTime: 0.005 | mem: 3475.01	
+Ep. [1/10][15/3125] Time(s): 3.51  batch err: 0.0141538791 | dataLoadTime: 0.005 | mem: 3476.26	
+Ep. [1/10][16/3125] Time(s): 3.52  batch err: 0.0137690017 | dataLoadTime: 0.005 | mem: 3476.58	
+Ep. [1/10][17/3125] Time(s): 3.51  batch err: 0.0135624167 | dataLoadTime: 0.005 | mem: 3477.10	
+Ep. [1/10][18/3125] Time(s): 3.50  batch err: 0.0139854671 | dataLoadTime: 0.005 | mem: 3478.08	
+Ep. [1/10][19/3125] Time(s): 3.50  batch err: 0.0135701559 | dataLoadTime: 0.005 | mem: 3478.41	
+Ep. [1/10][20/3125] Time(s): 3.50  batch err: 0.0134181678 | dataLoadTime: 0.005 | mem: 3478.71	
+Ep. [1/10][21/3125] Time(s): 3.50  batch err: 0.0121468166 | dataLoadTime: 0.005 | mem: 3478.96	
+Ep. [1/10][22/3125] Time(s): 3.50  batch err: 0.0112148244 | dataLoadTime: 0.005 | mem: 3478.96	
+Ep. [1/10][23/3125] Time(s): 3.50  batch err: 0.0105069270 | dataLoadTime: 0.005 | mem: 3478.96	
+Ep. [1/10][24/3125] Time(s): 3.50  batch err: 0.0094946008 | dataLoadTime: 0.005 | mem: 3479.12	
+Ep. [1/10][25/3125] Time(s): 3.50  batch err: 0.0093320319 | dataLoadTime: 0.005 | mem: 3479.12	
+Ep. [1/10][26/3125] Time(s): 3.49  batch err: 0.0089125643 | dataLoadTime: 0.005 | mem: 3479.60	
+Ep. [1/10][27/3125] Time(s): 3.54  batch err: 0.0088057984 | dataLoadTime: 0.005 | mem: 3479.60	
+Ep. [1/10][28/3125] Time(s): 3.57  batch err: 0.0086940434 | dataLoadTime: 0.005 | mem: 3479.60	
+Ep. [1/10][29/3125] Time(s): 3.57  batch err: 0.0086253919 | dataLoadTime: 0.005 | mem: 3479.60	
+Ep. [1/10][30/3125] Time(s): 3.64  batch err: 0.0083714053 | dataLoadTime: 0.005 | mem: 3479.60	
+Ep. [1/10][31/3125] Time(s): 3.57  batch err: 0.0082119349 | dataLoadTime: 0.005 | mem: 3479.60	
+Ep. [1/10][32/3125] Time(s): 3.58  batch err: 0.0079728486 | dataLoadTime: 0.005 | mem: 3479.60	
+Ep. [1/10][33/3125] Time(s): 3.55  batch err: 0.0069546988 | dataLoadTime: 0.005 | mem: 3480.08	
+Ep. [1/10][34/3125] Time(s): 3.57  batch err: 0.0072700889 | dataLoadTime: 0.005 | mem: 3479.85	
+Ep. [1/10][35/3125] Time(s): 3.53  batch err: 0.0069514969 | dataLoadTime: 0.005 | mem: 3479.85	
+Ep. [1/10][36/3125] Time(s): 3.54  batch err: 0.0067186388 | dataLoadTime: 0.005 | mem: 3479.85	
+Ep. [1/10][37/3125] Time(s): 3.56  batch err: 0.0065381713 | dataLoadTime: 0.005 | mem: 3480.28	
+Ep. [1/10][38/3125] Time(s): 3.53  batch err: 0.0065213647 | dataLoadTime: 0.005 | mem: 3480.28	
+Ep. [1/10][39/3125] Time(s): 3.54  batch err: 0.0062233075 | dataLoadTime: 0.005 | mem: 3480.92	
+Ep. [1/10][40/3125] Time(s): 3.54  batch err: 0.0062786145 | dataLoadTime: 0.005 | mem: 3480.92	
+Ep. [1/10][41/3125] Time(s): 3.52  batch err: 0.0063485927 | dataLoadTime: 0.005 | mem: 3481.70	
+Ep. [1/10][42/3125] Time(s): 3.57  batch err: 0.0058968826 | dataLoadTime: 0.005 | mem: 3482.13	
+Ep. [1/10][43/3125] Time(s): 3.57  batch err: 0.0059331520 | dataLoadTime: 0.005 | mem: 3482.13	
+Ep. [1/10][44/3125] Time(s): 3.56  batch err: 0.0055395034 | dataLoadTime: 0.005 | mem: 3482.13	
+Ep. [1/10][45/3125] Time(s): 3.54  batch err: 0.0055491733 | dataLoadTime: 0.005 | mem: 3482.13	
+Ep. [1/10][46/3125] Time(s): 3.57  batch err: 0.0054596718 | dataLoadTime: 0.005 | mem: 3482.13	
+Ep. [1/10][47/3125] Time(s): 3.68  batch err: 0.0053760041 | dataLoadTime: 0.005 | mem: 3482.13	
+Ep. [1/10][48/3125] Time(s): 3.58  batch err: 0.0053277067 | dataLoadTime: 0.006 | mem: 3482.13	
+Ep. [1/10][49/3125] Time(s): 3.54  batch err: 0.0054882625 | dataLoadTime: 0.005 | mem: 3482.13	
+Ep. [1/10][50/3125] Time(s): 3.54  batch err: 0.0051033110 | dataLoadTime: 0.005 | mem: 3482.13	
+Ep. [1/10][51/3125] Time(s): 3.54  batch err: 0.0051840674 | dataLoadTime: 0.005 | mem: 3482.13	
+Ep. [1/10][52/3125] Time(s): 3.55  batch err: 0.0051221889 | dataLoadTime: 0.005 | mem: 3483.11	
+Ep. [1/10][53/3125] Time(s): 3.54  batch err: 0.0051425709 | dataLoadTime: 0.005 | mem: 3483.58	
+Ep. [1/10][54/3125] Time(s): 3.55  batch err: 0.0048111435 | dataLoadTime: 0.005 | mem: 3484.07	
+Ep. [1/10][55/3125] Time(s): 3.53  batch err: 0.0049442085 | dataLoadTime: 0.005 | mem: 3484.07	
+Ep. [1/10][56/3125] Time(s): 3.54  batch err: 0.0049900105 | dataLoadTime: 0.005 | mem: 3484.61	
+Ep. [1/10][57/3125] Time(s): 3.53  batch err: 0.0050833020 | dataLoadTime: 0.005 | mem: 3484.61	
+Ep. [1/10][58/3125] Time(s): 3.53  batch err: 0.0045573916 | dataLoadTime: 0.005 | mem: 3484.61	
+Ep. [1/10][59/3125] Time(s): 3.53  batch err: 0.0047043683 | dataLoadTime: 0.005 | mem: 3484.61	
+Ep. [1/10][60/3125] Time(s): 3.52  batch err: 0.0044373418 | dataLoadTime: 0.005 | mem: 3484.61	
+Ep. [1/10][61/3125] Time(s): 3.52  batch err: 0.0046622469 | dataLoadTime: 0.005 | mem: 3485.41	
+Ep. [1/10][62/3125] Time(s): 3.53  batch err: 0.0046365433 | dataLoadTime: 0.005 | mem: 3485.41	
+Ep. [1/10][63/3125] Time(s): 3.53  batch err: 0.0044423873 | dataLoadTime: 0.005 | mem: 3485.41	
+Ep. [1/10][64/3125] Time(s): 3.56  batch err: 0.0044367616 | dataLoadTime: 0.005 | mem: 3485.41	
+Ep. [1/10][65/3125] Time(s): 3.55  batch err: 0.0043574297 | dataLoadTime: 0.005 | mem: 3485.91	
+Ep. [1/10][66/3125] Time(s): 3.54  batch err: 0.0045529869 | dataLoadTime: 0.005 | mem: 3485.91	
+Ep. [1/10][67/3125] Time(s): 3.54  batch err: 0.0046044788 | dataLoadTime: 0.005 | mem: 3485.91	
+Ep. [1/10][68/3125] Time(s): 3.59  batch err: 0.0040966603 | dataLoadTime: 0.005 | mem: 3485.91	
+Ep. [1/10][69/3125] Time(s): 3.61  batch err: 0.0043903971 | dataLoadTime: 0.005 | mem: 3485.91	
+Ep. [1/10][70/3125] Time(s): 3.56  batch err: 0.0042334897 | dataLoadTime: 0.005 | mem: 3485.91	
+Ep. [1/10][71/3125] Time(s): 3.54  batch err: 0.0045419140 | dataLoadTime: 0.005 | mem: 3485.91	
+Ep. [1/10][72/3125] Time(s): 3.54  batch err: 0.0038363670 | dataLoadTime: 0.005 | mem: 3485.91	
+Ep. [1/10][73/3125] Time(s): 3.56  batch err: 0.0041388879 | dataLoadTime: 0.006 | mem: 3485.91	
+Ep. [1/10][74/3125] Time(s): 3.56  batch err: 0.0043143756 | dataLoadTime: 0.005 | mem: 3485.91	
+Ep. [1/10][75/3125] Time(s): 3.59  batch err: 0.0039792480 | dataLoadTime: 0.005 | mem: 3485.91	
+Ep. [1/10][76/3125] Time(s): 3.57  batch err: 0.0038957188 | dataLoadTime: 0.005 | mem: 3485.91	
+Ep. [1/10][77/3125] Time(s): 3.52  batch err: 0.0041864975 | dataLoadTime: 0.005 | mem: 3485.91	
+Ep. [1/10][78/3125] Time(s): 3.56  batch err: 0.0041223560 | dataLoadTime: 0.005 | mem: 3485.91	
+Ep. [1/10][79/3125] Time(s): 3.50  batch err: 0.0043202066 | dataLoadTime: 0.005 | mem: 3485.91	
+Ep. [1/10][80/3125] Time(s): 3.50  batch err: 0.0039478592 | dataLoadTime: 0.005 | mem: 3485.91	
+Ep. [1/10][81/3125] Time(s): 3.52  batch err: 0.0040207934 | dataLoadTime: 0.005 | mem: 3485.91	
+Ep. [1/10][82/3125] Time(s): 3.50  batch err: 0.0038428232 | dataLoadTime: 0.005 | mem: 3485.91	
+Ep. [1/10][83/3125] Time(s): 3.49  batch err: 0.0038013468 | dataLoadTime: 0.005 | mem: 3485.91	
+Ep. [1/10][84/3125] Time(s): 3.55  batch err: 0.0039279358 | dataLoadTime: 0.005 | mem: 3485.91	
+Ep. [1/10][85/3125] Time(s): 3.63  batch err: 0.0038603847 | dataLoadTime: 0.005 | mem: 3485.91	
+Ep. [1/10][86/3125] Time(s): 3.62  batch err: 0.0038900441 | dataLoadTime: 0.005 | mem: 3485.91	
+Ep. [1/10][87/3125] Time(s): 3.57  batch err: 0.0038172367 | dataLoadTime: 0.005 | mem: 3485.91	
+Ep. [1/10][88/3125] Time(s): 3.56  batch err: 0.0039212937 | dataLoadTime: 0.005 | mem: 3486.21	
+Ep. [1/10][89/3125] Time(s): 3.54  batch err: 0.0036609110 | dataLoadTime: 0.005 | mem: 3486.21	
+Ep. [1/10][90/3125] Time(s): 3.55  batch err: 0.0037754218 | dataLoadTime: 0.005 | mem: 3486.21	
+Ep. [1/10][91/3125] Time(s): 3.53  batch err: 0.0040378668 | dataLoadTime: 0.005 | mem: 3486.21	
+Ep. [1/10][92/3125] Time(s): 3.49  batch err: 0.0037686450 | dataLoadTime: 0.005 | mem: 3486.21	
+Ep. [1/10][93/3125] Time(s): 3.53  batch err: 0.0036961681 | dataLoadTime: 0.005 | mem: 3486.21	
+Ep. [1/10][94/3125] Time(s): 3.49  batch err: 0.0038307782 | dataLoadTime: 0.005 | mem: 3486.55	
+Ep. [1/10][95/3125] Time(s): 3.49  batch err: 0.0036650423 | dataLoadTime: 0.005 | mem: 3487.28	
+Ep. [1/10][96/3125] Time(s): 3.55  batch err: 0.0035796666 | dataLoadTime: 0.005 | mem: 3487.28	
+Ep. [1/10][97/3125] Time(s): 3.53  batch err: 0.0037935684 | dataLoadTime: 0.005 | mem: 3487.28	
+Ep. [1/10][98/3125] Time(s): 3.52  batch err: 0.0036473142 | dataLoadTime: 0.005 | mem: 3487.28	
+Ep. [1/10][99/3125] Time(s): 3.54  batch err: 0.0036582341 | dataLoadTime: 0.005 | mem: 3487.28	
+Ep. [1/10][100/3125] Time(s): 3.55  batch err: 0.0035792899 | dataLoadTime: 0.005 | mem: 3487.28	
+Ep. [1/10][101/3125] Time(s): 3.56  batch err: 0.0037160090 | dataLoadTime: 0.005 | mem: 3487.28	
+Ep. [1/10][102/3125] Time(s): 3.57  batch err: 0.0033734366 | dataLoadTime: 0.006 | mem: 3487.28	
+Ep. [1/10][103/3125] Time(s): 3.53  batch err: 0.0037056394 | dataLoadTime: 0.005 | mem: 3487.28	
+Ep. [1/10][104/3125] Time(s): 3.50  batch err: 0.0038621861 | dataLoadTime: 0.005 | mem: 3487.28	
+Ep. [1/10][105/3125] Time(s): 3.52  batch err: 0.0035721974 | dataLoadTime: 0.006 | mem: 3487.28	
+Ep. [1/10][106/3125] Time(s): 3.54  batch err: 0.0053101075 | dataLoadTime: 0.005 | mem: 3487.28	
+Ep. [1/10][107/3125] Time(s): 3.65  batch err: 0.0034306627 | dataLoadTime: 0.005 | mem: 3487.28	
+Ep. [1/10][108/3125] Time(s): 3.66  batch err: 0.0043140375 | dataLoadTime: 0.006 | mem: 3487.28	
+Ep. [1/10][109/3125] Time(s): 3.49  batch err: 0.0051923250 | dataLoadTime: 0.006 | mem: 3487.63	
+Ep. [1/10][110/3125] Time(s): 3.51  batch err: 0.0046592974 | dataLoadTime: 0.005 | mem: 3487.95	
+Ep. [1/10][111/3125] Time(s): 3.49  batch err: 0.0042750062 | dataLoadTime: 0.005 | mem: 3487.95	
+Ep. [1/10][112/3125] Time(s): 3.49  batch err: 0.0044333288 | dataLoadTime: 0.005 | mem: 3487.95	
+Ep. [1/10][113/3125] Time(s): 3.49  batch err: 0.0043654433 | dataLoadTime: 0.006 | mem: 3487.95	
+Ep. [1/10][114/3125] Time(s): 3.54  batch err: 0.0040837354 | dataLoadTime: 0.006 | mem: 3488.28	
+Ep. [1/10][115/3125] Time(s): 3.55  batch err: 0.0042595030 | dataLoadTime: 0.005 | mem: 3488.28	
+Ep. [1/10][116/3125] Time(s): 3.59  batch err: 0.0041343677 | dataLoadTime: 0.005 | mem: 3488.28	
+Ep. [1/10][117/3125] Time(s): 3.57  batch err: 0.0041416520 | dataLoadTime: 0.005 | mem: 3488.67	
+Ep. [1/10][118/3125] Time(s): 3.54  batch err: 0.0039297910 | dataLoadTime: 0.005 | mem: 3488.67	
+Ep. [1/10][119/3125] Time(s): 3.56  batch err: 0.0040290370 | dataLoadTime: 0.005 | mem: 3488.67	
+Ep. [1/10][120/3125] Time(s): 3.50  batch err: 0.0038560168 | dataLoadTime: 0.005 | mem: 3488.67	
+Ep. [1/10][121/3125] Time(s): 3.49  batch err: 0.0036235393 | dataLoadTime: 0.005 | mem: 3488.67	
+Ep. [1/10][122/3125] Time(s): 3.51  batch err: 0.0038410693 | dataLoadTime: 0.005 | mem: 3488.67	
+Ep. [1/10][123/3125] Time(s): 3.55  batch err: 0.0033707507 | dataLoadTime: 0.006 | mem: 3488.67	
+Ep. [1/10][124/3125] Time(s): 3.59  batch err: 0.0039945520 | dataLoadTime: 0.005 | mem: 3488.67	
+Ep. [1/10][125/3125] Time(s): 3.50  batch err: 0.0042375196 | dataLoadTime: 0.006 | mem: 3488.67	
+Ep. [1/10][126/3125] Time(s): 3.55  batch err: 0.0036915373 | dataLoadTime: 0.005 | mem: 3488.67	
+Ep. [1/10][127/3125] Time(s): 3.54  batch err: 0.0035455418 | dataLoadTime: 0.005 | mem: 3488.67	
+Ep. [1/10][128/3125] Time(s): 3.54  batch err: 0.0039224932 | dataLoadTime: 0.005 | mem: 3488.67	
+Ep. [1/10][129/3125] Time(s): 3.56  batch err: 0.0037566612 | dataLoadTime: 0.005 | mem: 3489.67	
+Ep. [1/10][130/3125] Time(s): 3.56  batch err: 0.0036162154 | dataLoadTime: 0.006 | mem: 3489.67	
+Ep. [1/10][131/3125] Time(s): 3.54  batch err: 0.0036379290 | dataLoadTime: 0.005 | mem: 3489.67	
+Ep. [1/10][132/3125] Time(s): 3.52  batch err: 0.0033562509 | dataLoadTime: 0.005 | mem: 3489.67	
+Ep. [1/10][133/3125] Time(s): 3.57  batch err: 0.0036107346 | dataLoadTime: 0.005 | mem: 3489.67	
+Ep. [1/10][134/3125] Time(s): 3.49  batch err: 0.0036308179 | dataLoadTime: 0.006 | mem: 3489.67	
+Ep. [1/10][135/3125] Time(s): 3.50  batch err: 0.0037365654 | dataLoadTime: 0.005 | mem: 3489.67	
+Ep. [1/10][136/3125] Time(s): 3.49  batch err: 0.0036040877 | dataLoadTime: 0.005 | mem: 3489.67	
+Ep. [1/10][137/3125] Time(s): 3.49  batch err: 0.0034221814 | dataLoadTime: 0.005 | mem: 3489.67	
+Ep. [1/10][138/3125] Time(s): 3.49  batch err: 0.0034867253 | dataLoadTime: 0.005 | mem: 3489.67	
+Ep. [1/10][139/3125] Time(s): 3.50  batch err: 0.0035493788 | dataLoadTime: 0.005 | mem: 3490.22	
+Ep. [1/10][140/3125] Time(s): 3.50  batch err: 0.0034918436 | dataLoadTime: 0.006 | mem: 3490.22	
+Ep. [1/10][141/3125] Time(s): 3.49  batch err: 0.0036780671 | dataLoadTime: 0.006 | mem: 3490.22	
+Ep. [1/10][142/3125] Time(s): 3.49  batch err: 0.0035740340 | dataLoadTime: 0.006 | mem: 3490.22	
+Ep. [1/10][143/3125] Time(s): 3.50  batch err: 0.0034871162 | dataLoadTime: 0.005 | mem: 3490.22	
+Ep. [1/10][144/3125] Time(s): 3.50  batch err: 0.0035253416 | dataLoadTime: 0.006 | mem: 3490.22	
+Ep. [1/10][145/3125] Time(s): 3.49  batch err: 0.0034882743 | dataLoadTime: 0.005 | mem: 3490.22	
+Ep. [1/10][146/3125] Time(s): 3.60  batch err: 0.0036527144 | dataLoadTime: 0.005 | mem: 3490.22	
+Ep. [1/10][147/3125] Time(s): 3.55  batch err: 0.0035565596 | dataLoadTime: 0.005 | mem: 3490.22	
+Ep. [1/10][148/3125] Time(s): 3.59  batch err: 0.0035277724 | dataLoadTime: 0.005 | mem: 3490.22	
+Ep. [1/10][149/3125] Time(s): 4.28  batch err: 0.0034797478 | dataLoadTime: 0.005 | mem: 3490.22	
+Ep. [1/10][150/3125] Time(s): 3.47  batch err: 0.0030399959 | dataLoadTime: 0.007 | mem: 3490.22	
+Ep. [1/10][151/3125] Time(s): 3.46  batch err: 0.0030765836 | dataLoadTime: 0.005 | mem: 3490.22	
+Ep. [1/10][152/3125] Time(s): 3.54  batch err: 0.0033042091 | dataLoadTime: 0.006 | mem: 3490.22	
+Ep. [1/10][153/3125] Time(s): 3.93  batch err: 0.0036168764 | dataLoadTime: 0.006 | mem: 3490.52	
+Ep. [1/10][154/3125] Time(s): 3.45  batch err: 0.0034168367 | dataLoadTime: 0.008 | mem: 3490.85	
+Ep. [1/10][155/3125] Time(s): 3.49  batch err: 0.0032040433 | dataLoadTime: 0.005 | mem: 3490.85	
+Ep. [1/10][156/3125] Time(s): 3.49  batch err: 0.0034460269 | dataLoadTime: 0.005 | mem: 3490.85	
+Ep. [1/10][157/3125] Time(s): 3.50  batch err: 0.0032554655 | dataLoadTime: 0.005 | mem: 3490.85	
+Ep. [1/10][158/3125] Time(s): 3.49  batch err: 0.0033795023 | dataLoadTime: 0.005 | mem: 3490.85	
+Ep. [1/10][159/3125] Time(s): 3.49  batch err: 0.0035279337 | dataLoadTime: 0.005 | mem: 3490.85	
+Ep. [1/10][160/3125] Time(s): 3.61  batch err: 0.0034710134 | dataLoadTime: 0.005 | mem: 3490.85	
+Ep. [1/10][161/3125] Time(s): 3.60  batch err: 0.0034098711 | dataLoadTime: 0.006 | mem: 3490.85	
+Ep. [1/10][162/3125] Time(s): 3.58  batch err: 0.0033210295 | dataLoadTime: 0.005 | mem: 3490.85	
+Ep. [1/10][163/3125] Time(s): 3.61  batch err: 0.0032632393 | dataLoadTime: 0.005 | mem: 3490.85	
+Ep. [1/10][164/3125] Time(s): 3.54  batch err: 0.0034527050 | dataLoadTime: 0.005 | mem: 3491.25	
+Ep. [1/10][165/3125] Time(s): 3.50  batch err: 0.0032306453 | dataLoadTime: 0.005 | mem: 3491.25	
+Ep. [1/10][166/3125] Time(s): 3.59  batch err: 0.0033809433 | dataLoadTime: 0.005 | mem: 3491.25	
+Ep. [1/10][167/3125] Time(s): 3.51  batch err: 0.0032552935 | dataLoadTime: 0.005 | mem: 3491.25	
+Ep. [1/10][168/3125] Time(s): 3.51  batch err: 0.0031776656 | dataLoadTime: 0.005 | mem: 3491.25	
+Ep. [1/10][169/3125] Time(s): 3.55  batch err: 0.0033007490 | dataLoadTime: 0.005 | mem: 3491.25	
+Ep. [1/10][170/3125] Time(s): 3.54  batch err: 0.0033358021 | dataLoadTime: 0.005 | mem: 3491.25	
+Ep. [1/10][171/3125] Time(s): 3.49  batch err: 0.0035059019 | dataLoadTime: 0.005 | mem: 3491.25	
+Ep. [1/10][172/3125] Time(s): 3.49  batch err: 0.0034539045 | dataLoadTime: 0.005 | mem: 3491.25	
+Ep. [1/10][173/3125] Time(s): 3.49  batch err: 0.0032690349 | dataLoadTime: 0.005 | mem: 3491.25	
+Ep. [1/10][174/3125] Time(s): 3.48  batch err: 0.0030525520 | dataLoadTime: 0.005 | mem: 3491.25	
+Ep. [1/10][175/3125] Time(s): 3.51  batch err: 0.0032586139 | dataLoadTime: 0.005 | mem: 3491.25	
+Ep. [1/10][176/3125] Time(s): 3.49  batch err: 0.0034702860 | dataLoadTime: 0.005 | mem: 3491.25	
+Ep. [1/10][177/3125] Time(s): 3.49  batch err: 0.0031965724 | dataLoadTime: 0.005 | mem: 3491.25	
+Ep. [1/10][178/3125] Time(s): 3.49  batch err: 0.0031614767 | dataLoadTime: 0.005 | mem: 3491.25	
+Ep. [1/10][179/3125] Time(s): 3.49  batch err: 0.0032786375 | dataLoadTime: 0.005 | mem: 3491.25	
+Ep. [1/10][180/3125] Time(s): 3.53  batch err: 0.0034262489 | dataLoadTime: 0.005 | mem: 3491.25	
+Ep. [1/10][181/3125] Time(s): 3.50  batch err: 0.0032818362 | dataLoadTime: 0.005 | mem: 3491.25	
+Ep. [1/10][182/3125] Time(s): 3.53  batch err: 0.0034819827 | dataLoadTime: 0.005 | mem: 3491.25	
+Ep. [1/10][183/3125] Time(s): 3.50  batch err: 0.0031311838 | dataLoadTime: 0.005 | mem: 3491.25	
+Ep. [1/10][184/3125] Time(s): 3.50  batch err: 0.0034062292 | dataLoadTime: 0.005 | mem: 3491.25	
+Ep. [1/10][185/3125] Time(s): 3.50  batch err: 0.0034179750 | dataLoadTime: 0.005 | mem: 3491.25	
+Ep. [1/10][186/3125] Time(s): 3.50  batch err: 0.0032492785 | dataLoadTime: 0.005 | mem: 3491.25	
+Ep. [1/10][187/3125] Time(s): 3.49  batch err: 0.0032176652 | dataLoadTime: 0.005 | mem: 3491.25	
+Ep. [1/10][188/3125] Time(s): 3.49  batch err: 0.0031573421 | dataLoadTime: 0.005 | mem: 3491.25	
+Ep. [1/10][189/3125] Time(s): 3.50  batch err: 0.0031252170 | dataLoadTime: 0.005 | mem: 3491.25	
+Ep. [1/10][190/3125] Time(s): 3.50  batch err: 0.0031042548 | dataLoadTime: 0.005 | mem: 3491.25	
+Ep. [1/10][191/3125] Time(s): 3.51  batch err: 0.0032475232 | dataLoadTime: 0.005 | mem: 3491.25	
+Ep. [1/10][192/3125] Time(s): 3.52  batch err: 0.0033171130 | dataLoadTime: 0.005 | mem: 3491.25	
+Ep. [1/10][193/3125] Time(s): 3.53  batch err: 0.0034105885 | dataLoadTime: 0.005 | mem: 3491.25	
+Ep. [1/10][194/3125] Time(s): 3.54  batch err: 0.0031133851 | dataLoadTime: 0.005 | mem: 3491.25	
+Ep. [1/10][195/3125] Time(s): 3.51  batch err: 0.0032197936 | dataLoadTime: 0.006 | mem: 3491.25	
+Ep. [1/10][196/3125] Time(s): 3.51  batch err: 0.0029010975 | dataLoadTime: 0.005 | mem: 3491.25	
+Ep. [1/10][197/3125] Time(s): 3.52  batch err: 0.0035794780 | dataLoadTime: 0.005 | mem: 3491.25	
+Ep. [1/10][198/3125] Time(s): 3.55  batch err: 0.0033779999 | dataLoadTime: 0.005 | mem: 3491.25	
+Ep. [1/10][199/3125] Time(s): 3.53  batch err: 0.0033190269 | dataLoadTime: 0.005 | mem: 3491.25	
+Ep. [1/10][200/3125] Time(s): 3.51  batch err: 0.0032919145 | dataLoadTime: 0.005 | mem: 3491.25	
+Ep. [1/10][201/3125] Time(s): 3.50  batch err: 0.0031913344 | dataLoadTime: 0.005 | mem: 3491.25	
+Ep. [1/10][202/3125] Time(s): 3.51  batch err: 0.0027513078 | dataLoadTime: 0.005 | mem: 3491.25	
+Ep. [1/10][203/3125] Time(s): 3.50  batch err: 0.0030489094 | dataLoadTime: 0.005 | mem: 3491.25	

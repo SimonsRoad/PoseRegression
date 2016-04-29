@@ -8,15 +8,15 @@ require 'cunn'
 require 'cudnn'
 require 'nngraph'
 
-pathtomodels = '../save/PR_fcn/option/t_SunApr1709:33:532016'
+pathtomodels = '../save/PR_fcn/option/t_MonApr2522:54:292016'
 
-for epoch = 1,3 do
+for epoch = 1,10 do
     print('epoch ' .. epoch)
 	local model_raw = torch.load(paths.concat(pathtomodels, 'model_'..epoch..'.t7'))
 	local model_clr = model_raw:clearState()
 
 	-- sanity check
-	local a = torch.rand(3,3,128,64):cuda()
+	local a = torch.rand(1,3,128,64):cuda()
 	local out_raw = model_raw:cuda():forward(a)
 	local out_clr = model_clr:cuda():forward(a)
     if torch.type(out_raw) == 'table' then

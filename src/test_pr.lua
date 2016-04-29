@@ -31,18 +31,18 @@ opt.nDonkeys = 3
 
 
 -- location
-y   = 170
-x   = 570
-opt.W = 78
-opt.H = 112
-opt.W_jsc = 78
-opt.H_jsc = 112
+y   = 91
+x   = 354
+opt.W = 61
+opt.H = 87
+opt.W_jsc = opt.W
+opt.H_jsc = opt.H
 
 
 -- TEST DATA: 1) sTrain, 2) sTest, 3) rTest
 --
 testsettype = 'rTest'
-numimages   = 29
+numimages   = 28
 quality     = 'LQ'
 
 local indices = torch.Tensor(1):long()
@@ -50,7 +50,7 @@ local testimg_all = torch.Tensor(numimages, 3, opt.H, opt.W)
 local testjsc_all = torch.Tensor(numimages, opt.nChOut, opt.H_jsc, opt.W_jsc)
 
 -- load model
-for mNum = 1,8 do
+for mNum = 1,20 do
 
     local mName = string.format('clear_model_%d.t7', mNum)
     --local pathToModel = '../save/PR_fcn/option/t_SunMar2721:48:402016'
@@ -68,7 +68,15 @@ for mNum = 1,8 do
     --local pathToModel = '../save/PR_fcn/option/t_WedApr2008:26:562016'
     --local pathToModel = '../save/PR_fcn/option/t_ThuApr2104:24:462016'
     --local pathToModel = '../save/PR_fcn/option/t_ThuApr2112:11:132016'
-    local pathToModel = '../save/PR_fcn/option/t_SunApr2407:18:482016'
+    --local pathToModel = '../save/PR_fcn/option/t_SunApr2407:18:482016'
+    --local pathToModel = '../save/PR_fcn/option/t_SatApr2320:24:372016'
+    --local pathToModel = '../save/PR_fcn/option/t_SunApr2419:20:302016'
+    --local pathToModel = '../save/PR_fcn/option/t_MonApr2500:01:242016'
+    --local pathToModel = '../save/PR_fcn/option/t_MonApr2504:23:352016'
+    --local pathToModel = '../save/PR_fcn/option/t_MonApr2522:31:402016'
+    --local pathToModel = '../save/PR_fcn/option/t_TueApr2602:33:032016'
+    --local pathToModel = '../save/PR_fcn/option/t_TueApr2608:26:562016'
+    local pathToModel = '../save/PR_fcn/option/t_TueApr2617:42:272016'
 
     opt.retrain = paths.concat(pathToModel, mName)  
     local model, criterion = models.setup(opt)

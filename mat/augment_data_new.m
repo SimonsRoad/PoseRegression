@@ -7,9 +7,9 @@ clear; clc; close all;
 
 %% load existing data
 % data directories
-y = 138;
-x = 167;
-path_data = sprintf('~/develop/PoseRegression/data/rendout/anc_y%d_x%d_test', y, x);
+y = 91;
+x = 354;
+path_data = sprintf('~/develop/PoseRegression/data/rendout/anc_y%d_x%d', y, x);
 path_pos  = fullfile(path_data, 'pos');
 path_seg  = fullfile(path_data, 'seg');
 path_jsc  = fullfile(path_data, 'jsc');
@@ -55,6 +55,7 @@ for i = 1:numel(data)
         else
             hmap(j27_round(j,2), j27_round(j,1), j) = 1;
             hmap(:,:,j) = imgaussfilt(hmap(:,:,j), 3);       % gaussian
+%             hmap(:,:,j) = imgaussfilt(hmap(:,:,j), 1.5);       % gaussian half sigma
             hmap(:,:,j) = hmap(:,:,j)/max(max(hmap(:,:,j)));  % normalize approach1
         end
     end
@@ -69,7 +70,8 @@ for i = 1:numel(data)
     if midpoint(1) > w || midpoint(2) > h || sum(midpoint<=0)
     else
         cen(midpoint(2), midpoint(1)) = 1;
-        cen = imgaussfilt(cen, 5);
+        cen = imgaussfilt(cen, 5); 
+%         cen = imgaussfilt(cen, 2.5); % gaussian half sigma
         cen = single(cen);
         cen = cen/max(cen(:));
     end

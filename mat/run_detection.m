@@ -9,7 +9,7 @@ switch(detectionmethod)
     case 'DPM_INRIA'
         box = run_DPM_INRIA(testdata);
     case 'GT'
-        margin = 0.0;
+        margin = 0.4;
         box = get_gtbox(testdata, margin);
     otherwise
         error('Check available methods for detection!');
@@ -31,23 +31,6 @@ for i=1:numel(testdata)
 end
 end
 
-function box = run_DPM_INRIA(testdata)
-addpath('~/Downloads/voc-release5/');
-startup;
-fprintf('compiling the code...');
-compile;
-fprintf('done.\n\n');
-load('/home/namhoon/Downloads/voc-release5/INRIA/inriaperson_final');
-model.vis = @() visualizemodel(model, ...
-    1:2:length(model.rules{model.start}));
-
-box = [];
-for i=1:numel(testdata)
-    fprintf('detecting box for image %d ..\n', i);
-    box(i,:) = test(testdata(i).im, model, -0.3);
-end
-end
-
 function box = run_DPM_VOC(testdata)
 addpath('~/Downloads/voc-release5/');
 startup;
@@ -59,10 +42,39 @@ model.class = 'person grammar';
 model.vis = @() visualize_person_grammar_model(model, 6);
 
 box = [];
+time_total = 0;
 for i=1:numel(testdata)
     fprintf('detecting box for image %d ..\n', i);
+    tic;
     box(i,:) = test(testdata(i).im, model, -0.6);
+    time = toc;
+    time_total = time_total + time;
 end
+fprintf('total processing time (DPM_VOC): %.4f \n', time_total);
+fprintf('  avg processing time (DPM_VOC): %.4f \n', time_total/numel(testdata));
+end
+
+function box = run_DPM_INRIA(testdata)
+addpath('~/Downloads/voc-release5/');
+startup;
+fprintf('compiling the code...');
+compile;
+fprintf('done.\n\n');
+load('/home/namhoon/Downloads/voc-release5/INRIA/inriaperson_final');
+model.vis = @() visualizemodel(model, ...
+    1:2:length(model.rules{model.start}));
+
+box = [];
+time_total = 0;
+for i=1:numel(testdata)
+    fprintf('detecting box for image %d ..\n', i);
+    tic;
+    box(i,:) = test(testdata(i).im, model, -0.3);
+    time = toc;
+    time_total = time_total + time;
+end
+fprintf('total processing time (DPM_INRIA): %.4f \n', time_total);
+fprintf('  avg processing time (DPM_INRIA): %.4f \n', time_total/numel(testdata));
 end
 
 function box = test(imname, model, thresh)
@@ -145,6 +157,11 @@ for i=1:numel(testdata)
     
     joints = testdata(i).point;
     joints = joints(1:14,:);
+    
+    % get rid of occluded joints
+    occ = testdata(i).occ;
+    occ = occ(1:14);
+    joints(find(occ==1),:) = [];
     
     x1 = min(joints(:,1));
     x2 = max(joints(:,1));

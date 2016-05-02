@@ -13,6 +13,7 @@ function find_peak(hmap)
 
     local nData = hmap:size(1)
     local j27 = torch.CudaTensor(nData, opt.nJoints, 2)
+    local occ = torch.CudaTensor(nData, opt.nJoints, 1)
 
     for i=1,nData do
         for j=1,opt.nJoints do
@@ -23,13 +24,19 @@ function find_peak(hmap)
             -- new label
             j27[{ {i}, {j}, {1}}] = k
             j27[{ {i}, {j}, {2}}] = l
+            -- save occ. indicator
+            if max[1] < 0.9 then   -- This is occluded. Only gt label matters..
+                occ[{ {i}, {j}, {1} }] = 1
+            else
+                occ[{ {i}, {j}, {1} }] = 0
+            end
         end
     end
 
-    return j27
+    return j27, occ
 end
 
-function comp_PCK(gt, pred)
+function comp_PCK(gt, pred, occ)
     -- input: {nData, 27, 2} 
     assert(gt:size(1) == pred:size(1))
     assert(gt:size(2) == opt.nJoints and gt:size(3) == 2)
@@ -38,6 +45,7 @@ function comp_PCK(gt, pred)
 
     local alpha = 0.5
     local pck_cnt = 0
+    local num_occ = 0
 
     for i=1,nData do 
         local p = pred[i]
@@ -48,14 +56,18 @@ function comp_PCK(gt, pred)
 
         -- if distance is lses than alpha * head size then passed!
         for j=1,opt.nJoints do
-            local d=torch.sqrt(math.pow(g[j][1]-p[j][1], 2)+math.pow(g[j][2]-p[j][2], 2))
-            if d <= hsize * alpha then
-                pck_cnt = pck_cnt + 1
+            if occ[i][j] == 1 then
+                num_occ = num_occ + 1
+            else
+                local d=torch.sqrt(math.pow(g[j][1]-p[j][1], 2)+math.pow(g[j][2]-p[j][2], 2))
+                if d <= hsize * alpha then
+                    pck_cnt = pck_cnt + 1
+                end
             end
         end
     end
 
-    local PCK = ( pck_cnt / (opt.nJoints * nData) ) * 100
+    local PCK = ( pck_cnt / (opt.nJoints * nData - num_occ) ) * 100
     return PCK
 end
 

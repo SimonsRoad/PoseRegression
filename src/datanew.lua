@@ -27,7 +27,15 @@ local initcheck = argcheck{
     type="string",
     help=""}
 }
-
+--[[
+-- Only when passing one text file (list of images)
+local initcheck = argcheck{
+   pack=true,
+    {name="txtimg",
+    type="string",
+    help=""}
+}
+--]]
 
 function dataset:__init(...)
 	local args =  initcheck(...)
@@ -69,6 +77,15 @@ end
 
 function dataset:size()
     return self.numSamples
+end
+
+function dataset:fetch_framenumber(index)
+    -- This assumes that you want to find out frame number from real images.
+    -- Only works when the image name is only numbers which is the frame number. (e.g., 0231.jpg)
+    local imgpath = ffi.string(torch.data(self.imagePath[index]), self.imagePathLength[index])
+    local strlen  = string.len(imgpath)
+    local framenumber = string.sub(imgpath, strlen-7, strlen-4)
+    return framenumber
 end
 
 function dataset:load_img(indices)

@@ -31,10 +31,10 @@ opt.nDonkeys = 3
 
 
 -- location
-y   = 91
-x   = 354
-opt.W = 61
-opt.H = 87
+y   = 235
+x   = 325
+opt.W = 93
+opt.H = 133
 opt.W_jsc = opt.W
 opt.H_jsc = opt.H
 
@@ -42,17 +42,16 @@ opt.H_jsc = opt.H
 -- TEST DATA: 1) sTrain, 2) sTest, 3) rTest
 --
 testsettype = 'rTest'
-numimages   = 28
+numimages   = 21
 quality     = 'LQ'
 
 local indices = torch.Tensor(1):long()
-local testimg_all = torch.Tensor(numimages, 3, opt.H, opt.W)
-local testjsc_all = torch.Tensor(numimages, opt.nChOut, opt.H_jsc, opt.W_jsc)
 
 -- load model
-for mNum = 1,20 do
+for mNum = 1,1 do
 
     local mName = string.format('clear_model_%d.t7', mNum)
+
     --local pathToModel = '../save/PR_fcn/option/t_SunMar2721:48:402016'
     --local pathToModel = '../save/PR_fcn/option/t_TueMar2922:11:592016'
     --local pathToModel = '../save/PR_fcn/option,LR=0.01/t_WedApr1320:28:332016'
@@ -74,19 +73,21 @@ for mNum = 1,20 do
     --local pathToModel = '../save/PR_fcn/option/t_MonApr2500:01:242016'
     --local pathToModel = '../save/PR_fcn/option/t_MonApr2504:23:352016'
     --local pathToModel = '../save/PR_fcn/option/t_MonApr2522:31:402016'
+    --local pathToModel = '../save/PR_fcn/option/t_MonApr2522:54:292016'
     --local pathToModel = '../save/PR_fcn/option/t_TueApr2602:33:032016'
     --local pathToModel = '../save/PR_fcn/option/t_TueApr2608:26:562016'
-    local pathToModel = '../save/PR_fcn/option/t_TueApr2617:42:272016'
+    --local pathToModel = '../save/PR_fcn/option/t_TueApr2617:42:272016'
+    --local pathToModel = '../save/PR_fcn/option/t_WedApr2709:26:522016'
+    --local pathToModel = '../save/PR_fcn/option/t_ThuApr2807:24:202016'
+    --local pathToModel = '../save/PR_fcn/option/t_FriApr2917:18:122016'
+    local pathToModel = '../save/PR_fcn/option/t_SunMay107:29:372016'
 
     opt.retrain = paths.concat(pathToModel, mName)  
     local model, criterion = models.setup(opt)
     model:cuda()
 
-    savedir         = paths.concat(pathToModel, 'results/' .. testsettype)
+    savedir = paths.concat(pathToModel, string.format('results/%s/model%d',testsettype,mNum))
     os.execute('mkdir -p ' .. savedir)
-    savefile_img    = savedir..string.format('/img.mat')
-    savefile_gt     = savedir..string.format('/jsc_gt.mat')
-    savefile_pred   = savedir..string.format('/jsc_pred_model%d.mat', mNum)
 
     if testsettype == 'sTrain' then
         testindices = torch.randperm(opt.nTrainData):index(1, torch.range(1,20):long())
@@ -99,6 +100,8 @@ for mNum = 1,20 do
     elseif testsettype == 'rTest' then
         opt.txtimg  = string.format('../../towncenter/data/frames_y%d_x%d_%s/lists/img_pos.txt', y, x, quality)
         opt.txtjsc  = string.format('../../towncenter/data/frames_y%d_x%d_%s/lists/jsc_pos.txt', y, x, quality)
+        --opt.txtimg  = string.format('../../towncenter/data/frames_y%d_x%d_%s/lists_tmp/img_pos.txt', y, x, quality)
+        --opt.txtjsc  = string.format('../../towncenter/data/frames_y%d_x%d_%s/lists_tmp/jsc_pos.txt', y, x, quality)
         opt.nJoints = 14
     end
 
@@ -108,13 +111,9 @@ for mNum = 1,20 do
     mean = meanstd.mean
     std  = meanstd.std
 
-    -- assign variables
-    local pck_all = 0
-    local output_all  = torch.Tensor(numimages, opt.nChOut, opt.H_jsc, opt.W_jsc)
-
     -- Test
-    local counter = 1
     local loader = dataLoader{txtimg=opt.txtimg, txtjsc=opt.txtjsc}
+    local pck_all = 0
     for i=1,numimages do
         -- load 
         indices[1] = i
@@ -131,27 +130,20 @@ for mNum = 1,20 do
         -- compute PCK
         local gt_j27_hmap   = testjsc[{ {}, {1,opt.nJoints}, {}, {} }]
         local pred_j27_hmap = output[{ {}, {1,opt.nJoints}, {}, {} }]
-        local gt_j27   = find_peak(gt_j27_hmap)
-        local pred_j27 = find_peak(pred_j27_hmap)
-        local pck = comp_PCK(gt_j27, pred_j27)
+        local gt_j27,occ   = find_peak(gt_j27_hmap)
+        local pred_j27     = find_peak(pred_j27_hmap)
+        local pck = comp_PCK(gt_j27, pred_j27, occ)
         pck_all = pck_all + pck
         --print(string.format('#model: %d | PCK (%dth image): %.2f ', mNum, i, pck))
 
-        -- save img, jsc, output for later use 
-        output_all[i] = output:float()
-        if counter == 1 then
-            testimg_all[i] = testimg
-            testjsc_all[i] = testjsc
-        end
+        -- save output
+        local savefile = savedir..string.format('/jsc_pred_frm%04d.mat', loader:fetch_framenumber(i))
+        matio.save(savefile, output:float())
     end
     print(string.format('#model: %d | PCK (all images): %.2f (%%)' , mNum, pck_all/numimages))
-    counter = 0
-
-    -- save pred
-    matio.save(savefile_pred, output_all)
 
 end
 
--- save image and gt 
-matio.save(savefile_img, testimg_all)
-matio.save(savefile_gt,  testjsc_all)
+-- Delete the directory created unnecessarily
+sys.fexecute("rm -r "..opt.save)
+

@@ -8,17 +8,19 @@ testtype   = 'rTest';
 % pathtodata = ['../save/PR_fcn/option/t_ThuMar3112:33:322016/results/', testtype];
 % pathtodata = ['../save/PR_fcn/option/t_WedApr1308:12:392016/results/', testtype];
 % pathtodata = ['../save/PR_fcn/option,LR=0.01/t_WedApr1320:28:332016/results/', testtype];
-pathtodata = ['../save/PR_fcn/option/t_SunApr1709:33:532016/results/', testtype];
+% pathtodata = ['../save/PR_fcn/option/t_SunApr1709:33:532016/results/', testtype];
+% pathtodata = ['../save/PR_fcn/option/t_SunApr1700:11:532016/results_multi/', testtype];
+pathtodata = ['../save/PR_fcn/option/t_SunMay107:29:372016/results/', testtype];
 
 
-mNum    = 2;
-nData   = 25;
+mNum    = 4;
+nData   = 21;
 nJoints = 14;   % this can be 27 for synthetic data. For real it's 14.
 
 dataset_gt   = [];
 dataset_pred = [];
 %% test image (.mat file)
-fname_img = sprintf('img_model%d.mat',mNum);
+fname_img = 'img.mat';
 load(fullfile(pathtodata,fname_img));
 x = permute(x, [3,4,2,1]);
 assert(size(x,4) == nData);
@@ -28,7 +30,7 @@ end
 
 
 %% load gt label (j27 for synthetic or j14 for real)
-fname_jsc_gt = sprintf('jsc_gt_model%d.mat',mNum);
+fname_jsc_gt = 'jsc_gt.mat';
 load(fullfile(pathtodata,fname_jsc_gt));
 x = permute(x, [3,4,2,1]);
 assert(size(x,4) == nData);
@@ -55,8 +57,8 @@ end
 
 
 %% evaluation
-pck = pck_eval(dataset_pred, dataset_gt, 0.5, 'a', 'h');
-fprintf('PCK: %.2f \n', pck);
+% pck = pck_eval(dataset_pred, dataset_gt, 0.5, 'a', 'h');
+% fprintf('PCK: %.2f \n', pck);
 
 
 % visualize

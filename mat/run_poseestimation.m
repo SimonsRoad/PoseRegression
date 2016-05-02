@@ -35,32 +35,23 @@ net = caffe.Net(model.deployFile, model.caffemodel, 'test');
 nImages = numel(testdata);
 % nImages = 2;
 prediction_all = [];
+time_total = 0;
 for i = 1:nImages
     % select image
-    fprintf('selected image#: %d \n',i);
+%     fprintf('CPM: processing image#: %d \n',i);
     
     
     %% core: apply model on the image, to get heat maps and prediction coordinates
-    [heatMaps, prediction] = applyModel2(testdata(i).im, param, testdata(i).box, net);
+    [heatMaps, prediction, time] = applyModel2(testdata(i).im, param, testdata(i).box, net);
     prediction_all(i).point = prediction;
+    time_total = time_total + time;
     
     %% visualize, or extract variable heatMaps & prediction for your use
     %     visualize('tmp.jpg', heatMaps, prediction, param, rectangle, interestPart);
     
-    %% pck of each image; temporary
-    %     tmp = prediction_all(i).point;
-    %     prediction_all(i).point = tmp([1,2,6,7,8,12,13,14,3,4,5,9,10,11],:);
-    %     pck = pck_eval(prediction_all(i), dataset_gt(i), 0.5, 'a', 'h');
-    %     fprintf('PCK (%dth image): %.2f \n', i, pck);
-    %
-    %     figure; imshow('tmp.jpg'); hold all;
-    %     for j = 1:14
-    %         scatter(prediction_all(i).point(j,1), prediction_all(i).point(j,2), 'r*');
-    % %         pause();
-    %     end
-    
-    
 end
+fprintf('total processing time (CPM): %.4f \n', time_total);
+fprintf('  avg processing time (CPM): %.4f \n', time_total/nImages);
 
 %% PCK
 % dataset_pred.point = prediction([1,2,6,7,8,12,13,14,3,4,5,9,10,11],:);
@@ -70,13 +61,15 @@ for i=1:nImages
     tmp = prediction_all(i).point;
     prediction_all(i).point = tmp([1,2,6,7,8,12,13,14,3,4,5,9,10,11],:);
     testdata(i).point = testdata(i).point(1:nJoints,:);
+    testdata(i).occ = testdata(i).occ(1:nJoints);
     
     % compute PCK
-    pck = pck_eval(prediction_all(i), testdata(i), 0.5, 'a', 'h');
+%     pck = pck_eval(prediction_all(i), testdata(i), 0.5, 'a', 'h');
+    pck = pck_eval_NL(prediction_all(i), testdata(i));
     pck_all = pck_all + pck;
-    fprintf('PCK (%dth image): %.2f \n', i, pck);
+%     fprintf('PCK (%dth image): %.2f \n', i, pck);
 end
-fprintf('PCK (all images): %.2f \n', pck_all/nImages);
+% fprintf('PCK (all images): %.2f \n', pck_all/nImages);
 
 end
 
@@ -102,8 +95,9 @@ net.move('gpu') ;
 
 nImages = numel(testdata);
 prediction_all = [];
+time_total = 0;
 for i=1:nImages
-    sprintf('finding pose of image %d.. \n', i);
+%     fprintf('IEF: processing image %d.. \n', i);
     I = imread(testdata(i).im);
     
     %% NL
@@ -134,9 +128,10 @@ for i=1:nImages
     selI = selI(range, range, :);
     
     % predict pose
+    tic; 
     selI = gpuArray(single(selI));
     selI = bsxfun(@minus, selI, net.meta.normalization.averageImage(1,1,:));
-    
+
     pose = params.seed_pose - dif;
     pose(17,:) = ([crop_side crop_side]./2); % marking point is in center of cropped image
     all_poses = pose;
@@ -157,6 +152,8 @@ for i=1:nImages
         pose(1:16,:) = pose(1:16,:) + params.MAX_STEP_NORM*corrections;
         all_poses = cat(3,all_poses, pose);
     end
+    time = toc;
+    time_total = time_total + time;
     
     if 0
         clf; close all;
@@ -177,6 +174,8 @@ for i=1:nImages
         hold off;
     end
 end
+fprintf('total processing time (IEF): %.4f \n', time_total);
+fprintf('  avg processing time (IEF): %.4f \n', time_total/nImages);
 
 %% PCK
 nJoints = 14;
@@ -187,11 +186,12 @@ for i=1:nImages
     testdata(i).point = testdata(i).point(1:nJoints,:);
     
     % compute PCK
-    pck = pck_eval(prediction_all(i), testdata(i), 0.5, 'a', 'h');
+%     pck = pck_eval(prediction_all(i), testdata(i), 0.5, 'a', 'h');
+    pck = pck_eval_NL(prediction_all(i), testdata(i));
     pck_all = pck_all + pck;
-    fprintf('PCK (%dth image): %.2f \n', i, pck);
+%     fprintf('PCK (%dth image): %.2f \n', i, pck);
 end
-fprintf('PCK (all images): %.2f \n', pck_all/nImages);
+% fprintf('PCK (all images): %.2f \n', pck_all/nImages);
 
 
 

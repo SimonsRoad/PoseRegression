@@ -63,7 +63,9 @@ local mName = string.format('clear_model_%d.t7', mNum)
 --local pathToModel = '../save/PR_fcn/option/t_TueApr2602:33:032016'
 --local pathToModel = '../save/PR_fcn/option/t_TueApr2608:26:562016'
 --local pathToModel = '../save/PR_fcn/option/t_TueApr2617:42:272016'
-local pathToModel = '../save/PR_fcn/option/t_WedApr2709:26:522016'
+--local pathToModel = '../save/PR_fcn/option/t_WedApr2709:26:522016'
+--local pathToModel = '../save/PR_fcn/option/t_SunMay107:29:372016'
+local pathToModel = '../save/PR_fcn/option/t_FriApr2917:18:122016'
 
 opt.retrain = paths.concat(pathToModel, mName)  
 local model, criterion = models.setup(opt)
@@ -81,7 +83,6 @@ elseif testsettype == 'sTest' then
 elseif testsettype == 'rTest' then
     --opt.txtimg  = string.format('../../towncenter/data/frames_y%d_x%d_%s/lists/img_pos_multi.txt', y, x, quality)
     opt.txtimg  = string.format('../../towncenter/data/frames_y%d_x%d_%s/lists/img_pos.txt', y, x, quality)
-    opt.nJoints = 14
 end
 
 -- load meanstd
@@ -90,7 +91,12 @@ local meanstd = torch.load(meanstdCache)
 local mean = meanstd.mean
 local std  = meanstd.std
 
--- Test
+-- Test (warm up the model before measuring time!!)
+for i=1,3 do
+    print('warming up..')
+    local testinput  = torch.rand(1,3,opt.H, opt.W):cuda()
+    local testoutput = model:forward(testinput)
+end
 --local loader = dataLoader{txtimg=opt.txtimg, txtjsc=opt.txtjsc}
 local loader = dataLoader{txtimg=opt.txtimg}
 local timer = torch.Timer()
@@ -98,6 +104,7 @@ local t_total = 0
 for i=1,loader:size() do
     print(string.format('processing image %d..', i))
 
+    timer:reset()
     -- load image
     indices[1] = i
     local testimg = loader:load_img(indices)
@@ -107,8 +114,11 @@ for i=1,loader:size() do
     end
 
     -- Forward pass and save the results
-    timer:reset()
     local output = model:forward(testimg:cuda())
+
+    -- get peak. Just need to compute the total time for our algorithm
+    local pred_j27_hmap = output[{ {}, {1,27}, {}, {} }]
+    local pred_j27 = find_peak(pred_j27_hmap)
     local t = timer:time().real
     t_total = t_total + t
 

@@ -42,7 +42,9 @@ for i = 1:nImages
     
     
     %% core: apply model on the image, to get heat maps and prediction coordinates
-    [heatMaps, prediction, time] = applyModel2(testdata(i).im, param, testdata(i).box, net);
+    tic;
+    [heatMaps, prediction] = applyModel2(testdata(i).im, param, testdata(i).box, net);
+    time = toc;
     prediction_all(i).point = prediction;
     time_total = time_total + time;
     
@@ -97,6 +99,7 @@ nImages = numel(testdata);
 prediction_all = [];
 time_total = 0;
 for i=1:nImages
+    tic;
 %     fprintf('IEF: processing image %d.. \n', i);
     I = imread(testdata(i).im);
     
@@ -128,7 +131,7 @@ for i=1:nImages
     selI = selI(range, range, :);
     
     % predict pose
-    tic; 
+     
     selI = gpuArray(single(selI));
     selI = bsxfun(@minus, selI, net.meta.normalization.averageImage(1,1,:));
 

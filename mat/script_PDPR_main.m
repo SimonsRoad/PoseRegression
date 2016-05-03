@@ -10,7 +10,7 @@ addpath('~/Downloads/convolutional-pose-machines-release/testing/');
 
 
 %% load test data
-selLoc = 1;
+selLoc = 10;
 YX = [...
     138 167;
     160 260;
@@ -31,18 +31,18 @@ testdata = load_dataset(x,y,quality);
 %% Procedure1: detection (0: no detection, 1: sliding window, 2: gt-box)
 % As an output, it needs a box or rectangle which will be used as an input
 % to a pose estimation algorithm such as CPM
-% NO, DPM_INRIA, DPM_VOC, GT
-detectionmethod = 'DPM_INRIA'; 
+% NO, DPM_INRIA, DPM_VOC, RCNN, GT
+detectionmethod = 'RCNN'; 
 testdata = run_detection(testdata, detectionmethod);
 
 
 %% evaluate detection performance
-if strcmp(detectionmethod,'DPM_VOC') || strcmp(detectionmethod,'CPM_INRIA')
-    eval_detection(testdata);
-end
+% if strcmp(detectionmethod,'DPM_VOC') || strcmp(detectionmethod,'CPM_INRIA')
+%     eval_detection(testdata);
+% end
 
 
 %% Procedure2: pose estimation (CPM, IEF)
-posemethod = 'CPM';
+posemethod = 'IEF';
 run_poseestimation(testdata, posemethod);
 

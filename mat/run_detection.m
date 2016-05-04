@@ -20,6 +20,9 @@ else
         case 'GT'
             margin = 0.4;
             box = get_gtbox(testdata, margin);
+        case 'GT_JITTER'
+            margin = 0.1;
+            box = get_gtbox_jitter(testdata, margin);
         otherwise
             error('Check available methods for detection!');
     end
@@ -365,3 +368,68 @@ for i=1:numel(testdata)
 end
 
 end
+
+%% GT BOX JITTER
+function box = get_gtbox_jitter(testdata, margin)
+
+sampleimg = imread(testdata(1).im);
+W = size(sampleimg,2);
+H = size(sampleimg,1);
+
+box = [];
+for i=1:numel(testdata)
+    
+    joints = testdata(i).point;
+    joints = joints(1:14,:);
+    
+    % get rid of occluded joints
+    occ = testdata(i).occ;
+    occ = occ(1:14);
+    joints(find(occ==1),:) = [];
+    
+    x1 = min(joints(:,1));
+    x2 = max(joints(:,1));
+    y1 = min(joints(:,2));
+    y2 = max(joints(:,2));
+    
+    w = x2-x1;
+    h = y2-y1;
+    
+    center_x = (x1+x2)/2;
+    center_y = (y1+y2)/2;
+    
+%     clf;
+%     figure(1); imshow(testdata(i).im); hold on;
+%     rectangle('Position', [x1,y1,w,h]);
+    
+    % jitter
+    % translate center
+    center_x = center_x + normrnd(0, margin*w);
+    center_y = center_y + normrnd(0, margin*h);
+    % jitter width and height
+    w  = w  + normrnd(0, margin*w);
+    h  = h  + normrnd(0, margin*h);
+    % jittered box: x1, x2, y1, y2
+    x1 = center_x - (w/2);
+    x2 = center_x + (w/2);
+    y1 = center_y - (h/2);
+    y2 = center_y + (h/2);
+    
+    x1 = max(1,x1);
+    y1 = max(1,y1);
+    x2 = min(x2,W);
+    y2 = min(y2,H);
+    
+    box(i,:) = [x1 y1 x2-x1 y2-y1];
+    
+%     rectangle('Position', [x1,y1,w,h]);
+%     hold off;
+end
+
+end
+
+
+
+
+
+

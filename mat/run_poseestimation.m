@@ -32,6 +32,11 @@ net = caffe.Net(model.deployFile, model.caffemodel, 'test');
 
 
 %% NL
+% % warm-up
+% for i=1:3
+%     [heatMaps, prediction] = applyModel2(testdata(1).im, param, testdata(1).box, net);
+% end
+
 nImages = numel(testdata);
 % nImages = 2;
 prediction_all = [];
@@ -69,9 +74,9 @@ for i=1:nImages
 %     pck = pck_eval(prediction_all(i), testdata(i), 0.5, 'a', 'h');
     pck = pck_eval_NL(prediction_all(i), testdata(i));
     pck_all = pck_all + pck;
-%     fprintf('PCK (%dth image): %.2f \n', i, pck);
+    fprintf('PCK (%dth image): %.2f \n', i, pck);
 end
-% fprintf('PCK (all images): %.2f \n', pck_all/nImages);
+fprintf('PCK (all images): %.2f \n', pck_all/nImages);
 
 end
 
@@ -192,9 +197,9 @@ for i=1:nImages
 %     pck = pck_eval(prediction_all(i), testdata(i), 0.5, 'a', 'h');
     pck = pck_eval_NL(prediction_all(i), testdata(i));
     pck_all = pck_all + pck;
-%     fprintf('PCK (%dth image): %.2f \n', i, pck);
+    fprintf('PCK (%dth image): %.2f \n', i, pck);
 end
-% fprintf('PCK (all images): %.2f \n', pck_all/nImages);
+fprintf('PCK (all images): %.2f \n', pck_all/nImages);
 
 
 

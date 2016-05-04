@@ -31,10 +31,10 @@ opt.nDonkeys = 3
 
 
 -- location
-y   = 235
-x   = 325
-opt.W = 93
-opt.H = 133
+y   = 262
+x   = 544
+opt.W = 98
+opt.H = 141
 opt.W_jsc = opt.W
 opt.H_jsc = opt.H
 
@@ -42,13 +42,13 @@ opt.H_jsc = opt.H
 -- TEST DATA: 1) sTrain, 2) sTest, 3) rTest
 --
 testsettype = 'rTest'
-numimages   = 21
+numimages   = 25
 quality     = 'LQ'
 
 local indices = torch.Tensor(1):long()
 
 -- load model
-for mNum = 1,1 do
+for mNum = 1,10 do
 
     local mName = string.format('clear_model_%d.t7', mNum)
 
@@ -80,7 +80,8 @@ for mNum = 1,1 do
     --local pathToModel = '../save/PR_fcn/option/t_WedApr2709:26:522016'
     --local pathToModel = '../save/PR_fcn/option/t_ThuApr2807:24:202016'
     --local pathToModel = '../save/PR_fcn/option/t_FriApr2917:18:122016'
-    local pathToModel = '../save/PR_fcn/option/t_SunMay107:29:372016'
+    --local pathToModel = '../save/PR_fcn/option/t_SunMay107:29:372016'
+    local pathToModel = '../save/PR_fcn/option/t_MonMay206:03:052016'
 
     opt.retrain = paths.concat(pathToModel, mName)  
     local model, criterion = models.setup(opt)

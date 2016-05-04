@@ -32,7 +32,7 @@ testdata = load_dataset(x,y,quality);
 % As an output, it needs a box or rectangle which will be used as an input
 % to a pose estimation algorithm such as CPM
 % NO, DPM_INRIA, DPM_VOC, RCNN, GT
-detectionmethod = 'RCNN'; 
+detectionmethod = 'GT_JITTER'; 
 testdata = run_detection(testdata, detectionmethod);
 
 

@@ -18,7 +18,6 @@ local imgtensor = torch.Tensor(opt.batchSize, 3, opt.H, opt.W)
 local jsctensor = torch.Tensor(opt.batchSize, opt.nChOut, opt.H_jsc, opt.W_jsc) 
 
 local dataset = torch.class('dataLoader')
---[[
 local initcheck = argcheck{
    pack=true,
     {name="txtimg",
@@ -28,7 +27,7 @@ local initcheck = argcheck{
     type="string",
     help=""}
 }
---]]
+--[[
 -- Only when passing one text file (list of images)
 local initcheck = argcheck{
    pack=true,
@@ -36,6 +35,7 @@ local initcheck = argcheck{
     type="string",
     help=""}
 }
+--]]
 
 function dataset:__init(...)
 	local args =  initcheck(...)
@@ -56,7 +56,6 @@ function dataset:__init(...)
    	end
    	file:close()
 
-    --[[
 	self.labelNumSamples = tonumber(sys.fexecute("cat " .. self.txtjsc.. " |  wc -l"))
     assert(self.imageNumSamples == self.labelNumSamples)
 	self.labelMaxFileLength = tonumber(sys.fexecute("cat " .. self.txtjsc.. " |  awk '{print length($0)}' | datamash max 1"))
@@ -73,7 +72,6 @@ function dataset:__init(...)
       	count = count + 1
    	end
    	file:close()
-    --]]
     self.numSamples = self.imageNumSamples
 end
 

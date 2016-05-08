@@ -31,10 +31,10 @@ opt.nDonkeys = 3
 
 
 -- location
-y   = 262
-x   = 544
-opt.W = 98
-opt.H = 141
+y   = 240
+x   = 150
+opt.W = 68
+opt.H = 97
 opt.W_jsc = opt.W
 opt.H_jsc = opt.H
 
@@ -42,13 +42,13 @@ opt.H_jsc = opt.H
 -- TEST DATA: 1) sTrain, 2) sTest, 3) rTest
 --
 testsettype = 'rTest'
-numimages   = 25
+numimages   = 288
 quality     = 'LQ'
 
 local indices = torch.Tensor(1):long()
 
 -- load model
-for mNum = 1,10 do
+for mNum = 1,12 do
 
     local mName = string.format('clear_model_%d.t7', mNum)
 
@@ -81,7 +81,13 @@ for mNum = 1,10 do
     --local pathToModel = '../save/PR_fcn/option/t_ThuApr2807:24:202016'
     --local pathToModel = '../save/PR_fcn/option/t_FriApr2917:18:122016'
     --local pathToModel = '../save/PR_fcn/option/t_SunMay107:29:372016'
-    local pathToModel = '../save/PR_fcn/option/t_MonMay206:03:052016'
+    --local pathToModel = '../save/PR_fcn/option/t_MonMay206:03:052016'
+    --local pathToModel = '../save/PR_fcn/option/t_WedMay404:36:362016'
+    --local pathToModel = '../save/PR_fcn/option/t_WedMay408:52:332016'
+    --local pathToModel = '../save/PR_fcn/option/t_WedMay420:49:262016'
+    --local pathToModel = '../save/PR_fcn/option/t_ThuMay509:29:002016'
+    local pathToModel = '../save/PR_fcn/option/t_ThuMay522:48:142016'
+    --local pathToModel = '../save/PR_fcn/option/t_FriMay609:55:552016'
 
     opt.retrain = paths.concat(pathToModel, mName)  
     local model, criterion = models.setup(opt)
@@ -99,8 +105,10 @@ for mNum = 1,10 do
         opt.txtimg  = string.format('../data/rendout/anc_y%d_x%d/lists/img_pos.txt', y, x)
         opt.txtjsc  = string.format('../data/rendout/anc_y%d_x%d/lists/jsc_pos.txt', y, x)
     elseif testsettype == 'rTest' then
-        opt.txtimg  = string.format('../../towncenter/data/frames_y%d_x%d_%s/lists/img_pos.txt', y, x, quality)
-        opt.txtjsc  = string.format('../../towncenter/data/frames_y%d_x%d_%s/lists/jsc_pos.txt', y, x, quality)
+        opt.txtimg  = string.format('../../pet2006/data/frames_y%d_x%d/lists/img_pos.txt', y, x)
+        opt.txtjsc  = string.format('../../pet2006/data/frames_y%d_x%d/lists/jsc_pos.txt', y, x)
+        --opt.txtimg  = string.format('../../towncenter/data/frames_y%d_x%d_%s/lists/img_pos.txt', y, x, quality)
+        --opt.txtjsc  = string.format('../../towncenter/data/frames_y%d_x%d_%s/lists/jsc_pos.txt', y, x, quality)
         --opt.txtimg  = string.format('../../towncenter/data/frames_y%d_x%d_%s/lists_tmp/img_pos.txt', y, x, quality)
         --opt.txtjsc  = string.format('../../towncenter/data/frames_y%d_x%d_%s/lists_tmp/jsc_pos.txt', y, x, quality)
         opt.nJoints = 14

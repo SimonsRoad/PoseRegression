@@ -36,7 +36,7 @@ end
 
 % images - resized
 factor_resize = 0.5;
-for i = 1:5
+for i = 1:numel(data)
     im = imread(data(i).pos);
     im = imresize(im, factor_resize);
     fname = strrep(data(i).pos, '/pos/', '/pos_half/');

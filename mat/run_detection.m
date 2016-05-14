@@ -1,7 +1,7 @@
-function testdata = run_detection(testdata, detectionmethod)
+function testdata = run_0detection(testdata, detectionmethod, datasetname, datasettype)
 % outbox: [lefttop.x lefttop.y width height]
 
-savedbox = sprintf('savedbox/%s_y%d_x%d.mat',detectionmethod,testdata(1).y, testdata(1).x);
+savedbox = sprintf('savedbox/%s/%s_y%d_x%d.mat',datasettype,detectionmethod,testdata(1).y,testdata(1).x);
 if exist(savedbox, 'file')
     load(savedbox);
 else
@@ -23,6 +23,8 @@ else
         case 'GT_JITTER'
             margin = 0.1;
             box = get_gtbox_jitter(testdata, margin);
+        case 'OURS'
+            box = get_boxfromhmap(testdata, datasetname, datasettype);
         otherwise
             error('Check available methods for detection!');
     end
@@ -284,8 +286,12 @@ for j = 1:numel(testdata)
     
     %% save box
     if ~isempty(boxes_cell{15}) % person detected
-        assert(size(boxes_cell{15},1) == 1);    % for now, only take care of only one box 
-        tmp = boxes_cell{15};
+%         assert(size(boxes_cell{15},1) == 1);    % for now, only take care of only one box 
+        tmp = boxes_cell{15};        
+        if size(tmp,1) > 1
+            [val, idx] = sort(tmp(:,5),'descend');
+            tmp = tmp(idx(1),:);
+        end
         box(j,:) = [tmp(1) tmp(2) tmp(3)-tmp(1) tmp(4)-tmp(2)];
     else
         box(j,:) = [1 1 size(im,2) size(im,1)]; 
@@ -428,6 +434,144 @@ end
 
 end
 
+%% box from heat map
+function box = get_boxfromhmap(testdata, datasetname, datasettype)
+
+% directory to heat map predictions
+basedir = '~/develop/PoseRegression/save/PR_fcn/option';
+if testdata(1).y == 138 && testdata(1).x == 167
+    w = 71; 
+    h = 102;
+    bestmodel = 1;
+    date = 't_SunApr1705:37:282016';
+elseif testdata(1).y == 160 && testdata(1).x == 260
+    w = 76;
+    h = 109;
+    bestmodel = 5;
+    date = 't_TueApr1908:35:242016';
+elseif testdata(1).y == 170 && testdata(1).x == 570
+    w = 78;
+    h = 112;
+    bestmodel = 3;
+    date = 't_TueApr1922:59:002016';
+elseif testdata(1).y == 262 && testdata(1).x == 544
+    w = 98;
+    h = 141;
+    bestmodel = 6;
+    date = 't_WedApr2008:26:562016';
+elseif testdata(1).y == 130 && testdata(1).x == 460
+    w = 69;
+    h = 99;
+    bestmodel = 6;
+    date = 't_ThuApr2104:24:462016';
+elseif testdata(1).y == 235 && testdata(1).x == 325
+    w = 93;
+    h = 133;
+    bestmodel = 4;
+    date = 't_SunMay107:29:372016';
+elseif testdata(1).y == 169 && testdata(1).x == 92
+    w = 78;
+    h = 112;
+    bestmodel = 3;
+    date = 't_MonApr2504:23:352016';
+elseif testdata(1).y == 91  && testdata(1).x == 354
+    w = 61;
+    h = 87;
+    bestmodel = 9;
+    date = 't_MonApr2522:31:402016';
+elseif testdata(1).y == 230 && testdata(1).x == 438
+    w = 91;
+    h = 131;
+    bestmodel = 5;
+    date = 't_WedApr2709:26:522016';
+elseif testdata(1).y == 105 && testdata(1).x == 245
+    w = 64;
+    h = 91;
+    bestmodel = 8;
+    date = 't_FriApr2917:18:122016';
+elseif testdata(1).y == 240 && testdata(1).x == 150
+    w = 68;
+    h = 97;
+    bestmodel = 20;
+    date = 't_ThuMay509:29:002016';
+elseif testdata(1).y == 270 && testdata(1).x == 550
+    w = 76;
+    h = 109;
+    bestmodel = 22;
+    date = 't_FriMay609:55:552016';
+elseif testdata(1).y == 250 && testdata(1).x == 340
+    w = 71;
+    h = 101;
+    bestmodel = 28;
+    date = 't_MonMay919:51:352016';
+elseif testdata(1).y == 420 && testdata(1).x == 130
+    w = 93;
+    h = 132;
+    bestmodel = 10;
+    date = 't_SatMay702:56:182016';
+else
+    error('No available anchor location!');
+end
+dirtopred = fullfile(basedir, sprintf('%s/results/%s/model%d',date,datasettype,bestmodel));
+
+% load gt tight box
+if strcmp(datasetname, 'towncenter')
+    step = 1;
+elseif strcmp(datasetname, 'pet2006')
+    step = 2;
+else
+    error('invalid datasetname!');
+end
+tightbox = dlmread(sprintf('~/develop/PoseRegression/mat/tightbox/tightboxes_%s_step%d.txt',datasetname,step));
+
+
+% get prediction box
+box = [];
+for i=1:numel(testdata)
+    % load jsc
+    if strcmp(datasettype, 'rTest')    
+        framenum = testdata(i).im(end-7:end-4);
+        jsc = fullfile(dirtopred, sprintf('jsc_pred_frm%s.mat',framenum));
+    elseif strcmp(datasettype, 'sTest')
+        jsc = fullfile(dirtopred, sprintf('jsc_pred_frm%04d.mat',i));
+    else
+        error('invalid datasettype!');
+    end
+    load(jsc);
+    
+    % get center channel
+    x = permute(x, [3 4 2 1]);
+    cen = x(:,:,29);
+    % find peak of center channel
+    [max_val,idx] = max(cen(:));
+    [center.y,center.x] = ind2sub(size(cen), idx);
+    % translate the center to the absolute coordinate w.r.t. the frame
+    % l r t b
+    % ctot
+    ctot = (h - h/3.5*2)/2 + h/3.5*2;
+    ctol = w/2;
+    center.y_abs = center.y + (testdata(1).y - ctot);
+    center.x_abs = center.x + (testdata(1).x - ctol);
+
+    % find the closest location from tightbox
+    dist = tightbox(:,1:2) - repmat([center.x_abs center.y_abs], [size(tightbox,1),1]);
+    dist = sqrt(sum(dist(:,1).^2 + dist(:,2).^2, 2));
+    [min_val,idx] = min(dist);
+    
+    % w and h
+    w = tightbox(idx,3);
+    h = tightbox(idx,4);
+    
+    % box 
+    box(i,:) = [center.x-w/2 center.y-h/2 w h];    
+%     figure(1); imshow(testdata(i).im); hold on;
+%     rectangle('Position', box(i,:));
+%     hold off;
+    
+end
+
+
+end
 
 
 

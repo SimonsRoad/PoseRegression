@@ -57,13 +57,14 @@ for i = 1:nImages
     %     visualize('tmp.jpg', heatMaps, prediction, param, rectangle, interestPart);
     
 end
-fprintf('total processing time (CPM): %.4f \n', time_total);
-fprintf('  avg processing time (CPM): %.4f \n', time_total/nImages);
+% fprintf('total processing time (CPM): %.4f \n', time_total);
+% fprintf('  avg processing time (CPM): %.4f \n', time_total/nImages);
 
 %% PCK
 % dataset_pred.point = prediction([1,2,6,7,8,12,13,14,3,4,5,9,10,11],:);
 nJoints = 14;
-pck_all = 0;
+pck_all = [];
+normscalor = 0:0.05:0.5;
 for i=1:nImages
     tmp = prediction_all(i).point;
     prediction_all(i).point = tmp([1,2,6,7,8,12,13,14,3,4,5,9,10,11],:);
@@ -72,11 +73,19 @@ for i=1:nImages
     
     % compute PCK
 %     pck = pck_eval(prediction_all(i), testdata(i), 0.5, 'a', 'h');
-    pck = pck_eval_NL(prediction_all(i), testdata(i));
-    pck_all = pck_all + pck;
-    fprintf('PCK (%dth image): %.2f \n', i, pck);
+    pck_norms = [];
+    for j=normscalor
+        pck = pck_eval_NL(prediction_all(i), testdata(i), j);
+        pck_norms = [pck_norms pck];
+    end
+    pck_all = [pck_all; pck_norms];
 end
-fprintf('PCK (all images): %.2f \n', pck_all/nImages);
+pck_mean = mean(pck_all);
+assert(numel(pck_mean)==numel(normscalor));
+% fprintf('PCK (all images): \n');
+for i=1:numel(normscalor)
+    fprintf('%.2f\t', pck_mean(i)); 
+end; fprintf('\n');
 
 end
 
@@ -182,12 +191,13 @@ for i=1:nImages
         hold off;
     end
 end
-fprintf('total processing time (IEF): %.4f \n', time_total);
-fprintf('  avg processing time (IEF): %.4f \n', time_total/nImages);
+% fprintf('total processing time (IEF): %.4f \n', time_total);
+% fprintf('  avg processing time (IEF): %.4f \n', time_total/nImages);
 
 %% PCK
 nJoints = 14;
-pck_all = 0;
+pck_all = [];
+normscalor = 0:0.05:0.5;
 for i=1:nImages
     tmp = prediction_all(i).point;
     prediction_all(i).point = tmp([10 9 14 15 16 4 5 6 13 12 11 3 2 1],:);    % IEF definition to mine
@@ -195,13 +205,19 @@ for i=1:nImages
     
     % compute PCK
 %     pck = pck_eval(prediction_all(i), testdata(i), 0.5, 'a', 'h');
-    pck = pck_eval_NL(prediction_all(i), testdata(i));
-    pck_all = pck_all + pck;
-    fprintf('PCK (%dth image): %.2f \n', i, pck);
+    pck_norms = [];
+    for j=normscalor
+        pck = pck_eval_NL(prediction_all(i), testdata(i), j);
+        pck_norms = [pck_norms pck];
+    end
+    pck_all = [pck_all; pck_norms];
 end
-fprintf('PCK (all images): %.2f \n', pck_all/nImages);
-
-
+pck_mean = mean(pck_all);
+assert(numel(pck_mean)==numel(normscalor));
+% fprintf('PCK (all images): \n');
+for i=1:numel(normscalor)
+    fprintf('%.2f\t', pck_mean(i)); 
+end; fprintf('\n');
 
 end
 

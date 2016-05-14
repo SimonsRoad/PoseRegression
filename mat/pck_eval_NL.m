@@ -1,4 +1,4 @@
-function pck = pck_eval_NL(pred, gt)
+function pck = pck_eval_NL(pred, gt, normscalor)
 assert(numel(pred) == numel(gt));
 nJoints = 14;
 
@@ -11,7 +11,7 @@ for i=1:numel(gt)
             num_occ = num_occ+1;
         else
             d = sqrt(sum((gt(i).point(j,:)-pred(i).point(j,:)).^2));
-            if d <= hsize*0.5
+            if d <= hsize*normscalor
                 pck_cnt = pck_cnt + 1;
             end
         end

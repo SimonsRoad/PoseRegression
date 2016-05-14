@@ -7,9 +7,9 @@ clear; clc; close all;
 
 %% load existing data
 % data directories
-y = 250;
-x = 340;
-path_data = sprintf('~/develop/PoseRegression/data/rendout/anc_y%d_x%d', y, x);
+y = 138;
+x = 167;
+path_data = sprintf('~/develop/PoseRegression/data/rendout/anc_y%d_x%d_more', y, x);
 path_pos  = fullfile(path_data, 'pos');
 path_seg  = fullfile(path_data, 'seg');
 path_jsc  = fullfile(path_data, 'jsc');
@@ -27,23 +27,24 @@ end
 [h,w,~] = size(imread(data(1).pos));
 
 % label
-for i = 1:numel(data)
+for i = 1:numel(data)￼ablation study - network training
+
     tmp = data(i).pos;
     tmp = strrep(tmp, '/pos/', '/j27/');
     tmp = strrep(tmp, 'pos0000.jpg', 'joints.txt');
     data(i).j27 = dlmread(tmp);
 end
 
-% images - resized
-factor_resize = 0.5;
-for i = 1:numel(data)
-    im = imread(data(i).pos);
-    im = imresize(im, factor_resize);
-    fname = strrep(data(i).pos, '/pos/', '/pos_half/');
-    data(i).pos_half = fname;
-    imwrite(im, fname);
-end
-[h,w,~] = size(imread(data(1).pos_half));
+% images - resized [used only for pet2006 dataset]
+% factor_resize = 0.5;
+% for i = 1:numel(data)
+%     im = imread(data(i).pos);
+%     im = imresize(im, factor_resize);
+%     fname = strrep(data(i).pos, '/pos/', '/pos_half/');
+%     data(i).pos_half = fname;
+%     imwrite(im, fname);
+% end
+% [h,w,~] = size(imread(data(1).pos_half));
 
 
 %% generate jsc [joint, segmentation, center] label
@@ -71,7 +72,7 @@ for i = 1:numel(data)
     
     % seg
     seg = imread(data(i).seg);
-    seg = imresize(seg, factor_resize);
+%     seg = imresize(seg, factor_resize);
     seg = im2single(rgb2gray(seg));
 
     % cen
@@ -95,7 +96,7 @@ for i = 1:numel(data)
     
     % sanity check: jsc
     if 0
-        visualize_jsc(imread(data(i).pos_half), permute(jsc,[2, 3, 1]), permute(jsc,[2, 3, 1]), nJoints);
+        visualize_jsc(imread(data(i).pos), permute(jsc,[2, 3, 1]), permute(jsc,[2, 3, 1]), nJoints);
     end
     
     % save jsc

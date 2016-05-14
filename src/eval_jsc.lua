@@ -36,14 +36,13 @@ function find_peak(hmap)
     return j27, occ
 end
 
-function comp_PCK(gt, pred, occ)
+function comp_PCK(gt, pred, occ, normscalor)
     -- input: {nData, 27, 2} 
     assert(gt:size(1) == pred:size(1))
     assert(gt:size(2) == opt.nJoints and gt:size(3) == 2)
     
     local nData = gt:size(1)
 
-    local alpha = 0.5
     local pck_cnt = 0
     local num_occ = 0
 
@@ -54,13 +53,13 @@ function comp_PCK(gt, pred, occ)
         -- compute the size of head
         local hsize = math.sqrt(math.pow(g[1][1]-g[2][1], 2)+math.pow(g[1][2]-g[2][2], 2))
 
-        -- if distance is lses than alpha * head size then passed!
+        -- if distance is lses than normscalor * head size then passed!
         for j=1,opt.nJoints do
             if occ[i][j] == 1 then
                 num_occ = num_occ + 1
             else
                 local d=torch.sqrt(math.pow(g[j][1]-p[j][1], 2)+math.pow(g[j][2]-p[j][2], 2))
-                if d <= hsize * alpha then
+                if d <= hsize * normscalor then
                     pck_cnt = pck_cnt + 1
                 end
             end

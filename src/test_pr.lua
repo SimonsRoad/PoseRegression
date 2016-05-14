@@ -4,7 +4,6 @@
 --
 -- set opt.nDonkeys 1 (no use of donkey, directly load data)
 -- set opt.txtimg, opt.txtjsc for real data. 
--- set testindices properly..
 -- set pathToModel
 -- set mNum
 -- test data needs to be pre-processed (resize!)
@@ -25,30 +24,32 @@ local opts      = require 'opts'
 opt = opts.parse(arg)
 paths.dofile('datanew.lua')
 paths.dofile('eval_jsc.lua')
+paths.dofile('load_dataset_config.lua')
 
 -- **SETTING**
 opt.nDonkeys = 3
 
 
--- location
-y   = 240
-x   = 150
-opt.W = 68
-opt.H = 97
+-- load dataset configuration
+selLoc = 1
+dataset = 'pet2006'
+load_dataset_config(dataset)
+opt.W = WH[selLoc][1]
+opt.H = WH[selLoc][2]
 opt.W_jsc = opt.W
 opt.H_jsc = opt.H
 
 
 -- TEST DATA: 1) sTrain, 2) sTest, 3) rTest
 --
-testsettype = 'rTest'
-numimages   = 288
+testsettype = 'sTest'
+--numimages   = numtestimages[selLoc]
 quality     = 'LQ'
 
 local indices = torch.Tensor(1):long()
 
 -- load model
-for mNum = 1,12 do
+for mNum = bestmodel[selLoc],bestmodel[selLoc] do
 
     local mName = string.format('clear_model_%d.t7', mNum)
 
@@ -86,8 +87,10 @@ for mNum = 1,12 do
     --local pathToModel = '../save/PR_fcn/option/t_WedMay408:52:332016'
     --local pathToModel = '../save/PR_fcn/option/t_WedMay420:49:262016'
     --local pathToModel = '../save/PR_fcn/option/t_ThuMay509:29:002016'
-    local pathToModel = '../save/PR_fcn/option/t_ThuMay522:48:142016'
+    --local pathToModel = '../save/PR_fcn/option/t_ThuMay522:48:142016'
     --local pathToModel = '../save/PR_fcn/option/t_FriMay609:55:552016'
+    --
+    local pathToModel = string.format('../save/PR_fcn/option/%s', datetime[selLoc])
 
     opt.retrain = paths.concat(pathToModel, mName)  
     local model, criterion = models.setup(opt)
@@ -97,40 +100,42 @@ for mNum = 1,12 do
     os.execute('mkdir -p ' .. savedir)
 
     if testsettype == 'sTrain' then
-        testindices = torch.randperm(opt.nTrainData):index(1, torch.range(1,20):long())
-        opt.txtimg  = string.format('../data/rendout/anc_y%d_x%d/lists/img_pos.txt', y, x)
-        opt.txtjsc  = string.format('../data/rendout/anc_y%d_x%d/lists/jsc_pos.txt', y, x)
+        --opt.txtimg  = string.format('../data/rendout/anc_y%d_x%d/lists/img_pos.txt', y, x)
+        --opt.txtjsc  = string.format('../data/rendout/anc_y%d_x%d/lists/jsc_pos.txt', y, x)
     elseif testsettype == 'sTest' then
-        testindices = torch.randperm(opt.nTestData):index(1, torch.range(1,20):long()) + opt.nTrainData
-        opt.txtimg  = string.format('../data/rendout/anc_y%d_x%d/lists/img_pos.txt', y, x)
-        opt.txtjsc  = string.format('../data/rendout/anc_y%d_x%d/lists/jsc_pos.txt', y, x)
+        opt.txtimg  = string.format('../data/rendout/anc_y%03d_x%d/lists/img_sTest.txt',YX[selLoc][1],YX[selLoc][2])
+        opt.txtjsc  = string.format('../data/rendout/anc_y%03d_x%d/lists/jsc_sTest.txt',YX[selLoc][1],YX[selLoc][2])
+        opt.nJoints = 14
     elseif testsettype == 'rTest' then
-        opt.txtimg  = string.format('../../pet2006/data/frames_y%d_x%d/lists/img_pos.txt', y, x)
-        opt.txtjsc  = string.format('../../pet2006/data/frames_y%d_x%d/lists/jsc_pos.txt', y, x)
-        --opt.txtimg  = string.format('../../towncenter/data/frames_y%d_x%d_%s/lists/img_pos.txt', y, x, quality)
-        --opt.txtjsc  = string.format('../../towncenter/data/frames_y%d_x%d_%s/lists/jsc_pos.txt', y, x, quality)
+        opt.txtimg  = string.format('../../pet2006/data/frames_y%d_x%d/lists/img_pos.txt', YX[selLoc][1],YX[selLoc][2])
+        opt.txtjsc  = string.format('../../pet2006/data/frames_y%d_x%d/lists/jsc_pos.txt', YX[selLoc][1],YX[selLoc][2])
+        --opt.txtimg  = string.format('../../towncenter/data/frames_y%d_x%d_%s/lists/img_pos.txt', YX[selLoc][1], YX[selLoc][2], quality)
+        --opt.txtjsc  = string.format('../../towncenter/data/frames_y%d_x%d_%s/lists/jsc_pos.txt', YX[selLoc][1], YX[selLoc][2], quality)
         --opt.txtimg  = string.format('../../towncenter/data/frames_y%d_x%d_%s/lists_tmp/img_pos.txt', y, x, quality)
         --opt.txtjsc  = string.format('../../towncenter/data/frames_y%d_x%d_%s/lists_tmp/jsc_pos.txt', y, x, quality)
         opt.nJoints = 14
     end
 
     -- load meanstd
-    meanstdCache = paths.concat(opt.cache, string.format('meanstdCache/y%d_x%d.t7',y,x))
+    meanstdCache = paths.concat(opt.cache, string.format('meanstdCache/y%d_x%d.t7',YX[selLoc][1],YX[selLoc][2]))
     meanstd = torch.load(meanstdCache)
     mean = meanstd.mean
     std  = meanstd.std
 
     -- Test
     local loader = dataLoader{txtimg=opt.txtimg, txtjsc=opt.txtjsc}
-    local pck_all = 0
+    local numimages = loader:size()
+    print(string.format('number of test images: %d', numimages))
+    local numnormscalor = 11
+    local pck_all = torch.Tensor(numimages, numnormscalor)
     for i=1,numimages do
         -- load 
         indices[1] = i
         local testimg = loader:load_img(indices)
         local testjsc = loader:load_jsc(indices)
-        for i=1,3 do
-            testimg[{ {}, {i}, {}, {} }]:add(-mean[i])
-            testimg[{ {}, {i}, {}, {} }]:div(std[i])
+        for j=1,3 do
+            testimg[{ {}, {j}, {}, {} }]:add(-mean[j])
+            testimg[{ {}, {j}, {}, {} }]:div(std[j])
         end
 
         -- Forward pass and save the results
@@ -141,15 +146,27 @@ for mNum = 1,12 do
         local pred_j27_hmap = output[{ {}, {1,opt.nJoints}, {}, {} }]
         local gt_j27,occ   = find_peak(gt_j27_hmap)
         local pred_j27     = find_peak(pred_j27_hmap)
-        local pck = comp_PCK(gt_j27, pred_j27, occ)
-        pck_all = pck_all + pck
-        --print(string.format('#model: %d | PCK (%dth image): %.2f ', mNum, i, pck))
+        local pcks = torch.Tensor(numnormscalor)
+        for j=1,numnormscalor do 
+            local normscalor = (j-1)*0.05
+            pcks[j] = comp_PCK(gt_j27, pred_j27, occ, normscalor)
+        end
+        pck_all[{ {i}, {} }] = pcks
 
         -- save output
-        local savefile = savedir..string.format('/jsc_pred_frm%04d.mat', loader:fetch_framenumber(i))
+        local savefile
+        if testsettype == 'rTest' then
+            savefile = savedir..string.format('/jsc_pred_frm%04d.mat', loader:fetch_framenumber(i))
+        elseif testsettype == 'sTest' then
+            savefile = savedir..string.format('/jsc_pred_frm%04d.mat', i)
+        end
         matio.save(savefile, output:float())
     end
-    print(string.format('#model: %d | PCK (all images): %.2f (%%)' , mNum, pck_all/numimages))
+    local pck_avg = torch.mean(pck_all,1)
+    print(string.format('#model: %d | avgPCK(%%) (all images): ', mNum))
+    for i=1,numnormscalor do
+        print(string.format('%.2f ', pck_avg[1][i]))
+    end
 
 end
 

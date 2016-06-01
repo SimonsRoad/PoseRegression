@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # paths
-path='/home/namhoon/develop/PoseRegression/data/rendout/anc_y138_x167_more'
+path='/home/namhoon/develop/PoseRegression/data/rendout/anc_y240_x150_j'
 path_img_pos=$path'/pos'
 
 path_list=$path'/lists'

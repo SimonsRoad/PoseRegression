@@ -12,7 +12,7 @@ function find_peak(hmap)
     assert(hmap:size(2) == opt.nJoints and hmap:size(3) == opt.H_jsc and hmap:size(4) == opt.W_jsc)
 
     local nData = hmap:size(1)
-    local j27 = torch.CudaTensor(nData, opt.nJoints, 2)
+    local jnt = torch.CudaTensor(nData, opt.nJoints, 2)
     local occ = torch.CudaTensor(nData, opt.nJoints, 1)
 
     for i=1,nData do
@@ -22,8 +22,8 @@ function find_peak(hmap)
             local k = math.floor(idx[1]/opt.W_jsc)+1
             local l = idx[1] % opt.W_jsc
             -- new label
-            j27[{ {i}, {j}, {1}}] = k
-            j27[{ {i}, {j}, {2}}] = l
+            jnt[{ {i}, {j}, {1}}] = k
+            jnt[{ {i}, {j}, {2}}] = l
             -- save occ. indicator
             if max[1] < 0.9 then   -- This is occluded. Only gt label matters..
                 occ[{ {i}, {j}, {1} }] = 1
@@ -33,7 +33,7 @@ function find_peak(hmap)
         end
     end
 
-    return j27, occ
+    return jnt, occ
 end
 
 function comp_PCK(gt, pred, occ, normscalor)
@@ -133,9 +133,6 @@ function eval_jsc ()
     sad_seg = sad_seg / (opt.nTestData/opt.batchSize)
     sad_cen = sad_cen / (opt.nTestData/opt.batchSize)
 
-    -- test on Real images 
-    --pck_j14_real = testOnReal()
-
     evalLogger:add{ 
         ['pck_j27'] = pck_j27,
         ['sad_seg'] = sad_seg,
@@ -196,43 +193,6 @@ function evalBatch(inputsCPU, labelsCPU)
     cutorch.synchronize()
 
     collectgarbage()
-
-end
-
-function testOnReal()
-
-    -- load rTest
-    local loaderReal = dataLoader{txtimg=opt.txtimgreal, txtjsc=opt.txtjscreal}
-
-    -- compute PCK
-    local numReal = loaderReal:size()
-    assert(numReal == 22)
-    local pcksum = 0
-    for i=1,numReal do
-        local testindices = torch.Tensor({i})
-        local testimg = loaderReal:load_img(testindices)
-        local testjsc = loaderReal:load_jsc(testindices)
-        for j=1,3 do
-            testimg[{ {}, {j}, {}, {} }]:add(-mean[j])
-            testimg[{ {}, {j}, {}, {} }]:div(std[j])
-        end
-        local output = model:forward(testimg:cuda())
-        if torch.type(output) == 'table' then
-            output = output[#output]
-        end
-
-        -- compute PCK
-        local gt_j14_hmap   = testjsc[{ {}, {1,14}, {}, {} }]
-        local pred_j14_hmap = output[{ {}, {1,14}, {}, {} }] 
-        local gt_j14   = find_peak(gt_j14_hmap)
-        local pred_j14 = find_peak(pred_j14_hmap)
-        local pck = comp_PCK(gt_j14, pred_j14)
-        print(string.format('PCK [real] (image %d): %.2f', i, pck))
-        pcksum = pcksum + pck
-    end
-    print(string.format('PCK [real] total: %.2f', pcksum/numReal))
-
-    return pcksum/numReal
 
 end
 

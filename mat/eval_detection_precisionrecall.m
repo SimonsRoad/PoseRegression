@@ -1,125 +1,248 @@
-function testdata = run_detection(testdata, detectionmethod, datasetname, datasettype)
-% outbox: [lefttop.x lefttop.y width height]
+function eval_detection_precisionrecall()
+close all; clear; 
 
-savedbox = sprintf('savedbox/%s/%s_y%d_x%d.mat',datasettype,detectionmethod,testdata(1).y,testdata(1).x);
-if exist(savedbox, 'file')
-    load(savedbox);
-else
-    switch(detectionmethod)
-        case 'NO'
-            box = get_whole(testdata);
-        case 'DPM_VOC'
-            box = run_DPM_VOC(testdata);
-            save(savedbox, 'box');
-        case 'DPM_INRIA'
-            box = run_DPM_INRIA(testdata);
-            save(savedbox, 'box');
-        case 'RCNN'
-            box = run_RCNN(testdata);
-            save(savedbox, 'box');
-        case 'GT'
-            margin = 0.4;
-            box = get_gtbox(testdata, margin);
-        case 'GT_JITTER'
-            margin = 0.1;
-            box = get_gtbox_jitter(testdata, margin);
-        case 'OURS'
-            box = get_boxfromhmap(testdata, datasetname, datasettype);
-        otherwise
-            error('Check available methods for detection!');
+%% add path
+addpath('detection');
+addpath('~/Downloads/convolutional-pose-machines-release/testing/');
+
+
+%% Load test data
+
+datasetname = 'pet2006';             % 1) towncenter, 2)pet2006
+datasettype = 'rTest';
+
+RCNNInitFlag = 0;
+total_gt_rects = 0;
+all_labels_total = [];
+all_scores_total = [];
+for selLoc = 1:4
+    
+    if strcmp(datasetname, 'towncenter')
+        YX = [...
+            138 167;
+            160 260;
+            170 570;
+            262 544;
+            130 460;
+            235 325;
+            169 92;
+            91 354;
+            230 438;
+            105 245;
+            999 999];
+    elseif strcmp(datasetname, 'pet2006')
+        YX = [240 150;
+            270 550;
+            250 340;
+            420 130];
+    else
+        error('invalid datasetname!');
+    end
+    y = YX(selLoc,1);
+    x = YX(selLoc,2);
+    
+    testdata = load_dataset(x,y, datasetname, datasettype);
+    testdata = load_predictions(testdata, datasettype, 'no');
+    
+    
+    %% Run Detection
+    % OURS, DPM_INRIA, RCNN
+    detectionmethod = 'RCNN';
+    
+    fname = sprintf('detectionscores/%s_%s/%s_%d.mat',datasetname,datasettype,detectionmethod,selLoc);
+    if exist(fname)
+        load(fname);
+    else
+        switch(detectionmethod)
+            case 'OURS'
+                box = feval(['RUN_', detectionmethod], testdata, datasetname);
+            case 'DPM_INRIA'
+                box = feval(['RUN_', detectionmethod], testdata);
+            case 'DPM_VOC'
+                box = feval(['RUN_', detectionmethod], testdata);
+            case 'RCNN'
+                [box,RCNNInitFlag] = feval(['RUN_', detectionmethod], testdata, RCNNInitFlag);
+            otherwise
+                error('invalid detection method!');
+        end
+        
+        
+        %% evaluate detection
+        gtbox = get_gtbox(testdata, 0.1);
+        
+        total_gt_rects = total_gt_rects + size(gtbox,1);
+        scores = cell(numel(testdata),1);
+        labels = cell(numel(testdata),1);
+        for i=1:numel(testdata)
+            gt_rects = gtbox(i,:);
+            rects = box{i};
+            
+%             [~,idx] = max(rects(:,5));
+%             figure(1); imshow(testdata(i).im); hold on;
+%             rectangle('Position', gt_rects, 'EdgeColor', 'g');
+%             rectangle('Position', rects(idx,1:4), 'EdgeColor', 'r');
+%             hold off;
+%             figure(2); imagesc(testdata(i).jsc(:,:,29)); axis image;
+            
+            [labels{i}, scores{i}] = evaluate_image(gt_rects, rects);
+        end
+        all_labels = cat(1, labels{:});
+        all_scores = cat(1, scores{:});
+        
+        save(fname, 'all_labels', 'all_scores');
+    end
+    
+    idx = all_scores > -1.3;
+
+    [precision, recall, ap, sorted_scores] = ...
+        precision_recall(all_labels(idx==1), all_scores(idx==1), numel(testdata), 0);
+    
+    disp(['AP: ' num2str(ap)])
+    
+    all_labels_total = [all_labels_total; all_labels(idx==1)];
+    all_scores_total = [all_scores_total; all_scores(idx==1)];
+
+end
+
+if strcmp(datasetname, 'towncenter')
+    if strcmp(datasettype, 'rTest')
+        total_gt_rects = 358;
+    elseif strcmp(datasettype, 'sTest')
+        total_gt_rects = 1000;
+    end
+elseif strcmp(datasetname, 'pet2006')
+    if strcmp(datasettype, 'rTest')
+        total_gt_rects = 1079;
+    elseif strcmp(datasettype, 'sTest')
+        total_gt_rects = 400;
     end
 end
 
 
-for i=1:numel(testdata)
-    testdata(i).box = box(i,:);
-end
+%compute PR curve and AP; a figure will be shown if show_plots is true
+[precision, recall, ap, sorted_scores] = ...
+    precision_recall(all_labels_total, all_scores_total, total_gt_rects, true);
+
+disp(['avg AP: ' num2str(ap)])
+
+% save precision and recall for later use
+fname = sprintf('detectionscores/%s_%s/PR_%s.mat',datasetname,datasettype,detectionmethod);
+save(fname, 'precision', 'recall');
 
 end
+
 
 %%
-function box = get_whole(testdata)
-sampleimg = imread(testdata(1).im);
-W = size(sampleimg,2);
-H = size(sampleimg,1);
-box = [];
-for i=1:numel(testdata)
-    box(i,:) = [1,1,W,H];
+function box = RUN_OURS(testdata, datasetname)
+
+% load gt tight box
+if strcmp(datasetname, 'towncenter')
+    step = 1;
+elseif strcmp(datasetname, 'pet2006')
+    step = 2;
+else
+    error('invalid datasetname!');
 end
+tightbox = dlmread(sprintf('~/develop/PoseRegression/mat/tightbox/tightboxes_%s_step%d.txt',datasetname,step));
+
+% detection info
+dinfo = load_detector_info(testdata(1).y, testdata(1).x, 'no');
+w = dinfo.w;
+h = dinfo.h;
+
+box = cell(numel(testdata),1);
+
+for i=1:numel(testdata)
+    
+    %% settings
+    suppressed_scale = 0.8;
+    max_peaks = 80;
+    threshold = -1.0;
+   
+    %% get detection_size
+    % get center channel
+    cen = testdata(i).jsc(:,:,29);
+    % find peak of center channel
+    [max_val,idx] = max(cen(:));
+    [center.y,center.x] = ind2sub(size(cen), idx);
+    % translate the center to the absolute coordinate w.r.t. the frame
+    % l r t b
+    % ctotall_scores
+    ctot = (h - h/3.5*2)/2 + h/3.5*2;
+    ctol = w/2;
+    center.y_abs = center.y + (testdata(1).y - ctot);
+    center.x_abs = center.x + (testdata(1).x - ctol);
+
+    % find the closest location from tightbox
+    dist = tightbox(:,1:2) - repmat([center.x_abs center.y_abs], [size(tightbox,1),1]);
+    dist = sqrt(sum(dist(:,1).^2 + dist(:,2).^2, 2));
+    [min_val,idx] = min(dist);
+    
+    % w and h
+    w = tightbox(idx,3);
+    h = tightbox(idx,4);
+    
+    detection_size = [h w];
+    response = testdata(i).jsc(:,:,29);
+    
+    rects = get_rects(response, max_peaks, threshold, detection_size, suppressed_scale);
+    rects = post_process_rects(rects, 0.5);
+    
+    box{i} = rects;
 end
 
-%% DPM_VOC
-function box = run_DPM_VOC(testdata)
+end
+
+
+%%
+function box = RUN_DPM_INRIA(testdata)
 addpath('~/Downloads/voc-release5/');
 startup;
 fprintf('compiling the code...');
-compile;
-fprintf('done.\n\n');
-load('/home/namhoon/Downloads/voc-release5/VOC2007/person_grammar_final');
-model.class = 'person grammar';
-model.vis = @() visualize_person_grammar_model(model, 6);
-
-box = [];
-time_total = 0;
-for i=1:numel(testdata)
-    fprintf('detecting box for image %d ..\n', i);
-    tic;
-    box(i,:) = test(testdata(i).im, model, -0.6);
-    time = toc;
-    time_total = time_total + time;
-end
-fprintf('total processing time (DPM_VOC): %.4f \n', time_total);
-fprintf('  avg processing time (DPM_VOC): %.4f \n', time_total/numel(testdata));
-end
-
-%% DPM_INRIA
-function box = run_DPM_INRIA(testdata)
-addpath('~/Downloads/voc-release5/');
-startup;
-fprintf('compiling the code...');
-compile;
+% compile;
 fprintf('done.\n\n');
 load('/home/namhoon/Downloads/voc-release5/INRIA/inriaperson_final');
 model.vis = @() visualizemodel(model, ...
     1:2:length(model.rules{model.start}));
 
-box = [];
-time_total = 0;
+box = cell(numel(testdata),1);
 for i=1:numel(testdata)
     fprintf('detecting box for image %d ..\n', i);
-    tic;
-    box(i,:) = test(testdata(i).im, model, -0.3);
-    time = toc;
-    time_total = time_total + time;
-end
-fprintf('total processing time (DPM_INRIA): %.4f \n', time_total);
-fprintf('  avg processing time (DPM_INRIA): %.4f \n', time_total/numel(testdata));
+    box{i} = test(testdata(i).im, model, -100);
 end
 
-%% FIND BOX (DPM)
+end
+
+
+%%
+function box = RUN_DPM_VOC(testdata)
+addpath('~/Downloads/voc-release5/');
+startup;
+fprintf('compiling the code...');
+% compile;
+fprintf('done.\n\n');
+load('/home/namhoon/Downloads/voc-release5/VOC2010/person_grammar_final');
+model.class = 'person grammar';
+model.vis = @() visualize_person_grammar_model(model, 6);
+
+box = cell(numel(testdata),1);
+for i=1:numel(testdata)
+    fprintf('detecting box for image %d ..\n', i);
+    box{i} = test(testdata(i).im, model, -100);
+end
+end
+
+
+%%
 function box = test(imname, model, thresh)
 
-% load and display image
 im = imread(imname);
-% clf;
-% image(im);
-% axis equal; 
-% axis on;
-% disp('input image');
-% disp('press any key to continue'); pause;
-% disp('continuing...');
 
-% load and display model
-% model.vis();
-% disp([cls ' model visualization']);
-% disp('press any key to continue'); pause;
-% disp('continuing...');
 
 % detect objects
 [ds, bs] = imgdetect(im, model, thresh);
-%% NL
 if isempty(ds)
-    box = [1,1,size(im,2),size(im,1)];
+    box = [1,1,size(im,2),size(im,1), thresh];
     return; 
 end
 top = nms(ds, 0.5);
@@ -129,9 +252,6 @@ if model.type == model_types.Grammar
   bs = [ds(:,1:4) bs];
 end
 % showboxes(im, reduceboxes(model, bs(top,:)));
-% disp('detections');
-% disp('press any key to continue'); pause;
-% disp('continuing...');
 
 if model.type == model_types.MixStar
   % get bounding boxes
@@ -140,34 +260,21 @@ if model.type == model_types.MixStar
   top = nms(bbox, 0.5);
 %   clf;
 %   showboxes(im, bbox(top,:));
-%   disp('bounding boxes');
-%   disp('press any key to continue'); pause;
 end
 
 %% final outbox
 if model.type == model_types.MixStar
-    if numel(top) > 1
-        boxsize = bbox(:,3).*bbox(:,4);
-        boxsize = boxsize(top);
-        [~, idx] = max(boxsize);
-        top = top(idx);
-    end
-    selected = bbox(top,:);
+    sel = bbox(top,:);
 else
-    if numel(top) > 1
-        boxsize = ds(:,3).*ds(:,4);
-        boxsize = boxsize(top);
-        [~, idx] = max(boxsize);
-        top = top(idx);
-    end
-    selected = ds(top,:);
+    sel = ds(top,:);
 end
-box = [selected(1) selected(2) selected(3)-selected(1) selected(4)-selected(2)];
+box = [sel(:,1) sel(:,2) sel(:,3)-sel(:,1) sel(:,4)-sel(:,2), sel(:,5)];
 
 end
 
-%% FASTER RCNN
-function box = run_RCNN(testdata)
+
+%%
+function [box,RCNNInitFlag] = RUN_RCNN(testdata, RCNNInitFlag)
 
 clear mex;
 clear is_valid_handle; % to clear init_key
@@ -177,8 +284,10 @@ run(fullfile(workingdir, 'startup'));
 %% -------------------- CONFIG --------------------
 opts.caffe_version          = 'caffe_faster_rcnn';
 opts.gpu_id                 = auto_select_gpu;
-active_caffe_mex(opts.gpu_id, opts.caffe_version);
-
+if ~RCNNInitFlag
+    active_caffe_mex(opts.gpu_id, opts.caffe_version);
+    RCNNInitFlag = 1;
+end
 opts.per_nms_topN           = 6000;
 opts.nms_overlap_thres      = 0.7;
 opts.after_nms_topN         = 300;
@@ -235,7 +344,7 @@ for j = 1:2 % we warm up 2 times
 end
 
 %% -------------------- TESTING --------------------
-box = [];
+box = cell(numel(testdata),1);
 running_time = [];
 for j = 1:numel(testdata)
     
@@ -272,7 +381,8 @@ for j = 1:numel(testdata)
     % visualize
     classes = proposal_detection_model.classes;
     boxes_cell = cell(length(classes), 1);
-    thres = 0.6;
+%     thres = 0.6;
+    thres = -100;
     for i = 1:length(boxes_cell)
         boxes_cell{i} = [boxes(:, (1+(i-1)*4):(i*4)), scores(:, i)];
         boxes_cell{i} = boxes_cell{i}(nms(boxes_cell{i}, 0.3), :);
@@ -286,21 +396,15 @@ for j = 1:numel(testdata)
     
     %% save box
     if ~isempty(boxes_cell{15}) % person detected
-%         assert(size(boxes_cell{15},1) == 1);    % for now, only take care of only one box 
-        tmp = boxes_cell{15};        
-        if size(tmp,1) > 1
-            [val, idx] = sort(tmp(:,5),'descend');
-            tmp = tmp(idx(1),:);
-        end
-        box(j,:) = [tmp(1) tmp(2) tmp(3)-tmp(1) tmp(4)-tmp(2)];
+        sel = boxes_cell{15};
+        box{j} = [sel(:,1) sel(:,2) sel(:,3)-sel(:,1) sel(:,4)-sel(:,2), sel(:,5)];
     else
-        box(j,:) = [1 1 size(im,2) size(im,1)]; 
+        box{j} = [1,1,size(im,2),size(im,1), thres];
     end
 end
 fprintf('mean time: %.4fs\n', mean(running_time));
 
-caffe.reset_all();
-clear mex;
+% caffe.reset_all();
 
 end
 
@@ -334,7 +438,7 @@ if after_nms_topN > 0
 end
 end
 
-%% GT BOX
+%%
 function box = get_gtbox(testdata, margin)
 
 sampleimg = imread(testdata(1).im);
@@ -374,139 +478,3 @@ for i=1:numel(testdata)
 end
 
 end
-
-%% GT BOX JITTER
-function box = get_gtbox_jitter(testdata, margin)
-
-sampleimg = imread(testdata(1).im);
-W = size(sampleimg,2);
-H = size(sampleimg,1);
-
-box = [];
-for i=1:numel(testdata)
-    
-    joints = testdata(i).point;
-    joints = joints(1:14,:);
-    
-    % get rid of occluded joints
-    occ = testdata(i).occ;
-    occ = occ(1:14);
-    joints(find(occ==1),:) = [];
-    
-    x1 = min(joints(:,1));
-    x2 = max(joints(:,1));
-    y1 = min(joints(:,2));
-    y2 = max(joints(:,2));
-    
-    w = x2-x1;
-    h = y2-y1;
-    
-    center_x = (x1+x2)/2;
-    center_y = (y1+y2)/2;
-    
-%     clf;
-%     figure(1); imshow(testdata(i).im); hold on;
-%     rectangle('Position', [x1,y1,w,h]);
-    
-    % jitter
-    % translate center
-    center_x = center_x + normrnd(0, margin*w);
-    center_y = center_y + normrnd(0, margin*h);
-    % jitter width and height
-    w  = w  + normrnd(0, margin*w);
-    h  = h  + normrnd(0, margin*h);
-    % jittered box: x1, x2, y1, y2
-    x1 = center_x - (w/2);
-    x2 = center_x + (w/2);
-    y1 = center_y - (h/2);
-    y2 = center_y + (h/2);
-    
-    x1 = max(1,x1);
-    y1 = max(1,y1);
-    x2 = min(x2,W);
-    y2 = min(y2,H);
-    
-    box(i,:) = [x1 y1 x2-x1 y2-y1];
-    
-%     rectangle('Position', [x1,y1,w,h]);
-%     hold off;
-end
-
-end
-
-%% box from heat map
-function box = get_boxfromhmap(testdata, datasetname, datasettype)
-
-% directory to heat map predictions
-dinfo = load_detector_info(testdata(1).y, testdata(1).x, 'no');
-basedir = dinfo.basedir;
-w = dinfo.w;
-h = dinfo.h;
-date = dinfo.date;
-bestmodel = dinfo.bestmodel;
-
-dirtopred = fullfile(basedir, sprintf('%s/results/%s/model%d',date,datasettype,bestmodel));
-
-% load gt tight box
-if strcmp(datasetname, 'towncenter')
-    step = 1;
-elseif strcmp(datasetname, 'pet2006')
-    step = 2;
-else
-    error('invalid datasetname!');
-end
-tightbox = dlmread(sprintf('~/develop/PoseRegression/mat/tightbox/tightboxes_%s_step%d.txt',datasetname,step));
-
-
-% get prediction box
-box = [];
-for i=1:numel(testdata)
-    % load jsc
-    if strcmp(datasettype, 'rTest')    
-        framenum = testdata(i).im(end-7:end-4);
-        jsc = fullfile(dirtopred, sprintf('jsc_pred_frm%s.mat',framenum));
-    elseif strcmp(datasettype, 'sTest')
-        jsc = fullfile(dirtopred, sprintf('jsc_pred_frm%04d.mat',i));
-    else
-        error('invalid datasettype!');
-    end
-    load(jsc);
-    
-    % get center channel
-    x = permute(x, [3 4 2 1]);
-    cen = x(:,:,29);
-    % find peak of center channel
-    [max_val,idx] = max(cen(:));
-    [center.y,center.x] = ind2sub(size(cen), idx);
-    % translate the center to the absolute coordinate w.r.t. the frame
-    % l r t b
-    % ctot
-    ctot = (h - h/3.5*2)/2 + h/3.5*2;
-    ctol = w/2;
-    center.y_abs = center.y + (testdata(1).y - ctot);
-    center.x_abs = center.x + (testdata(1).x - ctol);
-
-    % find the closest location from tightbox
-    dist = tightbox(:,1:2) - repmat([center.x_abs center.y_abs], [size(tightbox,1),1]);
-    dist = sqrt(sum(dist(:,1).^2 + dist(:,2).^2, 2));
-    [min_val,idx] = min(dist);
-    
-    % w and h
-    w = tightbox(idx,3);
-    h = tightbox(idx,4);
-    
-    % box 
-    box(i,:) = [center.x-w/2 center.y-h/2 w h];    
-%     figure(1); imshow(testdata(i).im); hold on;
-%     rectangle('Position', box(i,:));
-%     hold off;
-    
-end
-
-
-end
-
-
-
-
-

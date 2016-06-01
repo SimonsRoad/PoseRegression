@@ -7,11 +7,11 @@ clear; clc; close all;
 
 %% load existing data
 % data directories
-y = 138;
-x = 167;
-path_data = sprintf('~/develop/PoseRegression/data/rendout/anc_y%d_x%d_more', y, x);
-path_pos  = fullfile(path_data, 'pos');
-path_seg  = fullfile(path_data, 'seg');
+y = 240;
+x = 150;
+path_data = sprintf('~/develop/PoseRegression/data/rendout/anc_y%d_x%d_j', y, x);
+path_pos  = fullfile(path_data, 'pos_half');
+% path_seg  = fullfile(path_data, 'seg');
 path_jsc  = fullfile(path_data, 'jsc');
 if ~exist(path_jsc, 'dir'), mkdir(path_jsc); end;
 
@@ -22,15 +22,14 @@ images  = dir(fullfile(path_pos, imgtype));
 data = [];
 for i=1:numel(images)
     data(i).pos = fullfile(path_pos, images(i).name);
-    data(i).seg = fullfile(path_seg, strrep(images(i).name,'pos0000', 'seg0000'));
+%     data(i).seg = fullfile(path_seg, strrep(images(i).name,'pos0000', 'seg0000'));
 end
 [h,w,~] = size(imread(data(1).pos));
 
 % label
-for i = 1:numel(data)￼ablation study - network training
-
+for i = 1:numel(data)
     tmp = data(i).pos;
-    tmp = strrep(tmp, '/pos/', '/j27/');
+    tmp = strrep(tmp, '/pos_half/', '/j27/');
     tmp = strrep(tmp, 'pos0000.jpg', 'joints.txt');
     data(i).j27 = dlmread(tmp);
 end
@@ -71,9 +70,9 @@ for i = 1:numel(data)
     end
     
     % seg
-    seg = imread(data(i).seg);
-%     seg = imresize(seg, factor_resize);
-    seg = im2single(rgb2gray(seg));
+%     seg = imread(data(i).seg);
+% %     seg = imresize(seg, factor_resize);
+%     seg = im2single(rgb2gray(seg));
 
     % cen
     midpoint = round( mean([j27(6,:);j27(12,:)]) );
@@ -90,8 +89,8 @@ for i = 1:numel(data)
     %% concatenated label: JSC
     jsc = single([]);
     jsc(:,:,1:27) = hmap;
-    jsc(:,:,28)   = seg;
-    jsc(:,:,29)   = cen;
+%     jsc(:,:,28)   = seg;
+%     jsc(:,:,29)   = cen;
     jsc = permute(jsc,[3, 1, 2]);         % following Torch standard
     
     % sanity check: jsc
@@ -100,7 +99,7 @@ for i = 1:numel(data)
     end
     
     % save jsc
-    fname_jsc = strrep(data(i).pos, '/pos/', '/jsc/');
+    fname_jsc = strrep(data(i).pos, '/pos_half/', '/jsc/');
     fname_jsc = strrep(fname_jsc, 'pos0000.jpg', 'jsc.mat');
     save(fname_jsc, 'jsc');
         

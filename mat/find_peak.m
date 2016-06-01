@@ -1,4 +1,5 @@
 function [joint,occ] = find_peak(hmap, nJoints)
+
 % assert(size(hmap,3) == nJoints);
 joint = [];
 occ = [];
@@ -12,6 +13,7 @@ for i = 1:nJoints
     else
         occ(i) = 0;
     end
+    if i==8
 end
 
 end

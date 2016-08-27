@@ -1,8 +1,10 @@
---[[
---script_poseregression_fcn.lua
---Namhoon Lee, The Robotics Institute, Carnegie Mellon University
---namhoonl@andrew.cmu.edu
---]]
+----------------------------------------------------------------------
+-- Copyright (c) 2016, Namhoon Lee <namhoonl@andrew.cmu.edu>
+-- All rights reserved.
+--
+-- script_poseregression_fcn.lua
+-- - main 
+----------------------------------------------------------------------
 
 require 'torch'
 require 'paths'
@@ -19,6 +21,19 @@ torch.manualSeed(2)
 
 -- Create model
 model, criterion = models.setup(opt)
+print('--------------------------------------------------')
+print('TEST!!!')
+--print(model.innode)
+--print(model.outnode)
+--print(model.nInputs)
+--print(model._type)
+--print(model.outnode)
+--print(model.outnode.data)
+print(model.innode.data.mapindex)
+--print(model.outnode.data.mapindex[1])
+--print(model.outnode.data.mapindex[1].module)
+print('--------------------------------------------------')
+adf=adf+1
 
 paths.dofile('data.lua')
 paths.dofile('train_fcn.lua')

@@ -1,14 +1,14 @@
---[[
---test_pr.lua
---Namhoon Lee, The Robotics Institute, Carnegie Mellon University
+----------------------------------------------------------------------
+-- Copyright (c) 2016, Namhoon Lee <namhoonl@andrew.cmu.edu>
+-- All rights reserved.
 --
--- set opt.nDonkeys 1 (no use of donkey, directly load data)
--- set opt.txtimg, opt.txtjsc for real data. 
--- set pathToModel
--- set mNum
--- test data needs to be pre-processed (resize!)
--- prepare a .txt for test data
---]]
+-- This file is part of NIPS'16 submission
+-- Visual Compiler: Scene Description to Pedestrian Pose Estimation
+-- N. Lee*, V. N. Boddeti*, K. M. Kitani, F. Beainy, and T. Kanade
+--
+-- test_pr.lua
+-- -
+----------------------------------------------------------------------
 
 require 'torch'
 require 'paths'

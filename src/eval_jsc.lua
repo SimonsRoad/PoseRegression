@@ -1,8 +1,14 @@
---[[
+----------------------------------------------------------------------
+-- Copyright (c) 2016, Namhoon Lee <namhoonl@andrew.cmu.edu>
+-- All rights reserved.
+--
+-- This file is part of NIPS'16 submission
+-- Visual Compiler: Scene Description to Pedestrian Pose Estimation
+-- N. Lee*, V. N. Boddeti*, K. M. Kitani, F. Beainy, and T. Kanade
+--
 -- eval_jsc.lua
--- Namhoon Lee, RI, CMU (namhoonl@andrew.cmu.edu)
--- evaluate jsc (j27, seg, cen)
---]]
+--  
+----------------------------------------------------------------------
 
 local matio = require 'matio'
 --paths.dofile('datanew.lua')
@@ -160,6 +166,7 @@ local pred_cen
 
 local gt_j27
 local pred_j27
+local occ
 
 function evalBatch(inputsCPU, labelsCPU)
     cutorch.synchronize()
@@ -175,19 +182,21 @@ function evalBatch(inputsCPU, labelsCPU)
 
     -- separation
     gt_j27_hmap = labels[{ {}, {1,opt.nJoints}, {}, {} }]
-    gt_seg = labels[{ {}, {28}, {}, {} }]
-    gt_cen = labels[{ {}, {29}, {}, {} }]
+    --gt_seg = labels[{ {}, {28}, {}, {} }]
+    --gt_cen = labels[{ {}, {29}, {}, {} }]
+    gt_cen = labels[{ {}, {28}, {}, {} }]
     pred_j27_hmap = outputs[{ {}, {1,opt.nJoints}, {}, {} }]
-    pred_seg = outputs[{ {}, {28}, {}, {} }]
-    pred_cen = outputs[{ {}, {29}, {}, {} }]
+    --pred_seg = outputs[{ {}, {28}, {}, {} }]
+    --pred_cen = outputs[{ {}, {29}, {}, {} }]
+    pred_cen = outputs[{ {}, {28}, {}, {} }]
 
     -- find peak for joints 
-    gt_j27   = find_peak(gt_j27_hmap) 
-    pred_j27 = find_peak(pred_j27_hmap) 
+    gt_j27, occ = find_peak(gt_j27_hmap) 
+    pred_j27    = find_peak(pred_j27_hmap) 
 
     -- EVALUATION
-    pck_j27 = pck_j27 + comp_PCK(gt_j27, pred_j27)      -- PCK for j27
-    sad_seg = sad_seg + comp_SAD(gt_seg, pred_seg)      -- SAD for seg
+    pck_j27 = pck_j27 + comp_PCK(gt_j27, pred_j27, occ, 0.5)      -- PCK for j27
+    --sad_seg = sad_seg + comp_SAD(gt_seg, pred_seg)      -- SAD for seg
     sad_cen = sad_cen + comp_SAD(gt_cen, pred_cen)      -- SAD for cen
 
     cutorch.synchronize()
@@ -195,10 +204,4 @@ function evalBatch(inputsCPU, labelsCPU)
     collectgarbage()
 
 end
-
-
-
-
-
-
 

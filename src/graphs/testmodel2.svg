@@ -14,7 +14,7 @@
 <g id="a_node1"><a xlink:title="[./models/testmodel2.lua]:113_">
 <ellipse fill="none" stroke="black" cx="284" cy="-150" rx="216.062" ry="37.4533"/>
 <text text-anchor="middle" x="284" y="-161.3" font-family="Times,serif" font-size="14.00">Node1</text>
-<text text-anchor="start" x="139" y="-146.3" font-family="Times,serif" font-size="14.00">module = cudnn.SpatialConvolution(256 &#45;&gt; 29, 1x1)</text>
+<text text-anchor="start" x="139" y="-146.3" font-family="Times,serif" font-size="14.00">module = cudnn.SpatialConvolution(256 &#45;&gt; 28, 1x1)</text>
 <text text-anchor="middle" x="284" y="-131.3" font-family="Times,serif" font-size="14.00">reverseMap = {}</text>
 </a>
 </g>
@@ -69,7 +69,7 @@
 <g id="a_node5"><a xlink:title="[./models/testmodel2.lua]:110_">
 <ellipse fill="none" stroke="black" cx="284" cy="-486" rx="220.987" ry="37.4533"/>
 <text text-anchor="middle" x="284" y="-497.3" font-family="Times,serif" font-size="14.00">Node5</text>
-<text text-anchor="start" x="135.5" y="-482.3" font-family="Times,serif" font-size="14.00">module = cudnn.SpatialConvolution(116 &#45;&gt; 256, 1x1)</text>
+<text text-anchor="start" x="135.5" y="-482.3" font-family="Times,serif" font-size="14.00">module = cudnn.SpatialConvolution(112 &#45;&gt; 256, 1x1)</text>
 <text text-anchor="middle" x="284" y="-467.3" font-family="Times,serif" font-size="14.00">reverseMap = {}</text>
 </a>
 </g>
@@ -130,7 +130,7 @@
 <g id="a_node9"><a xlink:title="[./models/testmodel2.lua]:65_">
 <ellipse fill="none" stroke="black" cx="221" cy="-3640" rx="216.062" ry="37.4533"/>
 <text text-anchor="middle" x="221" y="-3651.3" font-family="Times,serif" font-size="14.00">Node9</text>
-<text text-anchor="start" x="76" y="-3636.3" font-family="Times,serif" font-size="14.00">module = cudnn.SpatialConvolution(256 &#45;&gt; 29, 1x1)</text>
+<text text-anchor="start" x="76" y="-3636.3" font-family="Times,serif" font-size="14.00">module = cudnn.SpatialConvolution(256 &#45;&gt; 28, 1x1)</text>
 <text text-anchor="middle" x="221" y="-3621.3" font-family="Times,serif" font-size="14.00">reverseMap = {}</text>
 </a>
 </g>
@@ -161,7 +161,7 @@
 <g id="a_node10"><a xlink:title="[./models/testmodel2.lua]:65_">
 <ellipse fill="none" stroke="black" cx="434" cy="-2704" rx="216.062" ry="37.4533"/>
 <text text-anchor="middle" x="434" y="-2715.3" font-family="Times,serif" font-size="14.00">Node10</text>
-<text text-anchor="start" x="289" y="-2700.3" font-family="Times,serif" font-size="14.00">module = cudnn.SpatialConvolution(256 &#45;&gt; 29, 1x1)</text>
+<text text-anchor="start" x="289" y="-2700.3" font-family="Times,serif" font-size="14.00">module = cudnn.SpatialConvolution(256 &#45;&gt; 28, 1x1)</text>
 <text text-anchor="middle" x="434" y="-2685.3" font-family="Times,serif" font-size="14.00">reverseMap = {}</text>
 </a>
 </g>
@@ -192,7 +192,7 @@
 <g id="a_node11"><a xlink:title="[./models/testmodel2.lua]:65_">
 <ellipse fill="none" stroke="black" cx="510" cy="-1768" rx="216.062" ry="37.4533"/>
 <text text-anchor="middle" x="510" y="-1779.3" font-family="Times,serif" font-size="14.00">Node11</text>
-<text text-anchor="start" x="365" y="-1764.3" font-family="Times,serif" font-size="14.00">module = cudnn.SpatialConvolution(256 &#45;&gt; 29, 1x1)</text>
+<text text-anchor="start" x="365" y="-1764.3" font-family="Times,serif" font-size="14.00">module = cudnn.SpatialConvolution(256 &#45;&gt; 28, 1x1)</text>
 <text text-anchor="middle" x="510" y="-1749.3" font-family="Times,serif" font-size="14.00">reverseMap = {}</text>
 </a>
 </g>
@@ -223,7 +223,7 @@
 <g id="a_node12"><a xlink:title="[./models/testmodel2.lua]:104_">
 <ellipse fill="none" stroke="black" cx="548" cy="-954" rx="216.062" ry="37.4533"/>
 <text text-anchor="middle" x="548" y="-965.3" font-family="Times,serif" font-size="14.00">Node12</text>
-<text text-anchor="start" x="403" y="-950.3" font-family="Times,serif" font-size="14.00">module = cudnn.SpatialConvolution(256 &#45;&gt; 29, 1x1)</text>
+<text text-anchor="start" x="403" y="-950.3" font-family="Times,serif" font-size="14.00">module = cudnn.SpatialConvolution(256 &#45;&gt; 28, 1x1)</text>
 <text text-anchor="middle" x="548" y="-935.3" font-family="Times,serif" font-size="14.00">reverseMap = {}</text>
 </a>
 </g>
@@ -373,7 +373,7 @@
 <g id="a_node22"><a xlink:title="[./models/testmodel2.lua]:62_">
 <ellipse fill="none" stroke="black" cx="438" cy="-3162" rx="220.987" ry="37.4533"/>
 <text text-anchor="middle" x="438" y="-3173.3" font-family="Times,serif" font-size="14.00">Node22</text>
-<text text-anchor="start" x="289.5" y="-3158.3" font-family="Times,serif" font-size="14.00">module = cudnn.SpatialConvolution(157 &#45;&gt; 256, 1x1)</text>
+<text text-anchor="start" x="289.5" y="-3158.3" font-family="Times,serif" font-size="14.00">module = cudnn.SpatialConvolution(156 &#45;&gt; 256, 1x1)</text>
 <text text-anchor="middle" x="438" y="-3143.3" font-family="Times,serif" font-size="14.00">reverseMap = {}</text>
 </a>
 </g>
@@ -388,7 +388,7 @@
 <g id="a_node23"><a xlink:title="[./models/testmodel2.lua]:62_">
 <ellipse fill="none" stroke="black" cx="514" cy="-2226" rx="220.987" ry="37.4533"/>
 <text text-anchor="middle" x="514" y="-2237.3" font-family="Times,serif" font-size="14.00">Node23</text>
-<text text-anchor="start" x="365.5" y="-2222.3" font-family="Times,serif" font-size="14.00">module = cudnn.SpatialConvolution(186 &#45;&gt; 256, 1x1)</text>
+<text text-anchor="start" x="365.5" y="-2222.3" font-family="Times,serif" font-size="14.00">module = cudnn.SpatialConvolution(184 &#45;&gt; 256, 1x1)</text>
 <text text-anchor="middle" x="514" y="-2207.3" font-family="Times,serif" font-size="14.00">reverseMap = {}</text>
 </a>
 </g>
@@ -403,7 +403,7 @@
 <g id="a_node24"><a xlink:title="[./models/testmodel2.lua]:101_">
 <ellipse fill="none" stroke="black" cx="552" cy="-1290" rx="220.987" ry="37.4533"/>
 <text text-anchor="middle" x="552" y="-1301.3" font-family="Times,serif" font-size="14.00">Node24</text>
-<text text-anchor="start" x="403.5" y="-1286.3" font-family="Times,serif" font-size="14.00">module = cudnn.SpatialConvolution(215 &#45;&gt; 256, 1x1)</text>
+<text text-anchor="start" x="403.5" y="-1286.3" font-family="Times,serif" font-size="14.00">module = cudnn.SpatialConvolution(212 &#45;&gt; 256, 1x1)</text>
 <text text-anchor="middle" x="552" y="-1271.3" font-family="Times,serif" font-size="14.00">reverseMap = {}</text>
 </a>
 </g>
@@ -808,7 +808,7 @@
 <g id="a_node47"><a xlink:title="[./models/testmodel2.lua]:57_">
 <ellipse fill="none" stroke="black" cx="1059" cy="-2826" rx="265.308" ry="37.4533"/>
 <text text-anchor="middle" x="1059" y="-2837.3" font-family="Times,serif" font-size="14.00">Node47</text>
-<text text-anchor="start" x="879" y="-2822.3" font-family="Times,serif" font-size="14.00">module = cudnn.SpatialConvolution(157 &#45;&gt; 157, 17x17, 1,1, 8,8)</text>
+<text text-anchor="start" x="879" y="-2822.3" font-family="Times,serif" font-size="14.00">module = cudnn.SpatialConvolution(156 &#45;&gt; 156, 17x17, 1,1, 8,8)</text>
 <text text-anchor="middle" x="1059" y="-2807.3" font-family="Times,serif" font-size="14.00">reverseMap = {}</text>
 </a>
 </g>
@@ -828,7 +828,7 @@
 <g id="a_node49"><a xlink:title="[./models/testmodel2.lua]:57_">
 <ellipse fill="none" stroke="black" cx="1135" cy="-1890" rx="265.308" ry="37.4533"/>
 <text text-anchor="middle" x="1135" y="-1901.3" font-family="Times,serif" font-size="14.00">Node49</text>
-<text text-anchor="start" x="955" y="-1886.3" font-family="Times,serif" font-size="14.00">module = cudnn.SpatialConvolution(186 &#45;&gt; 186, 17x17, 1,1, 8,8)</text>
+<text text-anchor="start" x="955" y="-1886.3" font-family="Times,serif" font-size="14.00">module = cudnn.SpatialConvolution(184 &#45;&gt; 184, 17x17, 1,1, 8,8)</text>
 <text text-anchor="middle" x="1135" y="-1871.3" font-family="Times,serif" font-size="14.00">reverseMap = {}</text>
 </a>
 </g>
@@ -1120,7 +1120,7 @@
 <g id="a_node67"><a xlink:title="[./models/testmodel2.lua]:54_">
 <ellipse fill="none" stroke="black" cx="1023" cy="-3162" rx="265.308" ry="37.4533"/>
 <text text-anchor="middle" x="1023" y="-3173.3" font-family="Times,serif" font-size="14.00">Node67</text>
-<text text-anchor="start" x="843" y="-3158.3" font-family="Times,serif" font-size="14.00">module = cudnn.SpatialConvolution(157 &#45;&gt; 157, 17x17, 1,1, 8,8)</text>
+<text text-anchor="start" x="843" y="-3158.3" font-family="Times,serif" font-size="14.00">module = cudnn.SpatialConvolution(156 &#45;&gt; 156, 17x17, 1,1, 8,8)</text>
 <text text-anchor="middle" x="1023" y="-3143.3" font-family="Times,serif" font-size="14.00">reverseMap = {}</text>
 </a>
 </g>
@@ -1135,7 +1135,7 @@
 <g id="a_node68"><a xlink:title="[./models/testmodel2.lua]:54_">
 <ellipse fill="none" stroke="black" cx="1099" cy="-2226" rx="265.308" ry="37.4533"/>
 <text text-anchor="middle" x="1099" y="-2237.3" font-family="Times,serif" font-size="14.00">Node68</text>
-<text text-anchor="start" x="919" y="-2222.3" font-family="Times,serif" font-size="14.00">module = cudnn.SpatialConvolution(186 &#45;&gt; 186, 17x17, 1,1, 8,8)</text>
+<text text-anchor="start" x="919" y="-2222.3" font-family="Times,serif" font-size="14.00">module = cudnn.SpatialConvolution(184 &#45;&gt; 184, 17x17, 1,1, 8,8)</text>
 <text text-anchor="middle" x="1099" y="-2207.3" font-family="Times,serif" font-size="14.00">reverseMap = {}</text>
 </a>
 </g>

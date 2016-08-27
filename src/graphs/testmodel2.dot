@@ -4,7 +4,7 @@ digraph G {
 		shape=oval
 	];
 	n1	 [height=1.041,
-		label="Node1\nmodule = cudnn.SpatialConvolution(256 -> 29, 1x1)\lreverseMap = {}",
+		label="Node1\nmodule = cudnn.SpatialConvolution(256 -> 28, 1x1)\lreverseMap = {}",
 		pos="284,150",
 		tooltip="[./models/testmodel2.lua]:113_",
 		width=6.0052];
@@ -27,7 +27,7 @@ digraph G {
 		width=5.0616];
 	n4 -> n3	 [pos="e,284,299.84 284,336.37 284,327.93 284,318.83 284,310.01"];
 	n5	 [height=1.041,
-		label="Node5\nmodule = cudnn.SpatialConvolution(116 -> 256, 1x1)\lreverseMap = {}",
+		label="Node5\nmodule = cudnn.SpatialConvolution(112 -> 256, 1x1)\lreverseMap = {}",
 		pos="284,486",
 		tooltip="[./models/testmodel2.lua]:110_",
 		width=6.1434];
@@ -51,7 +51,7 @@ digraph G {
 		width=5.3952];
 	n8 -> n7	 [pos="e,284,747.72 284,783.57 284,775.1 284,766.27 284,757.81"];
 	n9	 [height=1.041,
-		label="Node9\nmodule = cudnn.SpatialConvolution(256 -> 29, 1x1)\lreverseMap = {}",
+		label="Node9\nmodule = cudnn.SpatialConvolution(256 -> 28, 1x1)\lreverseMap = {}",
 		pos="221,3640",
 		tooltip="[./models/testmodel2.lua]:65_",
 		width=6.0052];
@@ -63,7 +63,7 @@ digraph G {
 		width=3.5652];
 	n9 -> n34	 [pos="e,554.98,3538.7 326.65,3607.3 392.98,3587.4 478.33,3561.7 545.25,3541.7"];
 	n10	 [height=1.041,
-		label="Node10\nmodule = cudnn.SpatialConvolution(256 -> 29, 1x1)\lreverseMap = {}",
+		label="Node10\nmodule = cudnn.SpatialConvolution(256 -> 28, 1x1)\lreverseMap = {}",
 		pos="434,2704",
 		tooltip="[./models/testmodel2.lua]:65_",
 		width=6.0052];
@@ -75,7 +75,7 @@ digraph G {
 		width=3.7034];
 	n10 -> n35	 [pos="e,674.47,2608 519.15,2669.4 563.77,2651.7 618.63,2630 665.01,2611.7"];
 	n11	 [height=1.041,
-		label="Node11\nmodule = cudnn.SpatialConvolution(256 -> 29, 1x1)\lreverseMap = {}",
+		label="Node11\nmodule = cudnn.SpatialConvolution(256 -> 28, 1x1)\lreverseMap = {}",
 		pos="510,1768",
 		tooltip="[./models/testmodel2.lua]:65_",
 		width=6.0052];
@@ -87,7 +87,7 @@ digraph G {
 		width=3.7034];
 	n11 -> n36	 [pos="e,536.82,1684 521.81,1730.4 525.49,1719.1 529.63,1706.2 533.64,1693.8"];
 	n12	 [height=1.041,
-		label="Node12\nmodule = cudnn.SpatialConvolution(256 -> 29, 1x1)\lreverseMap = {}",
+		label="Node12\nmodule = cudnn.SpatialConvolution(256 -> 28, 1x1)\lreverseMap = {}",
 		pos="548,954",
 		tooltip="[./models/testmodel2.lua]:104_",
 		width=6.0052];
@@ -147,19 +147,19 @@ digraph G {
 		width=6.1434];
 	n21 -> n17	 [pos="e,221,4023.8 221,4060.4 221,4051.9 221,4042.8 221,4034"];
 	n22	 [height=1.041,
-		label="Node22\nmodule = cudnn.SpatialConvolution(157 -> 256, 1x1)\lreverseMap = {}",
+		label="Node22\nmodule = cudnn.SpatialConvolution(156 -> 256, 1x1)\lreverseMap = {}",
 		pos="438,3162",
 		tooltip="[./models/testmodel2.lua]:62_",
 		width=6.1434];
 	n22 -> n18	 [pos="e,436.67,3087.8 437.33,3124.4 437.18,3115.9 437.02,3106.8 436.85,3098"];
 	n23	 [height=1.041,
-		label="Node23\nmodule = cudnn.SpatialConvolution(186 -> 256, 1x1)\lreverseMap = {}",
+		label="Node23\nmodule = cudnn.SpatialConvolution(184 -> 256, 1x1)\lreverseMap = {}",
 		pos="514,2226",
 		tooltip="[./models/testmodel2.lua]:62_",
 		width=6.1434];
 	n23 -> n19	 [pos="e,512.67,2151.8 513.33,2188.4 513.18,2179.9 513.02,2170.8 512.85,2162"];
 	n24	 [height=1.041,
-		label="Node24\nmodule = cudnn.SpatialConvolution(215 -> 256, 1x1)\lreverseMap = {}",
+		label="Node24\nmodule = cudnn.SpatialConvolution(212 -> 256, 1x1)\lreverseMap = {}",
 		pos="552,1290",
 		tooltip="[./models/testmodel2.lua]:101_",
 		width=6.1434];
@@ -316,14 +316,14 @@ digraph G {
 	n45 -> n39	 [pos="e,709.49,3684 762.49,3725 748.43,3714.1 732.72,3701.9 717.73,3690.3"];
 	n46 -> n40	 [pos="e,757.15,2749.5 715.35,2790.9 726.11,2780.3 738.24,2768.2 749.94,2756.6"];
 	n47	 [height=1.041,
-		label="Node47\nmodule = cudnn.SpatialConvolution(157 -> 157, 17x17, 1,1, 8,8)\lreverseMap = {}",
+		label="Node47\nmodule = cudnn.SpatialConvolution(156 -> 156, 17x17, 1,1, 8,8)\lreverseMap = {}",
 		pos="1059,2826",
 		tooltip="[./models/testmodel2.lua]:57_",
 		width=7.3732];
 	n47 -> n40	 [pos="e,882.5,2742.6 983.97,2790 955.11,2776.5 921.86,2761 891.74,2746.9"];
 	n48 -> n41	 [pos="e,833.15,1813.5 791.35,1854.9 802.11,1844.3 814.24,1832.2 825.94,1820.6"];
 	n49	 [height=1.041,
-		label="Node49\nmodule = cudnn.SpatialConvolution(186 -> 186, 17x17, 1,1, 8,8)\lreverseMap = {}",
+		label="Node49\nmodule = cudnn.SpatialConvolution(184 -> 184, 17x17, 1,1, 8,8)\lreverseMap = {}",
 		pos="1135,1890",
 		tooltip="[./models/testmodel2.lua]:57_",
 		width=7.3732];
@@ -439,13 +439,13 @@ digraph G {
 		width=7.3732];
 	n66 -> n60	 [pos="e,809,4023.8 809,4060.4 809,4051.9 809,4042.8 809,4034"];
 	n67	 [height=1.041,
-		label="Node67\nmodule = cudnn.SpatialConvolution(157 -> 157, 17x17, 1,1, 8,8)\lreverseMap = {}",
+		label="Node67\nmodule = cudnn.SpatialConvolution(156 -> 156, 17x17, 1,1, 8,8)\lreverseMap = {}",
 		pos="1023,3162",
 		tooltip="[./models/testmodel2.lua]:54_",
 		width=7.3732];
 	n67 -> n61	 [pos="e,1037,3087.5 1030,3124.4 1031.6,3115.7 1033.4,3106.4 1035.1,3097.4"];
 	n68	 [height=1.041,
-		label="Node68\nmodule = cudnn.SpatialConvolution(186 -> 186, 17x17, 1,1, 8,8)\lreverseMap = {}",
+		label="Node68\nmodule = cudnn.SpatialConvolution(184 -> 184, 17x17, 1,1, 8,8)\lreverseMap = {}",
 		pos="1099,2226",
 		tooltip="[./models/testmodel2.lua]:54_",
 		width=7.3732];

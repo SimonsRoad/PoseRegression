@@ -1,7 +1,14 @@
---[[
+----------------------------------------------------------------------
+-- Copyright (c) 2016, Namhoon Lee <namhoonl@andrew.cmu.edu>
+-- All rights reserved.
+--
+-- This file is part of NIPS'16 submission
+-- Visual Compiler: Scene Description to Pedestrian Pose Estimation
+-- N. Lee*, V. N. Boddeti*, K. M. Kitani, F. Beainy, and T. Kanade
+--
 -- datanew.lua
--- Namhoon Lee, RI, CMU (namhoonl@andrew.cmu.edu)
---]]
+-- - This source code contains data (img,jsc) loading definitions
+----------------------------------------------------------------------
 
 torch.setdefaulttensortype('torch.FloatTensor')
 local ffi       = require 'ffi'
@@ -16,6 +23,8 @@ local matio = require 'matio'
 
 local imgtensor = torch.Tensor(opt.batchSize, 3, opt.H, opt.W) 
 local jsctensor = torch.Tensor(opt.batchSize, opt.nChOut, opt.H_jsc, opt.W_jsc) 
+-- temporary tensor to remove seg from jsc
+local tmptensor = torch.Tensor(opt.batchSize, 29, opt.H_jsc, opt.W_jsc)
 
 local dataset = torch.class('dataLoader')
 local initcheck = argcheck{
@@ -117,11 +126,12 @@ function dataset:load_batch_new(indices)
     -- load from .mat files 
     for i=1, indices:size(1) do
         local jscpath = ffi.string(torch.data(self.labelPath[indices[i]]), self.labelPathLength[indices[i]])
-        jsctensor[i] = matio.load(jscpath, 'jsc')
-
-        -- normalize seg and dep maps to have a sum of 1
-        --local sum_seg = torch.sum(jsctensor[i][28])
-        --jsctensor[i][{ {28}, {}, {} }]:div(sum_seg/24.0)
+        
+        -- try remove segmentation channel!!!
+        --jsctensor[i] = matio.load(jscpath, 'jsc')
+        tmptensor[i] = matio.load(jscpath, 'jsc')
+        jsctensor[{ {i}, {1,27}, {}, {} }] = tmptensor[{ {i}, {1,27}, {}, {} }]
+        jsctensor[{ {i}, {28}, {}, {} }] = tmptensor[{ {i}, {29}, {}, {} }]
     end
 
     -- normalize images (pos)

@@ -1,7 +1,14 @@
---[[
---load_dataset_config.lua
---Namhoon Lee, RI, CMU (namhoonl@andrew.cmu.edu)
---]]
+----------------------------------------------------------------------
+-- Copyright (c) 2016, Namhoon Lee <namhoonl@andrew.cmu.edu>
+-- All rights reserved.
+--
+-- This file is part of NIPS'16 submission
+-- Visual Compiler: Scene Description to Pedestrian Pose Estimation
+-- N. Lee*, V. N. Boddeti*, K. M. Kitani, F. Beainy, and T. Kanade
+--
+-- load_dataset_config.lua
+-- -
+----------------------------------------------------------------------
 
 function load_dataset_config(datasetname)
     if datasetname == 'towncenter' then

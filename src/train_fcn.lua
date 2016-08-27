@@ -1,8 +1,14 @@
---[[
--- train.lua
--- This code is from imigenet-multiGPU.torch by soumith
--- Modified by Namhoon Lee, (CMU, namhoonl@andrew.cmu.edu)
---]]
+----------------------------------------------------------------------
+-- Copyright (c) 2016, Namhoon Lee <namhoonl@andrew.cmu.edu>
+-- All rights reserved.
+--
+-- This file is part of NIPS'16 submission
+-- Visual Compiler: Scene Description to Pedestrian Pose Estimation
+-- N. Lee*, V. N. Boddeti*, K. M. Kitani, F. Beainy, and T. Kanade
+--
+-- train_fcn.lua
+-- -
+----------------------------------------------------------------------
 
 require 'optim'
 require 'image'

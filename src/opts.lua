@@ -1,15 +1,16 @@
+----------------------------------------------------------------------
+-- Copyright (c) 2016, Namhoon Lee <namhoonl@andrew.cmu.edu>
+-- All rights reserved.
 --
---  Copyright (c) 2014, Facebook, Inc.
---  All rights reserved.
+-- This file is part of NIPS'16 submission
+-- Visual Compiler: Scene Description to Pedestrian Pose Estimation
+-- N. Lee*, V. N. Boddeti*, K. M. Kitani, F. Beainy, and T. Kanade
 --
---  This source code is licensed under the BSD-style license found in the
---  LICENSE file in the root directory of this source tree. An additional grant
---  of patent rights can be found in the PATENTS file in the same directory.
---
---
------------------------------------------------------
--- Modified by Namhoon Lee, RI, CMU (namhoonl@andrew.cmu.edu)
---
+-- opts.lua
+-- - defines options 
+-- - This source code is originally created by Facebook, Inc.
+----------------------------------------------------------------------
+
 local M = { }
 
 function M.parse(arg)
@@ -35,10 +36,10 @@ function M.parse(arg)
 	cmd:option('-t',		   'PR_fcn',  'The name of task')
 
     ------------- Data options ------------------------
-    cmd:option('-nDonkeys',           1,  '# of donkeys to initialize (data loading threads)')
-    cmd:option('-txtimg',      '../data/rendout/anc_y138_x167_train/lists/img_pos.txt',  'img list')
-    cmd:option('-txtjsc',      '../data/rendout/anc_y138_x167_train/lists/jsc_pos.txt',  'jsc list')
-    cmd:option('-nTrainData',     50000,  'number of train data')
+    cmd:option('-nDonkeys',           3,  '# of donkeys to initialize (data loading threads)')
+    cmd:option('-txtimg',      '../data/rendout/anc_y138_x167/lists/img_pos.txt',  'img list')
+    cmd:option('-txtjsc',      '../data/rendout/anc_y138_x167/lists/jsc_pos.txt',  'jsc list')
+    cmd:option('-nTrainData',     49000,  'number of train data')
     cmd:option('-nTestData',        500,  'number of test data')
     cmd:option('-y',                138,  'y coordinate of anchor location')
     cmd:option('-x',                167,  'x coordinate of anchor location')
@@ -47,17 +48,17 @@ function M.parse(arg)
     cmd:option('-W_jsc',             71,  'jsc width')
     cmd:option('-H_jsc',            102,  'jsc height')
     cmd:option('-nJoints',           27,  'number of joints')
-    cmd:option('-nChOut',            29,  'number of joints')
+    cmd:option('-nChOut',            28,  'number of joints')
 
     ------------- Training options --------------------
-    cmd:option('-nEpochs',           10,   'Number of total epochs to run')
-    cmd:option('-epochSize',       3125,   'Number of batches per epoch')
+    cmd:option('-nEpochs',           35,   'Number of total epochs to run')
+    cmd:option('-epochSize',       3063,   'Number of batches per epoch')
     cmd:option('-epochNumber',        1,   'Manual epoch number (useful on restarts)')
     cmd:option('-batchSize',         16,   'mini-batch size (1 = pure stochastic)')
     cmd:option('-resume',        'none',   'Path to directory containing checkpoint')
 
     ---------- Optimization options ----------------------
-    cmd:option('-LR',    	        0.1,   'learning rate ')
+    cmd:option('-LR',    	       0.005,   'learning rate ')
     cmd:option('-momentum',         0.9,   'momentum')
     cmd:option('-weightDecay',     5e-4,   'weight decay')
 

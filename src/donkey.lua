@@ -1,21 +1,18 @@
+----------------------------------------------------------------------
+-- Copyright (c) 2016, Namhoon Lee <namhoonl@andrew.cmu.edu>
+-- All rights reserved.
 --
---  Copyright (c) 2014, Facebook, Inc.
---  All rights reserved.
+-- This file is part of NIPS'16 submission
+-- Visual Compiler: Scene Description to Pedesetrian Pose Estimation
+-- N. Lee*, V. N. Boddeti*, K. M. Kitani, F. Beainy, and T. Kanade
 --
---  This source code is licensed under the BSD-style license found in the
---  LICENSE file in the root directory of this source tree. An additional grant
---  of patent rights can be found in the PATENTS file in the same directory.
---
+-- donkey.lua
+-- - This source code creates a data loader
+----------------------------------------------------------------------
+
 require 'image'
 paths.dofile('datanew.lua')
 --paths.dofile('util.lua')
-
--- This file contains the data-loading logic and details.
--- It is run by each data-loader thread.
-------------------------------------------
---
--- Modified by Namhoon Lee, RI, CMU (namhoonl@andrew.cmu.edu)
---
 
 loader = dataLoader{txtimg=opt.txtimg, txtjsc=opt.txtjsc}
 

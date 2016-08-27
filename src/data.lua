@@ -1,22 +1,20 @@
+----------------------------------------------------------------------
+-- Copyright (c) 2016, Namhoon Lee <namhoonl@andrew.cmu.edu>
+-- All rights reserved.
 --
---  Copyright (c) 2014, Facebook, Inc.
---  All rights reserved.
+-- This file is part of NIPS'16 submission
+-- Visual Compiler: Scene Description to Pedestrian Pose Estimation
+-- N. Lee*, V. N. Boddeti*, K. M. Kitani, F. Beainy, and T. Kanade
 --
---  This source code is licensed under the BSD-style license found in the
---  LICENSE file in the root directory of this source tree. An additional grant
---  of patent rights can be found in the PATENTS file in the same directory.
---
---
--- Modified by Namhoon Lee, RI, CMU (namhoonl@andrew.cmu.edu)
---
+-- data.lua
+-- - This source code creates K threads for parallel data-loading
+-- - This source code is originally created by Facebook, Inc.
+----------------------------------------------------------------------
 
 local ffi = require 'ffi'
 local Threads = require 'threads'
 Threads.serialization('threads.sharedserialize')
 
--- This script contains the logic to create K threads for parallel data-loading.
--- For the data-loading details, look at donkey.lua
--------------------------------------------------------------------------------
 do -- start K datathreads (donkeys)
    if opt.nDonkeys > 0 then
         local options = opt    

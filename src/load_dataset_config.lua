@@ -2,10 +2,6 @@
 -- Copyright (c) 2016, Namhoon Lee <namhoonl@andrew.cmu.edu>
 -- All rights reserved.
 --
--- This file is part of NIPS'16 submission
--- Visual Compiler: Scene Description to Pedestrian Pose Estimation
--- N. Lee*, V. N. Boddeti*, K. M. Kitani, F. Beainy, and T. Kanade
---
 -- load_dataset_config.lua
 -- -
 ----------------------------------------------------------------------
@@ -14,7 +10,7 @@ function load_dataset_config(datasetname)
     if datasetname == 'towncenter' then
         YX = {{138,167}, {160,260}, {170,570}, {262,544}, {130,460}, {235,325}, {169,92}, {91,354}, {230,438}, {105,245}, {999,999}, {138,167}, {138,167}, {138,167}}
         WH = {{71,102},{76,109,},{78,112},{98,141},{69,99},{93,133},{78,112},{61,87},{91,131},{64,91},{78,112},{71,102},{71,102},{71,102}}
-        --bestmodel = {1,5,3,6,6,4,3,9,5,8,11,33,22,30}
+        bestmodel = {1,5,3,6,6,4,3,9,5,8,11,33,22,30}
         datetime = {
             't_SunApr1705:37:282016', 
             't_TueApr1908:35:242016', 

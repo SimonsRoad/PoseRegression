@@ -1,5 +1,7 @@
 # conv1 filter visualization 
-## towncenter
+
+## Settings
+- dataset 1: towncenter
 - filter size: 3x64x5x5 (in x out x width x height)
 - visualize filters learned for 10 locations 
 
@@ -8,6 +10,7 @@
 - Before seeing the learned filters, I actually expected that the filters at the bottom will show mostly low-level features like gabor filters. I wonder if it is 1) because our task is not just detection nor simply pose estimation, but the combination of detection, pose estimation, segmentation, 2) what other pose estimation baseline models will produce for the features. One thing that I would do for sure is to check and compare activation maps for some test images.  
 
 
+## visualizations
 <table>
     <tr> 
         <td> location 1 </td>

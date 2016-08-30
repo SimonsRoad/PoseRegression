@@ -1,9 +1,21 @@
-# What did SPN learn?
+# conv1 filter visualization 
+## towncenter
+- filter size: 3x64x5x5 (in x out x width x height)
+- visualize filters learned for 10 locations 
 
-## filter visualization 
-- dataset: towncenter
-- filter: conv1 (64x5x5x3)
-- for 10 locations 
+
+<table>
+    <tr>
+        <td>
+            Image inside Table
+        </td>
+
+        <td>
+            another image inside table
+        </td>
+    </tr>
+</table>
+
 
 
 <img src="visualize_filters/conv1_results/conv1_weights_loc1.png" height="280">

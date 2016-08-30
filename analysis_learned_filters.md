@@ -7,10 +7,10 @@
 
 ## Notes
 - Some of SPNs were not trained very well. For example, at location 8, the weights are mostly zeros. Likewise, location 4 and 6 have many zero values. 
-- Before seeing the learned filters, I actually expected that the filters at the bottom will show mostly low-level features like gabor filters. I wonder if it is 1) because our task is not just detection nor simply pose estimation, but the combination of detection, pose estimation, segmentation, 2) what other pose estimation baseline models will produce for the features. One thing that I would do for sure is to check and compare activation maps for some test images.  
+- Before seeing the results, I actually expected that it will show mostly low-level features like gabor filters. I wonder 1) if it is because our task is not just detection nor simply pose estimation, but the combination of many tasks (i.e., detection, pose estimation, segmentation), and 2) what other pose estimation baseline models that are trained correctly will produce. One thing that I would do is check and compare activation maps for layers at multiple stages given some test images.  
 
 
-## visualizations
+## Visualizations
 <table>
     <tr> 
         <td> location 1 </td>

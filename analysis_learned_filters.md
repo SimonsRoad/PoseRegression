@@ -10,7 +10,7 @@
 - Learned filters do not look similar to each other. This means that SPNs learned something different (assuming the training is equally successful). Note that the difference between SPNs are scale and background: A comparison between actual scales and background images should be made.
 - Learned filters do not look like gabor filters, which are usually seen from conv1s of well-trained models for some image classification tasks. I wonder if our SPNs are also supposed to look like those. In other words, is it possible that our setup of multi-task (detection, pose esetimation, segmentation) may have affected and learned differently? Or should I suspect that learning is simply not done well?
 - I wonder what other well-trained pose estimation networks produce for conv1 filters. 
-- The next thing I will do is check and compare activation maps for layers at multiple stages given some test images, instead of filters'' weights. 
+- The more intuitive way of checking the trained networks, which I will do for the next, is check and compare activation maps for layers at multiple stages given some test images, instead of filters'' weights. 
 
 
 

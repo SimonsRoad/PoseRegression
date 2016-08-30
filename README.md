@@ -1,2 +1,2 @@
 # ScenePoseNet 
-This work is under an active development. Stay tuned!
+This work is under active development. Stay tuned!

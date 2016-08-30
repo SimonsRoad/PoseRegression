@@ -19,7 +19,7 @@ for i=1,10 do
         string.format('/save/PR_fcn/option/%s/clear_model_%d.t7', 
         datetime[i],bestmodel[i])
     local model = torch.load(fmodel)
-    local fsave = string.format('conv1/conv1_weights_loc%d.npy',i)
+    local fsave = string.format('../../visualize_filters/conv1_npy/conv1_weights_loc%d.npy',i)
     npy4th.savenpy(fsave, model:get(2).weight)
 end
 

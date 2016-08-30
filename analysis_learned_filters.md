@@ -7,7 +7,11 @@
 
 ## Notes
 - Some of SPNs were not trained very well. For example, at location 8, the weights are mostly zeros. Likewise, location 4 and 6 have many zero values. 
-- Before seeing the results, I actually expected that it will show mostly low-level features like gabor filters. I wonder 1) if it is because our task is not just detection nor simply pose estimation, but the combination of many tasks (i.e., detection, pose estimation, segmentation), and 2) what other pose estimation baseline models that are trained correctly will produce. One thing that I would do is check and compare activation maps for layers at multiple stages given some test images, instead of filters weights.  
+- Learned filters do not look similar to each other. This means that SPNs learned something different (assuming the training is equally successful). Note that the difference between SPNs are scale and background: A comparison between actual scales and background images should be made.
+- Learned filters do not look like gabor filters, which are usually seen from conv1s of well-trained models for some image classification tasks. I wonder if our SPNs are also supposed to look like those. In other words, is it possible that our setup of multi-task (detection, pose esetimation, segmentation) may have affected and learned differently? Or should I suspect that learning is simply not done well?
+- I wonder what other well-trained pose estimation networks produce for conv1 filters. 
+- The next thing I will do is check and compare activation maps for layers at multiple stages given some test images, instead of filters'' weights. 
+
 
 
 ## Visualizations

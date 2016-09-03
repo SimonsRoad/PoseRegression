@@ -39,9 +39,9 @@ for i=1,10 do
     local output = model:forward(testimg:cuda())
 
     -- activation maps: the main purpose of this script
-    local layerofinterest = {53,68,83,90,96}
-    local activationmaps = torch.Tensor(5,output:size()[3],output:size()[4])
-    for l=1,5 do
+    local layerofinterest = {12,20,30,38,53,68,83,90,96}
+    local activationmaps = torch.Tensor(#layerofinterest,output:size()[3],output:size()[4])
+    for l=1,#layerofinterest do
         --print(torch.mean(model:get(layerofinterest[l]).output,2)[{1,1}]:size())
         activationmaps[l] = torch.mean(model:get(layerofinterest[l]).output,2)[{1,1}]:float()
     end

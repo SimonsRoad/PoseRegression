@@ -34,9 +34,7 @@ end
 -- test forward pass
 testinput = torch.rand(1,3,opt.H,opt.W):cuda()
 output = model:forward(testinput)
-print(output:size())
-print(output:size()[3])
-print(output:size()[4])
+print(model:get(12):listModules())
 --print(model:get(53):listModules())
 --print(model:get(68):listModules())
 --print(model:get(83):listModules())

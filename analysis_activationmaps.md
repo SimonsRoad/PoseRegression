@@ -2,7 +2,7 @@
 
 ## Settings
 - dataset 1: towncenter
-- 5 activation maps given a test image (CF1, CF2, CF3, Cat, Output; Please refer to Figure 4 of the paper)
+- total 9 activation maps given a test image (Res1, Res2, Res3, Res4, CF1, CF2, CF3, Cat, Output; Please refer to Figure 4 of the paper)
 - for 10 locations 
 
 ## Notes

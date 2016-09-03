@@ -4,29 +4,22 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
+# for 10 locations
 for i in range(1,11,1):
     print 'loc{} | visualizing activation maps..'.format(i)
     
     fname = "activationmaps_npy/loc{0:d}.npy".format(i)
     activationmaps = np.load(fname)
+    numlayers = activationmaps.shape[0]
+    nameoflayers = ['Res1', 'Res2', 'Res3', 'Res4', 'CF1', 'CF2', 'CF3', 'Cat', 'Output']
 
-    fig, axs = plt.subplots(1,5,figsize=(10,4),facecolor='w',edgecolor='k')
+    fig, axs = plt.subplots(1,numlayers,figsize=(12,3),facecolor='w',edgecolor='k')
     axs = axs.ravel()
-    for l in range(5):
+    for l in range(numlayers):
         axs[l].imshow(activationmaps[l])
         axs[l].get_xaxis().set_ticks([])
         axs[l].get_yaxis().set_ticks([])
-        if l == 0:
-            axs[l].set_title('CF1')
-        elif l == 1:
-            axs[l].set_title('CF2')
-        elif l == 2:
-            axs[l].set_title('CF3')
-        elif l == 3:
-            axs[l].set_title('Cat')
-        elif l == 4:
-            axs[l].set_title('Output')
-
+        axs[l].set_title(nameoflayers[l])
     plt.tight_layout()
     # save
     fname = "activationmaps_results/loc{}.png".format(i)

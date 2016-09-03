@@ -1,9 +1,9 @@
 # Activation maps visualization 
 
 ## Settings
-- dataset 1: towncenter
-- total 9 activation maps given a test image (Res1, Res2, Res3, Res4, CF1, CF2, CF3, Cat, Output; Please refer to Figure 4 of the paper)
-- for 10 locations 
+- dataset: towncenter (10 locations)
+- Given a test image, activation maps at every block of ScenePoseNet are presented. 
+- 9 activation maps (Res1, Res2, Res3, Res4, CF1, CF2, CF3, Cat, Output). Please refer to Figure 4 of the paper.
 
 ## Notes
 

@@ -39,12 +39,14 @@ for i=1,10 do
     local output = model:forward(testimg:cuda())
 
     -- activation maps: the main purpose of this script
-    print(model:get(2).output:size())
-    print(model:get(2).output:size())
-    print(model:get(2).output:size())
-    adf=adf+1
+    local layerofinterest = {53,68,83,90,96}
+    local activationmaps = torch.Tensor(5,output:size()[3],output:size()[4])
+    for l=1,5 do
+        --print(torch.mean(model:get(layerofinterest[l]).output,2)[{1,1}]:size())
+        activationmaps[l] = torch.mean(model:get(layerofinterest[l]).output,2)[{1,1}]:float()
+    end
+    local fsave = string.format('../../visualize_filters/activationmaps_npy/loc%d.npy',i)
+    npy4th.savenpy(fsave,activationmaps)
     
-    --local fsave = string.format('../../visualize_filters/conv1_npy/conv1_weights_loc%d.npy',i)
-    --npy4th.savenpy(fsave, model:get(2).weight)
 end
 

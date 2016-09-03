@@ -1,12 +1,10 @@
 # Activation maps visualization 
 
-## Settings
+## Notes
 - dataset: towncenter (10 locations)
 - Given a test image, activation maps at every block of ScenePoseNet are presented. 
 - 9 activation maps (Res1, Res2, Res3, Res4, CF1, CF2, CF3, Cat, Output). Please refer to Figure 4 of the paper.
-
-## Notes
-
+- Each activation map is a mean activation over output channels.
 
 
 ## Visualizations

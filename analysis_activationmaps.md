@@ -16,44 +16,44 @@
         <td> activation maps </td>
     </tr>
     <tr>
-        <td> <img src="src/testscripts/testset1/1.jpg" height="200"> </td>
-        <td> <img src="visualize_filters/activationmaps_results/loc1.png" height="280"> </td>
+        <td> <img src="src/testscripts/testset1/1.jpg" height="150"> </td>
+        <td> <img src="visualize_filters/activationmaps_results/loc1.png" height="250"> </td>
     </tr>
     <tr>
-        <td> <img src="src/testscripts/testset1/2.jpg" height="200"> </td>
-        <td> <img src="visualize_filters/activationmaps_results/loc2.png" height="280"> </td>
+        <td> <img src="src/testscripts/testset1/2.jpg" height="150"> </td>
+        <td> <img src="visualize_filters/activationmaps_results/loc2.png" height="250"> </td>
     </tr>
     <tr>
-        <td> <img src="src/testscripts/testset1/3.jpg" height="200"> </td>
-        <td> <img src="visualize_filters/activationmaps_results/loc3.png" height="280"> </td>
+        <td> <img src="src/testscripts/testset1/3.jpg" height="150"> </td>
+        <td> <img src="visualize_filters/activationmaps_results/loc3.png" height="250"> </td>
     </tr>
     <tr>
-        <td> <img src="src/testscripts/testset1/4.jpg" height="200"> </td>
-        <td> <img src="visualize_filters/activationmaps_results/loc4.png" height="280"> </td>
+        <td> <img src="src/testscripts/testset1/4.jpg" height="150"> </td>
+        <td> <img src="visualize_filters/activationmaps_results/loc4.png" height="250"> </td>
     </tr>
     <tr>
-        <td> <img src="src/testscripts/testset1/5.jpg" height="200"> </td>
-        <td> <img src="visualize_filters/activationmaps_results/loc5.png" height="280"> </td>
+        <td> <img src="src/testscripts/testset1/5.jpg" height="150"> </td>
+        <td> <img src="visualize_filters/activationmaps_results/loc5.png" height="250"> </td>
     </tr>
     <tr>
-        <td> <img src="src/testscripts/testset1/6.jpg" height="200"> </td>
-        <td> <img src="visualize_filters/activationmaps_results/loc6.png" height="280"> </td>
+        <td> <img src="src/testscripts/testset1/6.jpg" height="150"> </td>
+        <td> <img src="visualize_filters/activationmaps_results/loc6.png" height="250"> </td>
     </tr>
     <tr>
-        <td> <img src="src/testscripts/testset1/7.jpg" height="200"> </td>
-        <td> <img src="visualize_filters/activationmaps_results/loc7.png" height="280"> </td>
+        <td> <img src="src/testscripts/testset1/7.jpg" height="150"> </td>
+        <td> <img src="visualize_filters/activationmaps_results/loc7.png" height="250"> </td>
     </tr>
     <tr>
-        <td> <img src="src/testscripts/testset1/8.jpg" height="200"> </td>
-        <td> <img src="visualize_filters/activationmaps_results/loc8.png" height="280"> </td>
+        <td> <img src="src/testscripts/testset1/8.jpg" height="150"> </td>
+        <td> <img src="visualize_filters/activationmaps_results/loc8.png" height="250"> </td>
     </tr>
     <tr>
-        <td> <img src="src/testscripts/testset1/9.jpg" height="200"> </td>
-        <td> <img src="visualize_filters/activationmaps_results/loc9.png" height="280"> </td>
+        <td> <img src="src/testscripts/testset1/9.jpg" height="150"> </td>
+        <td> <img src="visualize_filters/activationmaps_results/loc9.png" height="250"> </td>
     </tr>
     <tr>
-        <td> <img src="src/testscripts/testset1/10.jpg" height="200"> </td>
-        <td> <img src="visualize_filters/activationmaps_results/loc10.png" height="280"> </td>
+        <td> <img src="src/testscripts/testset1/10.jpg" height="150"> </td>
+        <td> <img src="visualize_filters/activationmaps_results/loc10.png" height="250"> </td>
     </tr>
     
 </table>

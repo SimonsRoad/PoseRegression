@@ -16,15 +16,15 @@
         <td> activation maps </td>
     </tr>
     <tr>
-        <td> </td>
+        <td> <img src="src/testscripts/testset/1.jpg"> </td>
         <td> <img src="visualize_filters/activationmaps_results/loc1.png" height="280"> </td>
     </tr>
     <tr>
-        <td> </td>
+        <td> <img src="src/testscripts/testset/2.jpg"> </td>
         <td> <img src="visualize_filters/activationmaps_results/loc2.png" height="280"> </td>
     </tr>
     <tr>
-        <td> </td>
+        <td> <img src="src/testscripts/testset/3.jpg"> </td>
         <td> <img src="visualize_filters/activationmaps_results/loc3.png" height="280"> </td>
     </tr>
     

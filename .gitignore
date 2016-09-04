@@ -2,5 +2,5 @@
 *.pyc
 *.swp
 data
-save
+save/PR_fcn
 mat
